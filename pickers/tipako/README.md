@@ -4,6 +4,9 @@ A picker with support for group or individual selections.
 
 # Change Log
 
+##### 3.6.0
+- Added a bottom slot to the dropdown
+
 ##### 3.5.2
 - Fixing spinner hover state
 - Fixing message if loading vs. if empty

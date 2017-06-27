@@ -175,6 +175,10 @@ $h: 30px;
     max-height: 300px;
     z-index: 100;
   }
+
+  &.withSlotBottom {
+    max-height: 340px;
+  }
 }
 
 .empty {

@@ -7,6 +7,7 @@ import generateId from '../../../shared/generateId';
 
 export default class Tipako extends React.Component {
   static propTypes = {
+    slotBottom: PropTypes.node,
     closeOnSelect: PropTypes.bool,
     data: PropTypes.arrayOf(PropTypes.shape({
       children: PropTypes.arrayOf(PropTypes.shape({
@@ -32,13 +33,14 @@ export default class Tipako extends React.Component {
     searchable: PropTypes.bool,
     stylesheets: PropTypes.arrayOf(PropTypes.shape()),
     titlePlaceholder: PropTypes.string,
-    titleSlot: PropTypes.element,
+    slotTitle: PropTypes.element,
     titleValue: PropTypes.string,
     updateOnSelect: PropTypes.bool,
     valueField: PropTypes.string
   }
 
   static defaultProps = {
+    slotBottom: null,
     closeOnSelect: false,
     data: [],
     keyField: 'key',
@@ -55,7 +57,7 @@ export default class Tipako extends React.Component {
     selectedKey: null,
     stylesheets: [],
     titlePlaceholder: 'Select...',
-    titleSlot: null,
+    slotTitle: null,
     titleValue: '',
     updateOnSelect: false,
     valueField: 'value'
@@ -224,6 +226,7 @@ export default class Tipako extends React.Component {
 
   render() {
     const {
+      slotBottom,
       data,
       keyField,
       loading,
@@ -235,7 +238,7 @@ export default class Tipako extends React.Component {
       renderItem,
       searchable,
       titlePlaceholder,
-      titleSlot,
+      slotTitle,
       titleValue,
       updateOnSelect,
       valueField
@@ -341,8 +344,8 @@ export default class Tipako extends React.Component {
       ? <span className={this.styles.spinner} />
       : null;
 
-    const slot = titleSlot
-      ? <div className={this.styles.slot}>{titleSlot}</div>
+    const slot = slotTitle
+      ? <div className={this.styles.slot}>{slotTitle}</div>
       : null;
 
     const search = searchable
@@ -381,12 +384,16 @@ export default class Tipako extends React.Component {
         <div className={this.styles.dropdownContainer}>
           <div
             className={cx(this.styles.dropdown, {
-              [this.styles.expanded]: this.state.expanded })}
+              [this.styles.expanded]: this.state.expanded,
+              [this.styles.withSlotBottom]: slotBottom && this.state.expanded
+            })}
           >
             {controls}
             <div className={this.styles.itemsContainer}>
               {items.length ? items : empty}
             </div>
+            {slotBottom &&
+              <div className={this.styles.slotBottom} onClick={e => e.stopPropagation()}>{slotBottom}</div>}
           </div>
         </div>
       </div>

@@ -4,6 +4,15 @@
   font: 13px sans-serif;
 }
 
+.slotBottom {
+  align-items: center;
+  border-top: 1px solid #939393;
+  display: flex;
+  height: 48px;
+  justify-content: center;
+  user-select: none;
+}
+
 .titleIcon {
   display: inline-block;
   height: 20px;

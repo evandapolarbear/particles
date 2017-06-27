@@ -54,13 +54,13 @@ const data = [
 ];
 
 const loading = false;
-const searchable = false;
+const searchable = true;
 const closeOnSelect = false;
 const updateOnSelect = false;
 
 const onClearAll = () => { console.warn('Clear all.'); };
 const onFocus = () => { console.warn('Focus.'); };
-// const onSearch = (str) => { console.warn('Searching for', str); };
+const onSearch = (str) => { console.warn('Searching for', str); };
 const onSelect = (item) => { console.warn('Selected', item); };
 const onSelectAll = () => { console.warn('Select all.'); };
 
@@ -74,7 +74,8 @@ const keyField = 'key';
 const valueField = 'value';
 const titleValue = 'Calypso';
 const titlePlaceholder = 'Make a selection...';
-const titleSlot = <div className={`fa fa-bus ${sandboxStyles.titleIcon}`} />;
+const slotTitle = <div className={`fa fa-bus ${sandboxStyles.titleIcon}`} />;
+const slotBottom = <div className={sandboxStyles.slotBottom}>Bottom Slot</div>;
 
 render(
   <Tipako
@@ -84,16 +85,18 @@ render(
       keyField,
       loading,
       onClearAll,
-      // onSearch,
+      onFocus,
+      onSearch,
       onSelect,
       onSelectAll,
       renderEmpty,
       renderGroup,
       renderItem,
       searchable,
+      slotBottom,
       stylesheets,
       titlePlaceholder,
-      titleSlot,
+      slotTitle,
       titleValue,
       updateOnSelect,
       valueField
