@@ -4,6 +4,9 @@ A picker with support for group or individual selections.
 
 # Change Log
 
+##### 3.6.1
+- Fixing onFocus if not defined
+
 ##### 3.6.0
 - Added a bottom slot to the dropdown
 

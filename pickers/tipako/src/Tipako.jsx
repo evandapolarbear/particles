@@ -168,7 +168,7 @@ export default class Tipako extends React.Component {
   onCaretClick = () => {
     if (this.state.expanded === false) {
       this.setState({ expanded: true, guid: this.guid });
-      this.props.onFocus();
+      this.props.onFocus && this.props.onFocus();
     }
   }
 
@@ -184,7 +184,7 @@ export default class Tipako extends React.Component {
 
   onSearchFocus = (evt) => {
     evt.target.select();
-    this.props.onFocus();
+    this.props.onFocus && this.props.onFocus();
   }
 
   onBlur = () => {
