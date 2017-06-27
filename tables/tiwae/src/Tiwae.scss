@@ -50,17 +50,19 @@ $itemH: 24px;
 
 .dropdownBody {
   background: #fff;
+  border-radius: 0 0 2px 2px;
   border: 1px solid #c2c2c2;
   border-top: 0;
-  max-height: 300px;
-  overflow: auto;
+
+  &.withSlot {
+    border-radius: 0;
+  }
 }
 
 .dropdownContainer {
   $bezier: cubic-bezier(0, 0.2, 0.5, 1);
 
-  border-radius: 2px;
-  box-shadow: 0;
+  border-radius: 0 0 2px 2px;
   max-height: 0;
   opacity: 0;
   overflow: hidden;
@@ -79,6 +81,7 @@ $itemH: 24px;
 .dropdownHead {
   background: #fff;
   border: 1px solid #c2c2c2;
+  border-radius: 2px 2px 0 0;
   padding: $p * 2;
   text-align: left;
   user-select: none;
@@ -157,12 +160,15 @@ $itemH: 24px;
   }
 }
 
-
-
 .itemCheckbox {
   cursor: pointer;
   flex-shrink: 0;
   margin-right: $m;
+}
+
+.itemContainer {
+  max-height: 250px;
+  overflow: auto;
 }
 
 .itemLabel {

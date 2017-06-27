@@ -6,6 +6,7 @@ const RipangaBodyRow = ({
   columnDefinitions,
   idKey,
   isChecked,
+  isMinHeight,
   onCheck,
   renderCell,
   rowData,
@@ -49,7 +50,10 @@ const RipangaBodyRow = ({
     </div>);
   }
 
-  return (<div key={`row-${rowData[idKey]}`} className={styles.tableRow}>
+  return (<div
+    key={`row-${rowData[idKey]}`}
+    className={cx(styles.tableRow, { [styles.minHeight]: isMinHeight })}
+  >
     {cells}
   </div>);
 };
@@ -59,10 +63,12 @@ RipangaBodyRow.propTypes = {
   columnDefinitions: PropTypes.arrayOf(PropTypes.shape()).isRequired,
   idKey: PropTypes.string,
   isChecked: PropTypes.bool,
+  isMinHeight: PropTypes.bool,
   onCheck: PropTypes.func,
   renderCell: PropTypes.func,
   rowData: PropTypes.shape().isRequired,
   showCheckboxes: PropTypes.bool,
+  showGroups: PropTypes.bool,
   styles: PropTypes.shape().isRequired
 };
 

@@ -32,6 +32,7 @@ export default class Ripanga extends React.Component {
   static propTypes = {
     columnDefinitions: PropTypes.arrayOf(PropTypes.object).isRequired,
     idKey: PropTypes.string,
+    isMinHeight: PropTypes.bool.isRequired,
     renderCell: PropTypes.func.isRequired,
     renderEmpty: PropTypes.func,
     renderGroupTitle: PropTypes.func,
@@ -176,6 +177,7 @@ export default class Ripanga extends React.Component {
     const {
       columnDefinitions,
       idKey,
+      isMinHeight,
       onSort,
       renderCell,
       renderEmpty,
@@ -258,6 +260,7 @@ export default class Ripanga extends React.Component {
               collapsedIds,
               columnDefinitions,
               idKey,
+              isMinHeight,
               onRowCheck: this.onRowCheck,
               onCollapse: this.onCollapse,
               onGroupCheck: this.onGroupCheck,

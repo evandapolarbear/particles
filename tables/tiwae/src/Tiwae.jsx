@@ -1,5 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import cx from 'classnames';
+
 import baseStyles from './Tiwae.scss';
 import composeStyles from '../../../shared/stylesheetComposer';
 
@@ -12,12 +14,14 @@ export default class Tiwae extends React.Component {
     isSelectAll: PropTypes.bool,
     lockLimit: PropTypes.number,
     onChange: PropTypes.func.isRequired,
+    slot: PropTypes.node,
     stylesheets: PropTypes.arrayOf(PropTypes.shape())
   };
 
   static defaultProps = {
     isSelectAll: true,
     lockLimit: 3,
+    slot: null,
     stylesheets: []
   }
 
@@ -249,13 +253,17 @@ export default class Tiwae extends React.Component {
             <div className={styles.title}>Show, Hide, or Reorder Columns</div>
             {controls}
           </div>
-          <div
-            className={styles.dropdownBody}
-            onDragOver={this.onDragOverBody}
-            onDrop={this.onDrop}
-          >
-            {items}
+          <div className={cx(styles.dropdownBody, { [styles.withSlot]: this.props.slot })}>
+            <div
+              className={styles.itemContainer}
+              onDragOver={this.onDragOverBody}
+              onDrop={this.onDrop}
+            >
+              {items}
+            </div>
           </div>
+          {this.props.slot &&
+            <div className={styles.slot} onClick={e => e.stopPropagation()}>{this.props.slot}</div>}
         </div>
       </div>
     );

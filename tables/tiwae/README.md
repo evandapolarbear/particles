@@ -4,6 +4,9 @@ Manages column definition arrays to configure columns.
 
 # Change Log
 
+##### 2.4.0
+- Added row height control
+
 ##### 2.3.1
 - Fixed IE bug that allowed disabled checkboxes to fire `onChange` on a double click
 
