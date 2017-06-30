@@ -90,10 +90,10 @@ export default class Wharangi extends React.Component {
         key={`page-${i}`}
         className={cx(this.styles.item, { [this.styles.active]: i === active })}
         onClick={() => this.handleSelect(i)}
-      >
+        >
         {i}
-      </button>);
-    }
+        </button>); 
+      }
 
     const firstitem = (active > 2)
       ? (<button
@@ -102,29 +102,29 @@ export default class Wharangi extends React.Component {
       >1</button>)
       : null;
 
-    const prev = (active > 2)
+    const prev = (active > 1)
       ? (<button
         onClick={() => this.handleSelect(active - 1)}
         className={cx('fa', 'fa-angle-left', this.styles.prev)}
       />)
       : null;
 
-    const prevEllipsis = (active > 2)
+    const prevEllipsis = (active > 2 && (totalPages !== 3))
       ? <span className={this.styles.ellipsis}>&hellip;</span>
       : null;
 
-    const next = (active < totalPages - 1)
+    const next = (active < totalPages)
       ? (<button
         onClick={() => this.handleSelect(active + 1)}
         className={cx('fa', 'fa-angle-right', this.styles.prev)}
       />)
       : null;
 
-    const nextEllipsis = (active < totalPages - 1)
+    const nextEllipsis = ((active < totalPages - 1) && (totalPages !== 3))
       ? <span className={this.styles.ellipsis}>&hellip;</span>
       : null;
 
-    const lastitem = (active < totalPages - 1)
+    const lastitem = (active < totalPages - 1 && (totalPages !== 3))
       ? (<button
         className={this.styles.item}
         onClick={() => this.handleSelect(totalPages)}

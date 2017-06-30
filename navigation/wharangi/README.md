@@ -4,6 +4,9 @@ A pagination component.
 
 # Change Log
 
+##### 3.1.2
+- Removed ellipsis from navigation under 4 pages
+
 ##### 3.1.1
 - Updating package.json to Particles URL
 
