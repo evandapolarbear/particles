@@ -16,7 +16,6 @@ const def = {
 const onSort = () => console.warn('Column was sorted.');
 
 const tableDataUngrouped = [{
-  key: undefined,
   data: [
     { text: 'rowA', key: 'rowA' },
     { text: 'rowB', key: 'rowB' },
@@ -70,12 +69,12 @@ render(
     </button>
 
     <Ripanga
-      showCheckboxes={true}
+      showCheckboxes
       globalKey='ripanga-sandbox'
       idKey='key'
       scope='sandbox'
       onMounted={state => console.log(state)}
-      tableData={tableDataGrouped}
+      tableData={tableDataUngrouped}
       {...{
         columnDefinitions,
         onSort,

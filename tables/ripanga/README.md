@@ -4,6 +4,9 @@ A table component with self-managed checkboxes, sticky head, sticky right panel,
 
 # Change Log
 
+##### 2.4.2
+- Fixed a race condition when checking and unchecking all
+
 ##### 2.4.1
 - Fixed a bug where the select all checkbox would incorrectly be checked when not all elements were actually selected
 

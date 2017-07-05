@@ -33,6 +33,7 @@ export default class RipangaHeadRow extends React.Component {
     onCheckAll: PropTypes.func.isRequired,
     onCollapseAll: PropTypes.func.isRequired,
     onSort: PropTypes.func.isRequired,
+    onUncheckAll: PropTypes.func.isRequired,
     showCheckboxes: PropTypes.bool.isRequired,
     showGroups: PropTypes.bool.isRequired,
     sortState: PropTypes.shape().isRequired,
@@ -126,6 +127,7 @@ export default class RipangaHeadRow extends React.Component {
       onCheckAll,
       onCollapseAll,
       onSort,
+      onUncheckAll,
       showGroups,
       showCheckboxes,
       sortState,
@@ -141,11 +143,15 @@ export default class RipangaHeadRow extends React.Component {
     }, []);
 
     if (showCheckboxes || showGroups) {
-      const checkbox = (showCheckboxes
-        ? (<label className={styles.controlCheckbox}>
-          <input type='checkbox' checked={allChecked} onChange={onCheckAll} />
-        </label>)
-        : null);
+      const onCheckHandler = allChecked ? onUncheckAll : onCheckAll;
+      const checkbox = (
+        showCheckboxes
+        ? (
+          <label className={styles.controlCheckbox}>
+            <input type='checkbox' checked={allChecked} onChange={onCheckHandler} />
+          </label>
+        ) : null
+      );
 
       const caret = (showGroups
         ? RipangaCaret({ closed: allCollapsed, onClick: onCollapseAll })
