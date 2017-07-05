@@ -4,6 +4,9 @@ A table component with self-managed checkboxes, sticky head, sticky right panel,
 
 # Change Log
 
+##### 2.4.3
+- Took out the shouldComponentUpdate
+
 ##### 2.4.2
 - Fixed a race condition when checking and unchecking all
 

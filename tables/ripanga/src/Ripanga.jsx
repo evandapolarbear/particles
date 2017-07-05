@@ -104,16 +104,6 @@ export default class Ripanga extends React.Component {
     this.setState({ allChecked });
   }
 
-  shouldComponentUpdate() {
-    const { tableData } = this.props;
-
-    if (!tableData || !tableData[0] || tableData[0].length === 0 || !tableData[0].data) {
-      return false;
-    }
-
-    return true;
-  }
-
   componentWillUnmount() {
     window.removeEventListener('scroll', this.onScroll);
     window.removeEventListener('table/checkAll', this.onCheckAll);
