@@ -359,7 +359,7 @@ export default class Tipako extends React.Component {
           placeholder={titlePlaceholder}
           ref={(input) => { this.searchInput = input; }}
           type='text'
-          value={value}
+          value={value || ''}
         />
         )
       : (
