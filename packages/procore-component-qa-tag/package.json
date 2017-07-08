@@ -1,0 +1,23 @@
+{
+  "name": "@procore/qa-tag",
+  "version": "1.0.0",
+  "description": "",
+  "main": "build/index.js",
+  "scripts": {
+    "test": "neutrino test",
+    "start": "neutrino start --use neutrino-preset-react --options.entry sandbox.js",
+    "build": "neutrino build --use neutrino-preset-react neutrino-preset-particles"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "neutrino": "^6.1.4",
+    "neutrino-preset-react": "^6.1.4",
+    "neutrino-preset-particles": "0.0.1"
+  },
+  "dependencies": {
+    "camelize": "^1.0.0",
+    "react": "^15.6.1",
+    "react-dom": "^15.6.1"
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "name": "@procore/icon",
+  "version": "1.0.0",
+  "description": "",
+  "main": "build/index.js",
+  "scripts": {
+    "test": "neutrino test",
+    "start": "neutrino start --use neutrino-preset-react --options.entry sandbox.js",
+    "build": "neutrino build --use neutrino-preset-react neutrino-preset-particles"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "neutrino": "^6.1.4",
+    "neutrino-preset-react": "^6.1.4",
+    "neutrino-preset-particles": "0.0.1"
+  },
+  "dependencies": {
+    "@procore/qa-tag": "^1.0.0",
+    "classnames": "^2.2.5",
+    "prop-types": "^15.5.10",
+    "react": "^15.6.1",
+    "react-dom": "^15.6.1"
+  }
+}
