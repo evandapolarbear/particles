@@ -1,6 +1,6 @@
 import React from 'react';
 import { render } from 'react-dom';
-import Icon from './.';
+import Icon from './Icon';
 
 var ss = document.createElement("link");
 ss.type = "text/css";
