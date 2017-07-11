@@ -4,7 +4,8 @@
   "description": "A small, organized, component library",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "particle": "./node_modules/.bin/yo ./packages/generator-particle/generators/app/index.js"
   },
   "repository": {
     "type": "git",
@@ -17,7 +18,8 @@
   },
   "homepage": "https://github.com/chrisarevir/component-library#readme",
   "devDependencies": {
-    "lerna": "^2.0.0"
+    "lerna": "^2.0.0",
+    "yo": "^2.0.0"
   },
   "dependencies": {
     "babel-eslint": "^7.1.1",
