@@ -2,62 +2,95 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import cx from 'classnames';
 
-const TatariDropdownPlain = ({
-  data,
-  i18n,
-  isExpanded,
-  isLoading,
-  onChange,
-  onExpand,
-  styles
-}) => {
-  const items = data.reduce((acc, item) => {
-    if (item.hidden !== true) {
-      acc.push(<div
-        key={`item-${item.key}`}
-        data-key={item.key}
-        className={styles.inactiveItem}
-        onClick={onChange}
-      >
-        {item.value}
-      </div>);
+let counter = 0;
+
+export default class TatariDropdownPlain extends React.Component {
+  componentDidUpdate() {
+    const { currentIndex } = this.props;
+
+    if (this.props.isExpanded && this.focusedItem && currentIndex > -1) {
+      this.focusedItem.focus();
     }
-    return acc;
-  }, []);
+  }
 
-  const text = <div className={styles.dropdownTitle}>{i18n.filter_placeholder}</div>;
+  render() {
+    const {
+      arrowKeyListener,
+      currentIndex,
+      data,
+      i18n,
+      isExpanded,
+      isLoading,
+      onChange,
+      onExpand,
+      styles
+    } = this.props;
 
-  const loading = (isLoading
-    ? <span className={styles.dropdownLoading} />
-    : null);
+    counter = 0;
 
-  const caret = (isLoading || items.length === 0)
-    ? null
-    : (<div className={styles.dropdownCaret}>
-      <span
-        className={cx('fa', 'fa-caret-down', styles.arrow,
-        { [styles.expanded]: isExpanded })}
-      />
+    const items = data.reduce((acc, item) => {
+      const focusedItem = currentIndex === counter;
+
+      if (item.hidden !== true) {
+        acc.push(<div
+          className={cx(styles.inactiveItem, { [styles.keyFocus]: focusedItem })}
+          data-key={item.key}
+          key={`item-${item.key}`}
+          onClick={onChange}
+          onKeyDown={onChange}
+          ref={(el) => { if (focusedItem) this.focusedItem = el; }}
+          tabIndex={-1}
+        >
+          {item.value}
+        </div>);
+        counter += 1;
+      }
+
+      return acc;
+    }, []);
+
+    const text = <div className={styles.dropdownTitle}>{i18n.filter_placeholder}</div>;
+
+    const loading = (isLoading
+      ? <span className={styles.dropdownLoading} />
+      : null);
+
+    const caret = (isLoading || items.length === 0)
+      ? null
+      : (<div className={styles.dropdownCaret}>
+        <span
+          className={cx('fa', 'fa-caret-down', styles.arrow,
+          { [styles.expanded]: isExpanded })}
+        />
+      </div>);
+
+    return (<div className={styles.dropdownContainer}>
+      <div
+        className={cx(styles.dropdownHead, { [styles.expanded]: isExpanded })}
+        data-key={'inactive'}
+        onClick={onExpand}
+        onKeyDown={arrowKeyListener}
+        tabIndex={-1}
+      >
+        {text}
+        {caret}
+        {loading}
+      </div>
+
+      <div
+        className={cx(styles.dropdownBody, { [styles.expanded]: isExpanded })}
+        onKeyDown={arrowKeyListener}
+        tabIndex={-1}
+      >
+        {items}
+      </div>
     </div>);
-
-  return (<div className={styles.dropdownContainer}>
-    <div
-      className={cx(styles.dropdownHead, { [styles.expanded]: isExpanded })}
-      data-key={'inactive'}
-      onClick={onExpand}
-    >
-      {text}
-      {caret}
-      {loading}
-    </div>
-
-    <div className={cx(styles.dropdownBody, { [styles.expanded]: isExpanded })}>
-      {items}
-    </div>
-  </div>);
-};
+  }
+}
 
 TatariDropdownPlain.propTypes = {
+  arrowKeyListener: PropTypes.func.isRequired,
+  currentIndex: PropTypes.number.isRequired,
   data: PropTypes.arrayOf(PropTypes.shape({
     endpoint: PropTypes.string,
     key: PropTypes.string,
@@ -76,5 +109,3 @@ TatariDropdownPlain.defaultProps = {
   isExpanded: false,
   isLoading: false
 };
-
-export default TatariDropdownPlain;

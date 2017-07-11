@@ -4,6 +4,9 @@ A dynamically populated filter component.
 
 # Change Log
 
+##### 2.5.0
+- Added support for arrow and enter key navigation/selection
+
 ##### 2.4.4
 - Fixing saved filters if null array entry
 

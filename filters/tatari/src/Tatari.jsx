@@ -37,10 +37,12 @@ export default class Tatari extends React.Component {
 
     this.state = {
       activeFilters: [],
+      currentIndex: -1,
       expanded: {},
       hiding: {},
       inactiveFilters: [],
       loading: {},
+      maximum: 0,
       options: {},
       savedFilters: [],
       savedSelections: []
@@ -139,7 +141,7 @@ export default class Tatari extends React.Component {
 
     const expanded = { [key]: expandedStatus };
 
-    this.setState({ expanded });
+    this.setState({ currentIndex: -1, expanded, maximum: 0 });
   }
 
   onBlur = () => {
@@ -166,9 +168,39 @@ export default class Tatari extends React.Component {
     const filteredOptions = options[key].map(option => Object.assign(option,
       { hidden: (option.value.toLowerCase().indexOf(value) === -1) }));
 
+    const maximum = options[key].reduce((acc, filter) => (!filter.hidden ? acc + 1 : acc), 0);
+
     options[key] = filteredOptions;
 
-    this.setState({ options });
+    this.setState({ maximum, options });
+  }
+
+  arrowKeyListener = (evt) => {
+    let { currentIndex, maximum } = this.state;
+
+    if (this.state.expanded.inactive) {
+      maximum = this.state.inactiveFilters.length;
+    } else if (maximum === 0) {
+      maximum = this.state.options[Object.keys(this.state.expanded)[0]].length;
+    }
+
+    const minimum = this.state.expanded.inactive ? 0 : -1;
+
+    if (evt.keyCode === 38) {
+      evt.preventDefault();
+      if (currentIndex > minimum) {
+        currentIndex -= 1;
+        this.setState({ currentIndex });
+      }
+    }
+
+    if (evt.keyCode === 40) {
+      evt.preventDefault();
+      if (currentIndex < maximum - 1) {
+        currentIndex += 1;
+        this.setState({ currentIndex });
+      }
+    }
   }
 
   updateUrl = () => {
@@ -230,24 +262,35 @@ export default class Tatari extends React.Component {
   }
 
   checkOne = (evt) => {
-    evt.stopPropagation();
+    if (evt.type === 'change' || evt.keyCode === 13) {
+      evt.stopPropagation();
 
-    const { options } = this.state;
-    const key = evt.currentTarget.dataset.key;
-    const filterKey = evt.currentTarget.dataset.filterKey;
+      let key;
+      let filterKey;
 
-    options[filterKey] = options[filterKey].reduce((acc, option) => {
-      option.key.toString() === key
-        ? acc.push(Object.assign(option, { checked: !option.checked }))
-        : acc.push(option);
+      const { options } = this.state;
 
-      return acc;
-    }, []);
+      if (evt.type === 'change') {
+        key = evt.currentTarget.dataset.key;
+        filterKey = evt.currentTarget.dataset.filterKey;
+      } else if (evt.keyCode === 13) {
+        key = evt.currentTarget.children[0].dataset.key;
+        filterKey = evt.currentTarget.children[0].dataset.filterKey;
+      }
 
-    this.setState({
-      options,
-      expanded: Object.assign(this.state.expanded, { [filterKey]: true })
-    });
+      options[filterKey] = options[filterKey].reduce((acc, option) => {
+        option.key.toString() === key
+          ? acc.push(Object.assign(option, { checked: !option.checked }))
+          : acc.push(option);
+
+        return acc;
+      }, []);
+
+      this.setState({
+        options,
+        expanded: Object.assign(this.state.expanded, { [filterKey]: true })
+      });
+    }
   }
 
   checkAll = (evt) => {
@@ -280,38 +323,40 @@ export default class Tatari extends React.Component {
   }
 
   addActive = (evt) => {
-    evt.stopPropagation();
+    if (evt.type === 'click' || evt.keyCode === 13) {
+      evt.stopPropagation();
 
-    const { activeFilters, inactiveFilters, loading, options } = this.state;
+      const { activeFilters, inactiveFilters, loading, options } = this.state;
 
-    const key = evt.target.dataset.key;
-    const index = inactiveFilters.findIndex(filter => filter.key === key);
-    const item = inactiveFilters[index];
+      const key = evt.target.dataset.key;
+      const index = inactiveFilters.findIndex(filter => filter.key === key);
+      const item = inactiveFilters[index];
 
-    loading[key] = true;
-    inactiveFilters.splice(index, 1);
-    activeFilters.push(item);
+      loading[key] = true;
+      inactiveFilters.splice(index, 1);
+      activeFilters.push(item);
 
-    const retrieveOptions = () => {
-      if (options[key] === undefined) {
-        return get(item.endpoint);
-      }
+      const retrieveOptions = () => {
+        if (options[key] === undefined) {
+          return get(item.endpoint);
+        }
 
-      return Promise.resolve({ data: options[key] });
-    };
+        return Promise.resolve({ data: options[key] });
+      };
 
-    retrieveOptions().then(({ data }) => {
-      options[key] = data.map(d => Object.assign(d, { checked: false, hidden: false }));
-      const newLoading = this.state.loading;
-      newLoading[key] = false;
+      retrieveOptions().then(({ data }) => {
+        options[key] = data.map(d => Object.assign(d, { checked: false, hidden: false }));
+        const newLoading = this.state.loading;
+        newLoading[key] = false;
 
-      const newExpanded = this.state.expanded;
-      newExpanded[key] = true;
+        const newExpanded = this.state.expanded;
+        newExpanded[key] = true;
 
-      this.setState({ options, loading: newLoading, expanded: newExpanded });
-    });
+        this.setState({ options, loading: newLoading, expanded: newExpanded });
+      });
 
-    this.setState({ inactiveFilters, activeFilters, loading, expanded: {} });
+      this.setState({ activeFilters, currentIndex: -1, expanded: {}, inactiveFilters, loading });
+    }
   }
 
   removeActive = (evt) => {
@@ -371,6 +416,8 @@ export default class Tatari extends React.Component {
   render() {
     const inactiveFilters = this.state.inactiveFilters.length
       ? (<TatariDropdownPlain
+        arrowKeyListener={this.arrowKeyListener}
+        currentIndex={this.state.currentIndex}
         data={this.state.inactiveFilters}
         i18n={this.props.i18n}
         isExpanded={this.state.expanded.inactive}
@@ -382,22 +429,24 @@ export default class Tatari extends React.Component {
       : null;
 
     const activeFilters = this.state.activeFilters
-      .map(item => <TatariDropdownCheckboxes
-        key={`active-${item.key}`}
+      .map(item => (<TatariDropdownCheckboxes
+        arrowKeyListener={this.arrowKeyListener}
+        currentIndex={this.state.currentIndex}
         filter={item}
         i18n={this.props.i18n}
         isExpanded={this.state.expanded[item.key]}
         isHiding={this.state.hiding[item.key]}
         isLoading={this.state.loading[item.key]}
-        onCheckOne={this.checkOne}
+        key={`active-${item.key}`}
         onCheckAll={this.checkAll}
         onCheckNone={this.checkNone}
+        onCheckOne={this.checkOne}
         onExpand={this.onExpand}
         onRemove={this.removeActive}
         onSearch={this.onSearch}
         options={this.state.options[item.key]}
         styles={styles}
-      />);
+      />));
 
     const clearAll = (activeFilters.length
       ? (<div

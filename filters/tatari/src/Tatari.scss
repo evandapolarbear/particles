@@ -73,6 +73,14 @@ $h: 30px;
   &:hover {
     background: $lightGray;
   }
+
+  &:focus {
+    outline: none;
+  }
+
+  &.keyFocus {
+    background: #ddd;
+  }
 }
 
 .activeItems {
@@ -242,6 +250,14 @@ $h: 30px;
 
   &:hover {
     background: $lightGray;
+  }
+
+  &:focus {
+    outline: none;
+  }
+
+  &.keyFocus {
+    background: #ddd;
   }
 }
 
