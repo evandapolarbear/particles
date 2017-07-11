@@ -105,6 +105,10 @@
   margin: 0;
 }
 
+.input {
+  -moz-appearance: textfield;
+}
+
 .inputYear {
   composes: input;
   min-width: 40px;

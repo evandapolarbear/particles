@@ -4,6 +4,9 @@ A date picker.
 
 # Change Log
 
+##### 1.2.1
+- Removes the spinners from firefox to match other browsers
+
 ##### 1.2.0
 - Style updates
 - `closeOnSelect` prop added
