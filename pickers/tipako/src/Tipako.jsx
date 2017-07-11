@@ -5,6 +5,9 @@ import baseStyles from './Tipako.scss';
 import composeStyles from '../../../shared/stylesheetComposer';
 import generateId from '../../../shared/generateId';
 
+let counter = 0;
+let groupCounter = 0;
+
 export default class Tipako extends React.Component {
   static propTypes = {
     slotBottom: PropTypes.node,
@@ -77,6 +80,7 @@ export default class Tipako extends React.Component {
     }
 
     this.state = {
+      currentIndex: -1,
       expanded: false,
       value: props.titleValue
     };
@@ -84,6 +88,20 @@ export default class Tipako extends React.Component {
 
   componentWillMount() {
     window.addEventListener('click', this.onBlur);
+  }
+
+  componentDidUpdate() {
+    const { currentIndex, expanded } = this.state;
+
+    if (expanded) {
+      if (this.focusedItem && currentIndex > -1) {
+        this.focusedItem.focus();
+      }
+
+      if (this.searchInput && currentIndex === -1) {
+        this.searchInput.focus();
+      }
+    }
   }
 
   componentWillUnmount() {
@@ -115,10 +133,6 @@ export default class Tipako extends React.Component {
     if (this.props.updateOnSelect) {
       this.setState({ value: child[this.props.valueField] });
     }
-
-    if (this.props.searchable) {
-      this.searchInput.focus();
-    }
   }
 
   onGroupClick = (evt, group) => {
@@ -136,10 +150,6 @@ export default class Tipako extends React.Component {
 
     if (this.props.updateOnSelect) {
       this.setState({ value: group[this.props.valueField] });
-    }
-
-    if (this.props.searchable) {
-      this.searchInput.focus();
     }
   }
 
@@ -159,15 +169,11 @@ export default class Tipako extends React.Component {
     if (this.props.updateOnSelect) {
       this.setState({ value: item[this.props.valueField] });
     }
-
-    if (this.props.searchable) {
-      this.searchInput.focus();
-    }
   }
 
   onCaretClick = () => {
     if (this.state.expanded === false) {
-      this.setState({ expanded: true, guid: this.guid });
+      this.setState({ currentIndex: -1, expanded: true, guid: this.guid });
       this.props.onFocus && this.props.onFocus();
     }
   }
@@ -224,6 +230,35 @@ export default class Tipako extends React.Component {
     return 'No items found.';
   }
 
+  arrowKeyListener = (evt) => {
+    let { currentIndex } = this.state;
+    const { searchable } = this.props;
+
+    let totalCounter = counter > groupCounter
+      ? counter
+      : groupCounter;
+
+    if (groupCounter === 0) {
+      totalCounter -= 1;
+    }
+
+    if (evt.keyCode === 38 && this.state.expanded) {
+      evt.preventDefault();
+      if ((currentIndex > -1 && searchable) || (currentIndex > 0 && !searchable)) {
+        currentIndex -= 1;
+        this.setState({ currentIndex });
+      }
+    }
+
+    if (evt.keyCode === 40 && this.state.expanded) {
+      evt.preventDefault();
+      if (currentIndex < totalCounter) {
+        currentIndex += 1;
+        this.setState({ currentIndex });
+      }
+    }
+  }
+
   render() {
     const {
       slotBottom,
@@ -250,6 +285,11 @@ export default class Tipako extends React.Component {
       ? value.toLowerCase()
       : '';
 
+    const { currentIndex } = this.state;
+
+    counter = 0;
+    groupCounter = 0;
+
     const items = data.reduce((acc, v, i) => {
       // Grouped
       if (v.children) {
@@ -258,29 +298,48 @@ export default class Tipako extends React.Component {
             return result;
           }
 
-          return result.concat(<div
-            onClick={(evt) => { this.onChildClick(evt, vv); }}
+          groupCounter > counter
+            ? counter = groupCounter + 1
+            : counter += 1;
+
+          const focusedItem = currentIndex === counter;
+
+          const childItem = result.concat(<div
             className={cx(this.styles.item, this.styles.childItem,
-              { [this.styles.disabled]: vv.disabled })}
+              { [this.styles.disabled]: vv.disabled,
+                [this.styles.keyFocus]: focusedItem })}
             key={`child-${v[keyField]}-${vv[keyField]}`}
+            onClick={(e) => { this.onChildClick(e, vv); }}
+            onKeyDown={(e) => { if (focusedItem && e.keyCode === 13) this.onChildClick(e, vv); }}
+            ref={(el) => { if (focusedItem) this.focusedItem = el; }}
+            tabIndex={-1}
           >
             {renderItem ? renderItem(vv, ii) : vv[valueField]}
           </div>);
+
+          return childItem;
         }, []);
 
         if (children.length === 0 && v[valueField].toLowerCase().indexOf(searchTerm) === -1) {
           return acc;
         }
 
+        const focusedItem = currentIndex === groupCounter;
+
         const group = (<div
-          onClick={(evt) => { this.onGroupClick(evt, v); }}
           className={cx(this.styles.item, this.styles.groupItem,
-            { [this.styles.disabled]: v.disabled })}
+            { [this.styles.disabled]: v.disabled,
+              [this.styles.keyFocus]: focusedItem })}
           key={`group-${v[keyField]}`}
+          onClick={(evt) => { this.onGroupClick(evt, v); }}
+          onKeyDown={(e) => { if (focusedItem && e.keyCode === 13) this.onGroupClick(e, v); }}
+          ref={(el) => { if (focusedItem) this.focusedItem = el; }}
+          tabIndex={-1}
         >
           {renderGroup ? renderGroup(v, i) : v[valueField]}
         </div>);
 
+        groupCounter = counter + 1;
         return acc.concat(group).concat(children);
       }
 
@@ -289,14 +348,30 @@ export default class Tipako extends React.Component {
       }
 
       // Ungrouped
+      if (groupCounter > 0) {
+        groupCounter > counter
+          ? counter = groupCounter + 1
+          : counter += 1;
+      }
+
+      const focusedItem = currentIndex === counter;
+
       const ungrouped = (<div
-        onClick={(evt) => { this.onUngroupedClick(evt, v); }}
         className={cx(this.styles.item, this.styles.ungroupedItem,
-          { [this.styles.disabled]: v.disabled })}
+          { [this.styles.disabled]: v.disabled,
+            [this.styles.keyFocus]: focusedItem })}
         key={`ungrouped-${v[keyField]}`}
+        onClick={(evt) => { this.onUngroupedClick(evt, v); }}
+        onKeyDown={(e) => { if (focusedItem && e.keyCode === 13) this.onUngroupedClick(e, v); }}
+        ref={(el) => { if (focusedItem) this.focusedItem = el; }}
+        tabIndex={-1}
       >
         {renderItem ? renderItem(v, i) : v[valueField]}
       </div>);
+
+      if (groupCounter === 0) {
+        counter += 1;
+      }
 
       return acc.concat(ungrouped);
     }, []);
@@ -336,7 +411,7 @@ export default class Tipako extends React.Component {
         <span className={cx('fa', 'fa-caret-down', this.styles.arrow, { [this.styles.expanded]: this.state.expanded })} />
       </button>);
 
-    const clear = (value && searchable)
+    const clear = value
       ? <button onClick={this.onInputClear} className={this.styles.clear} />
       : null;
 
@@ -372,8 +447,14 @@ export default class Tipako extends React.Component {
       );
 
     return (
-      <div className={cx(this.styles.container, { [this.styles.active]: this.state.expanded })}>
-        <div className={cx(this.styles.title, { [this.styles.expanded]: this.state.expanded })}>
+      <div
+        className={cx(this.styles.container, { [this.styles.active]: this.state.expanded })}
+        onKeyDown={this.arrowKeyListener}
+        tabIndex={-1}
+      >
+        <div
+          className={cx(this.styles.title, { [this.styles.expanded]: this.state.expanded })}
+        >
           {slot}
           {search}
           {clear}
@@ -393,7 +474,10 @@ export default class Tipako extends React.Component {
               {items.length ? items : empty}
             </div>
             {slotBottom &&
-              <div className={this.styles.slotBottom} onClick={e => e.stopPropagation()}>{slotBottom}</div>}
+              <div
+                className={this.styles.slotBottom}
+                onClick={e => e.stopPropagation()}
+              >{slotBottom}</div>}
           </div>
         </div>
       </div>

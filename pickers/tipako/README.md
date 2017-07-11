@@ -4,6 +4,9 @@ A picker with support for group or individual selections.
 
 # Change Log
 
+##### 3.7.0
+- Adding key listeners to navigate and select the dropdown items
+
 ##### 3.6.2
 - Graceful handling for null `titleValue` prop
 

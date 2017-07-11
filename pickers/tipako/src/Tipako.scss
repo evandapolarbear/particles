@@ -12,6 +12,10 @@ $h: 30px;
   * {
     box-sizing: border-box;
   }
+
+  &:focus {
+    outline: none;
+  }
 }
 
 .title {
@@ -104,7 +108,7 @@ $h: 30px;
   }
 
   &:focus {
-    outline: 0;
+    outline: none;
   }
 }
 
@@ -208,6 +212,10 @@ $h: 30px;
   &:hover {
     background: #e7e7e7;
   }
+}
+
+.keyFocus {
+  background: #ccc;
 }
 
 .itemIcon {

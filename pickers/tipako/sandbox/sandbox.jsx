@@ -78,29 +78,53 @@ const slotTitle = <div className={`fa fa-bus ${sandboxStyles.titleIcon}`} />;
 const slotBottom = <div className={sandboxStyles.slotBottom}>Bottom Slot</div>;
 
 render(
-  <Tipako
-    {...{
-      closeOnSelect,
-      data,
-      keyField,
-      loading,
-      onClearAll,
-      onFocus,
-      onSearch,
-      onSelect,
-      onSelectAll,
-      renderEmpty,
-      renderGroup,
-      renderItem,
-      searchable,
-      slotBottom,
-      stylesheets,
-      titlePlaceholder,
-      slotTitle,
-      titleValue,
-      updateOnSelect,
-      valueField
-    }}
-  />,
+  <div className={sandboxStyles.wrapper}>
+    <Tipako
+      {...{
+        closeOnSelect,
+        data,
+        keyField,
+        loading,
+        onClearAll,
+        onFocus,
+        onSearch,
+        onSelect,
+        onSelectAll,
+        renderEmpty,
+        renderGroup,
+        renderItem,
+        searchable,
+        slotBottom,
+        slotTitle,
+        stylesheets,
+        titlePlaceholder,
+        titleValue,
+        updateOnSelect,
+        valueField
+      }}
+    />
+    <Tipako
+      {...{
+        closeOnSelect,
+        data,
+        keyField,
+        loading,
+        onClearAll,
+        onFocus,
+        onSelect,
+        onSelectAll,
+        renderEmpty,
+        renderGroup,
+        renderItem,
+        slotBottom,
+        slotTitle,
+        stylesheets,
+        titlePlaceholder,
+        titleValue,
+        updateOnSelect,
+        valueField
+      }}
+    />
+</div>,
   window.document.getElementById('root')
 );
