@@ -63,6 +63,7 @@ const onFocus = () => { console.warn('Focus.'); };
 const onSearch = (str) => { console.warn('Searching for', str); };
 const onSelect = (item) => { console.warn('Selected', item); };
 const onSelectAll = () => { console.warn('Select all.'); };
+const valueFunction = item => item.value;
 
 const renderEmpty = () => 'Empty!';
 const renderGroup = group => group.value;
@@ -100,7 +101,8 @@ render(
         titlePlaceholder,
         titleValue,
         updateOnSelect,
-        valueField
+        valueField,
+        valueFunction
       }}
     />
     <Tipako
@@ -125,6 +127,6 @@ render(
         valueField
       }}
     />
-</div>,
+  </div>,
   window.document.getElementById('root')
 );

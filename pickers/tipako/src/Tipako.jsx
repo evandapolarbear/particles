@@ -39,7 +39,8 @@ export default class Tipako extends React.Component {
     slotTitle: PropTypes.element,
     titleValue: PropTypes.string,
     updateOnSelect: PropTypes.bool,
-    valueField: PropTypes.string
+    valueField: PropTypes.string,
+    valueFunction: PropTypes.func
   }
 
   static defaultProps = {
@@ -63,7 +64,8 @@ export default class Tipako extends React.Component {
     slotTitle: null,
     titleValue: '',
     updateOnSelect: false,
-    valueField: 'value'
+    valueField: 'value',
+    valueFunction: item => item[this.props.valueField]
   }
 
   constructor(props) {
@@ -131,7 +133,7 @@ export default class Tipako extends React.Component {
     }
 
     if (this.props.updateOnSelect) {
-      this.setState({ value: child[this.props.valueField] });
+      this.setState({ value: this.props.valueFunction(child) });
     }
   }
 
@@ -149,7 +151,7 @@ export default class Tipako extends React.Component {
     }
 
     if (this.props.updateOnSelect) {
-      this.setState({ value: group[this.props.valueField] });
+      this.setState({ value: this.props.valueFunction(group) });
     }
   }
 
@@ -167,7 +169,7 @@ export default class Tipako extends React.Component {
     }
 
     if (this.props.updateOnSelect) {
-      this.setState({ value: item[this.props.valueField] });
+      this.setState({ value: this.props.valueFunction(item) });
     }
   }
 
