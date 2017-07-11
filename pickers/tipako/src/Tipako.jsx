@@ -65,7 +65,7 @@ export default class Tipako extends React.Component {
     titleValue: '',
     updateOnSelect: false,
     valueField: 'value',
-    valueFunction: item => item.value
+    valueFunction: null
   }
 
   constructor(props) {
@@ -132,9 +132,7 @@ export default class Tipako extends React.Component {
       this.setState({ expanded: false });
     }
 
-    if (this.props.updateOnSelect) {
-      this.setState({ value: this.props.valueFunction(child) });
-    }
+    this.updateValue(child);
   }
 
   onGroupClick = (evt, group) => {
@@ -150,9 +148,7 @@ export default class Tipako extends React.Component {
       this.setState({ expanded: false });
     }
 
-    if (this.props.updateOnSelect) {
-      this.setState({ value: this.props.valueFunction(group) });
-    }
+    this.updateValue(group);
   }
 
   onUngroupedClick = (evt, item) => {
@@ -168,9 +164,7 @@ export default class Tipako extends React.Component {
       this.setState({ expanded: false });
     }
 
-    if (this.props.updateOnSelect) {
-      this.setState({ value: this.props.valueFunction(item) });
-    }
+    this.updateValue(item);
   }
 
   onCaretClick = () => {
@@ -230,6 +224,16 @@ export default class Tipako extends React.Component {
     }
 
     return 'No items found.';
+  }
+
+  updateValue = (item) => {
+    if (this.props.updateOnSelect) {
+      if (this.props.valueFunction) {
+        this.setState({ value: this.props.valueFunction(item) });
+      } else {
+        this.setState({ value: item[this.props.valueField] });
+      }
+    }
   }
 
   arrowKeyListener = (evt) => {
