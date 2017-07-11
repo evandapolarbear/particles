@@ -1,13 +1,9 @@
 {
   "name": "generator-particle",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "Generate particle modules",
   "homepage": "",
-  "author": {
-    "name": "remyyounes",
-    "email": "ryounes@gmail.com",
-    "url": ""
-  },
+  "author": "",
   "files": [
     "generators"
   ],
@@ -17,8 +13,6 @@
     "yeoman-generator"
   ],
   "devDependencies": {
-    "eslint": "^4.1.0",
-    "eslint-config-xo-space": "^0.16.0",
     "jest": "^19.0.2",
     "jest-cli": "^20.0.0",
     "nsp": "^2.6.3",
@@ -36,16 +30,7 @@
   },
   "scripts": {
     "prepublish": "nsp check",
-    "pretest": "eslint . --fix",
     "test": "jest"
   },
-  "eslintConfig": {
-    "extends": "xo-space",
-    "env": {
-      "jest": true,
-      "node": true
-    }
-  },
-  "repository": "remyyounes/generator-particle",
   "license": "MIT"
 }

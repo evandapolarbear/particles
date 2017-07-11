@@ -1,36 +1,26 @@
-# generator-particle [![NPM version][npm-image]][npm-url] [![Build Status][travis-image]][travis-url] [![Dependency Status][daviddm-image]][daviddm-url]
+# generator-particle
 > Generate particle modules
 
-## Installation
 
-First, install [Yeoman](http://yeoman.io) and generator-particle using [npm](https://www.npmjs.com/) (we assume you have pre-installed [node.js](https://nodejs.org/)).
+This generator is meant to be run as an `npm script` from the root directory of `procore/particle`.
 
+
+## Usage
+
+From the root directory:
 ```bash
-npm install -g yo
-npm install -g generator-particle
+yarn particle
+# projectName: your-particle-name (lower-case-dash-delimited)
+# description: brief description of your particle
 ```
 
-Then generate your new project:
+Then bootstrap and start your new particle:
 
 ```bash
-yo particle
+# Link dependent packages with Lerna
+yarn bootstrap
+# Navigate to your particle
+cd packages/your-particle-name
+# Start the sandbox
+yarn start
 ```
-
-## Getting To Know Yeoman
-
- * Yeoman has a heart of gold.
- * Yeoman is a person with feelings and opinions, but is very easy to work with.
- * Yeoman can be too opinionated at times but is easily convinced not to be.
- * Feel free to [learn more about Yeoman](http://yeoman.io/).
-
-## License
-
-MIT © [remyyounes]()
-
-
-[npm-image]: https://badge.fury.io/js/generator-particle.svg
-[npm-url]: https://npmjs.org/package/generator-particle
-[travis-image]: https://travis-ci.org/remyyounes/generator-particle.svg?branch=master
-[travis-url]: https://travis-ci.org/remyyounes/generator-particle
-[daviddm-image]: https://david-dm.org/remyyounes/generator-particle.svg?theme=shields.io
-[daviddm-url]: https://david-dm.org/remyyounes/generator-particle

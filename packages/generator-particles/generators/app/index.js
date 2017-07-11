@@ -14,7 +14,7 @@ module.exports = class extends Generator {
     const prompts = [{
       type: 'input',
       name: 'projectName',
-      message: 'What would you like to name your particle? (convention: lower-dashed)',
+      message: 'What would you like to name your particle? (convention: lower-case-dashed)',
       default: 'hello-world'
     }, {
       type: 'input',
@@ -79,7 +79,7 @@ module.exports = class extends Generator {
 
   install() {
     // This.installDependencies();
-    
+
     this.log(yosay(
       [chalk.red('Next steps:'),
         'from the root directory.',

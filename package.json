@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "bootstrap": "./node_modules/.bin/lerna bootstrap",
-    "particle": "./node_modules/.bin/yo ./packages/generator-particle/generators/app/index.js"
+    "particle": "./node_modules/.bin/yo ./packages/generator-particles/generators/app/index.js"
   },
   "repository": {
     "type": "git",
