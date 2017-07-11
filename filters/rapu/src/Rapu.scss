@@ -12,7 +12,7 @@ $h: 32px;
   position: absolute;
   text-align: center;
   top: $borderWidth;
-  transition: $transition;
+  transition: background-color $transition;
   width: $h;
 
   &:hover {

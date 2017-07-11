@@ -1,0 +1,307 @@
+@import '../../shared/variables';
+
+$headH: 30px;
+
+.container {
+  box-shadow: 0 0 9px $darkGray;
+  box-sizing: border-box;
+  font-family: sans-serif;
+  min-width: 600px;
+  position: relative;
+
+  * {
+    box-sizing: border-box;
+  }
+}
+
+.header {
+  $h: 44px;
+  $p: 16px;
+
+  background: $black1;
+  color: $white;
+  display: flex;
+  font-size: 18px;
+  font-weight: 200;
+  line-height: $h;
+
+  .text {
+    margin: 0 auto 0 $p;
+  }
+
+  .close {
+    line-height: $h;
+    padding: 0 $p;
+    transition: background-color $transition;
+
+    &:hover {
+      background: $gray;
+      cursor: pointer;
+    }
+  }
+}
+
+.body {
+  display: flex;
+}
+
+.footer {
+  $h: 44px;
+  $p: 16px;
+
+  border-top: 1px solid $lightGray;
+  line-height: $h;
+  padding: 0 $p;
+  text-align: right;
+}
+
+.controls {
+  flex: 1;
+}
+
+.tiers {
+  $p: 16px;
+
+  flex: 1;
+  font-size: 0;
+  padding: 16px;
+}
+
+.addnew {
+  $h: 24px;
+  $p: 16px;
+
+  margin: $p;
+  position: relative;
+
+  .input {
+    border: 1px solid $lightGray;
+    border-radius: 2px;
+    font-size: 12px;
+    height: $h;
+    line-height: $h;
+    padding: 4px ($h + 8) 4px 4px;
+    width: 100%;
+
+    &:focus {
+      outline: 0;
+    }
+  }
+}
+
+.btn {
+  border: 0;
+  cursor: pointer;
+  font-size: 12px;
+  padding: 0 12px;
+  transition: background $transition;
+
+  &[disabled] {
+    cursor: not-allowed;
+  }
+
+  &:focus {
+    outline: 0;
+  }
+
+  &:hover {
+    background: $lightGray;
+  }
+}
+
+.btnAdd {
+  $h: 24px;
+
+  composes: btn;
+
+  background: $green1;
+  border-radius: 0 2px 2px 0;
+  color: $white;
+  height: $h;
+  line-height: $h;
+  padding: 0;
+  position: absolute;
+  right: 0;
+  text-align: center;
+  top: 0;
+  width: $h;
+}
+
+.divider {
+  $p: 16px;
+
+  border: 1px solid $darkGray;
+  border-width: 1px 0 0 0;
+  margin: $p;
+}
+
+.list {
+  $h: 24px;
+  $p: 16px;
+
+  border-right: 0;
+  display: flex;
+  flex-direction: column;
+  margin: $p;
+  position: relative;
+
+  .message {
+    height: $h;
+    line-height: $h;
+  }
+
+  .input {
+    border: 1px solid $lightGray;
+    border-radius: 2px;
+    font-size: 12px;
+    height: $h;
+    line-height: $h;
+    margin-bottom: 4px;
+    padding: 4px ($h + 8) 4px 4px;
+    width: 100%;
+
+    &:focus {
+      outline: 0;
+    }
+  }
+
+  .select {
+    border: 1px solid $lightGray;
+    border-radius: 2px;
+    border-right: 0;
+    height: 127px;
+
+    &:focus {
+      outline: 0;
+    }
+  }
+
+  // &::after {
+  //   color: $gray;
+  //   content: '\f002';
+  //   display: block;
+  //   font-family: fontawesome;
+  //   font-size: 13px;
+  //   height: $h;
+  //   line-height: $h;
+  //   position: absolute;
+  //   right: 0;
+  //   text-align: center;
+  //   top: 0;
+  //   width: $h;
+  // }
+
+  .msgExisting {
+    cursor: default;
+    font-size: 13px;
+    line-height: $h;
+    margin-bottom: 5px;
+  }
+
+  .item {
+    cursor: pointer;
+    padding: 6px 8px;
+
+    &:hover {
+      background: $lightGray;
+    }
+  }
+}
+
+.btnCreate {
+  composes: btn;
+
+  background: $xdarkGray;
+  border-radius: 2px;
+  color: $white;
+  margin-left: 10px;
+  padding: 8px 12px;
+}
+
+.btnCancel {
+  composes: btn;
+
+  background: 0;
+  color: #00e;
+
+  &:hover {
+    background: 0;
+    color: $black1;
+    text-decoration: underline;
+  }
+}
+
+.tier {
+  $h: 40px;
+  $p: 4px;
+  $w: 110px;
+
+  background: #eee;
+  border: 1px solid $xdarkGray;
+  border-radius: 2px;
+  display: inline-block;
+  height: $h;
+  margin-bottom: 5px;
+  padding: $p $p $p ($p + 30);
+  position: relative;
+  vertical-align: top;
+  width: $w;
+
+  .number {
+    font-size: 12px;
+    font-weight: bold;
+    line-height: 16px;
+  }
+
+  .value {
+    font-size: 12px;
+    line-height: 16px;
+    overflow: hidden;
+    position: relative;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    width: 100%;
+  }
+
+  .close {
+    cursor: pointer;
+    font-size: 20px;
+    height: $h - 2;
+    left: 0;
+    line-height: $h - 2;
+    position: absolute;
+    text-align: center;
+    top: 0;
+    transition: background-color $transition;
+    width: 30px;
+
+    &:hover {
+      background: $lightGray;
+    }
+  }
+}
+
+.caret {
+  $h: 30px;
+
+  display: inline-block;
+  font-size: 16px;
+  height: $h;
+  line-height: $h;
+  margin-top: 5px;
+  text-align: center;
+  width: $h;
+}
+
+.msgMax {
+  background: $xLightRed;
+  border-radius: 2px;
+  font-size: 12px;
+  margin-top: 10px;
+  padding: 10px;
+}
+
+.disabled {
+  cursor: not-allowed;
+  opacity: 0.3;
+}

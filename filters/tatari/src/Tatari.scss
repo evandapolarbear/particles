@@ -98,7 +98,7 @@ $h: 30px;
   outline: 0;
   padding: 0 $p;
   text-align: center;
-  transition: $transition;
+  transition: background-color $transition;
 
   &:hover {
     background: $darkGray;
@@ -142,7 +142,7 @@ $h: 30px;
   min-width: 200px;
   overflow-x: hidden;
   position: absolute;
-  transition: $transition;
+  transition: all $transition;
 
   &.expanded {
     border: 1px solid $darkGray;
