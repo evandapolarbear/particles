@@ -4,6 +4,9 @@ A picker with support for group or individual selections.
 
 # Change Log
 
+##### 3.8.1
+- Added a sane default to valueFunction prop
+
 ##### 3.8.0
 - Added in a function to allow for more control on the displayed value
 

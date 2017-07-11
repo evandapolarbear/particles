@@ -65,7 +65,7 @@ export default class Tipako extends React.Component {
     titleValue: '',
     updateOnSelect: false,
     valueField: 'value',
-    valueFunction: item => item[this.props.valueField]
+    valueFunction: item => item.value
   }
 
   constructor(props) {
