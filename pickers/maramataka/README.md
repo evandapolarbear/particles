@@ -4,6 +4,9 @@ A date picker.
 
 # Change Log
 
+##### 1.2.2
+- Positions the clear button absolutely to work in opinionated environments
+
 ##### 1.2.1
 - Removes the spinners from firefox to match other browsers
 
