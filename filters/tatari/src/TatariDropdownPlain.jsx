@@ -15,7 +15,7 @@ export default class TatariDropdownPlain extends React.Component {
 
   render() {
     const {
-      arrowKeyListener,
+      keyListeners,
       currentIndex,
       data,
       i18n,
@@ -69,7 +69,7 @@ export default class TatariDropdownPlain extends React.Component {
         className={cx(styles.dropdownHead, { [styles.expanded]: isExpanded })}
         data-key={'inactive'}
         onClick={onExpand}
-        onKeyDown={arrowKeyListener}
+        onKeyDown={keyListeners}
         tabIndex={-1}
       >
         {text}
@@ -79,7 +79,7 @@ export default class TatariDropdownPlain extends React.Component {
 
       <div
         className={cx(styles.dropdownBody, { [styles.expanded]: isExpanded })}
-        onKeyDown={arrowKeyListener}
+        onKeyDown={keyListeners}
         tabIndex={-1}
       >
         {items}
@@ -89,7 +89,7 @@ export default class TatariDropdownPlain extends React.Component {
 }
 
 TatariDropdownPlain.propTypes = {
-  arrowKeyListener: PropTypes.func.isRequired,
+  keyListeners: PropTypes.func.isRequired,
   currentIndex: PropTypes.number.isRequired,
   data: PropTypes.arrayOf(PropTypes.shape({
     endpoint: PropTypes.string,

@@ -4,6 +4,10 @@ A dynamically populated filter component.
 
 # Change Log
 
+##### 2.5.1
+- Added esc key functionality
+- Fixed arrow/enter bugs
+
 ##### 2.5.0
 - Added support for arrow and enter key navigation/selection
 

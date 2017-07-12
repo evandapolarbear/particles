@@ -21,7 +21,7 @@ export default class TatariDropdownCheckboxes extends React.Component {
 
   render() {
     const {
-      arrowKeyListener,
+      keyListeners,
       currentIndex,
       filter,
       i18n,
@@ -147,7 +147,7 @@ export default class TatariDropdownCheckboxes extends React.Component {
         className={cx(styles.dropdownHead, { [styles.expanded]: isExpanded })}
         data-key={filter.key}
         onClick={onExpand}
-        onKeyDown={arrowKeyListener}
+        onKeyDown={keyListeners}
         tabIndex={-1}
       >
         {remove}
@@ -159,7 +159,7 @@ export default class TatariDropdownCheckboxes extends React.Component {
 
       <div
         className={cx(styles.dropdownBody, { [styles.expanded]: isExpanded })}
-        onKeyDown={arrowKeyListener}
+        onKeyDown={keyListeners}
         tabIndex={-1}
       >
         <div>
@@ -176,7 +176,7 @@ export default class TatariDropdownCheckboxes extends React.Component {
 }
 
 TatariDropdownCheckboxes.propTypes = {
-  arrowKeyListener: PropTypes.func.isRequired,
+  keyListeners: PropTypes.func.isRequired,
   currentIndex: PropTypes.number.isRequired,
   filter: PropTypes.shape({
     endpoint: PropTypes.string,
