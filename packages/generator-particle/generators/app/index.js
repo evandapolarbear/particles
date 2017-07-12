@@ -51,6 +51,13 @@ module.exports = class extends Generator {
       {componentName}
     );
 
+    // Copy the tests
+    this.fs.copyTpl(
+      this.templatePath('test/Particle.test.js'),
+      this.destinationPath('test/Particle.test.js'),
+      {componentName, projectName}
+    );
+
     // Copy the rest of src
     this.fs.copyTpl(
       this.templatePath('src/*'),

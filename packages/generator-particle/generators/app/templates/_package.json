@@ -4,16 +4,20 @@
   "description": "<%= description %>",
   "main": "build/index.js",
   "scripts": {
-    "test": "neutrino test",
+    "test": "neutrino test --use neutrino-preset-react neutrino-preset-jest ",
     "start": "neutrino start --use neutrino-preset-react --options.entry sandbox.js",
     "build": "neutrino build --use neutrino-preset-react neutrino-preset-particles"
   },
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "chai": "^4.1.0",
+    "enzyme": "^2.9.1",
     "neutrino": "^6.1.4",
+    "neutrino-preset-jest": "^6.1.4",
+    "neutrino-preset-particles": "0.0.1",
     "neutrino-preset-react": "^6.1.4",
-    "neutrino-preset-particles": "0.0.1"
+    "react-test-renderer": "^15.6.1"
   },
   "dependencies": {
     "prop-types": "^15.5.10",
