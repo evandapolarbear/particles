@@ -1,15 +1,15 @@
 @import '../../../shared/variables.scss';
 
-$defaultSpacing: 5px;
+$defaultSpacing: 8px;
 
 .cancel {
-  color: palette(blue, dark);
+  color: $darkBlue;
   cursor: pointer;
-  margin-right: $defaultSpacing;
-  transition: color 0.3s ease;
+  margin-right: $defaultSpacing * 2;
+  transition: color $transition;
 
   &:hover {
-    color: orange;
+    color: $darkGray;
   }
 }
 
@@ -20,7 +20,7 @@ $defaultSpacing: 5px;
   height: 100%;
   line-height: 18px;
   overflow: hidden;
-  padding: 24px;
+  padding: ($defaultSpacing * 3) 0;
   text-align: center;
 }
 
@@ -34,27 +34,25 @@ $defaultSpacing: 5px;
   display: flex;
   flex-direction: row;
   justify-content: flex-end;
-  margin-bottom: $defaultSpacing;
 }
 
 .fieldsContainer {
   display: flex;
   flex-direction: column;
-  margin-left: $defaultSpacing;
   justify-content: space-between;
+  margin-left: $defaultSpacing;
   width: 100%;
 }
 
 .item {
-  margin: auto 0;
+  margin: auto $defaultSpacing;
   max-width: 205px;
-  overflow-x: hidden;
+  overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
 .itemContainer {
-  margin-bottom: 2px;
   display: flex;
   flex-direction: row;
 }
@@ -62,39 +60,44 @@ $defaultSpacing: 5px;
 .itemsTitle {
   display: flex;
   flex-direction: row;
-  margin-bottom: 4px;
-}
-
-.itemsContainer {
-  height: 100%;
-  margin-right: $defaultSpacing;
-  width: 250px;
+  font-weight: bold;
+  margin-bottom: $defaultSpacing;
 }
 
 .removeButton {
   background: none;
   border: none;
   cursor: pointer;
-  margin-right: $defaultSpacing;
+  display: flex;
+  flex-shrink: 0;
+  height: 32px;
+  justify-content: center;
   padding: $defaultSpacing;
-  transition: background 0.3s ease;
+  transition: background $transition;
+  width: 32px;
 
   &:focus {
     outline: none;
   }
 
   &:hover {
-    background: palette(orange);
-    color: white;
+    background: $darkGray;
+    color: $white;
   }
 }
 
 .selectedItems {
+  border-radius: 2px;
   border: 1px solid black;
-  display: flex;
-  flex-direction: column;
   flex: 3;
-  max-width: 250px;
+  max-width: 248px;
+  max-height: 296px;
+  overflow-x: hidden;
+  overflow-y: auto;
+
+  &.empty {
+    overflow: hidden;
+  }
 }
 
 .subContainer {
@@ -103,21 +106,22 @@ $defaultSpacing: 5px;
 }
 
 .submitButton {
-  background: palette(orange);
+  background: $darkGray;
   border-radius: 2px;
-  border: 1px solid palette(orange);
+  border: 1px solid $darkGray;
   color: white;
   cursor: pointer;
-  margin-right: 5px;
-  padding: 8px 15px;
-  transition: background 0.3s ease;
+  font: $fontSize $main-font;
+  margin-right: $defaultSpacing;
+  padding: $defaultSpacing ($defaultSpacing * 2);
+  transition: background $transition;
 
   &:focus {
     outline: none;
   }
 
   &:hover {
-    background: palette(orange, dark);
+    background: $xDarkGray;
   }
 }
 

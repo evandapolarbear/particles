@@ -1,5 +1,8 @@
 # Bulk Editor
 
+##### 1.3.1
+- Style fixes
+
 ##### 1.3.0
 - Changed the way that itemFormatter works, now only needs the string interpolator portion, BulkEditor will style the items accordingly
 

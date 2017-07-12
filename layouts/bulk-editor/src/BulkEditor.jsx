@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import cx from 'classnames';
 import composeStyles from '../../../shared/stylesheetComposer';
 
 import baseStyles from './BulkEditor.scss';
@@ -49,14 +50,21 @@ class BulkEditor extends React.Component {
       <div className={this.styles.container}>
         <span className={this.styles.itemsTitle}>{itemsTitle}</span>
         <div className={this.styles.subContainer}>
-          <div className={this.styles.selectedItems}>{itemsContainer}</div>
+          <div
+            className={cx(this.styles.selectedItems, { [this.styles.empty]: !items.length })}
+          >{itemsContainer}</div>
           <div className={this.styles.fields} id='batch-editor-fields'>
             <div className={this.styles.fieldsContainer}>{children}</div>
           </div>
         </div>
         <span className={this.styles.footer}>
           <a className={this.styles.cancel} onClick={onCancel}>{cancelText}</a>
-          <button type='button' className={this.styles.submitButton} disabled={!items.length || submitDisabled} onClick={() => { this.setState({ submitDisabled: true }); onSubmit(); }}>{submitText}</button>
+          <button
+            className={this.styles.submitButton}
+            disabled={!items.length || submitDisabled}
+            onClick={() => { this.setState({ submitDisabled: true }); onSubmit(items); }}
+            type='button'
+          >{submitText}</button>
         </span>
       </div>
     );
@@ -87,9 +95,9 @@ BulkEditor.defaultProps = {
   itemsTitle: 'Selected Items: ',
   onCancel: () => console.log('No onCancel was passed to BulkEditor'), // eslint-disable-line
   onRemove: () => console.log('No onRemove was passed to BulkEditor'), // eslint-disable-line
-  onSubmit: () => console.log('No onSubmit was passed to Bulk Editor'), // eslint-disable-line
+  onSubmit: () => console.log('No onSubmit was passed to BulkEditor'), // eslint-disable-line
   stylesheets: [],
-  submitText: 'Update',
+  submitText: 'Save Edits',
   valueField: null
 };
 

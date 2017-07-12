@@ -1,6 +1,6 @@
 {
   "name": "tauwahi",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A location picker.",
   "main": "index.js",
   "scripts": {

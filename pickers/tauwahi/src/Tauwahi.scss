@@ -211,7 +211,7 @@ $headH: 30px;
 .btnCreate {
   composes: btn;
 
-  background: $xdarkGray;
+  background: $xDarkGray;
   border-radius: 2px;
   color: $white;
   margin-left: 10px;
@@ -237,7 +237,7 @@ $headH: 30px;
   $w: 110px;
 
   background: #eee;
-  border: 1px solid $xdarkGray;
+  border: 1px solid $xDarkGray;
   border-radius: 2px;
   display: inline-block;
   height: $h;
