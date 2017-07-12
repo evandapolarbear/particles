@@ -53,9 +53,10 @@ const data = [
   { value: 'Almond', key: 24 }
 ];
 
+const closeOnSelect = false;
+const disabled = false;
 const loading = false;
 const searchable = true;
-const closeOnSelect = false;
 const updateOnSelect = false;
 
 const onClearAll = () => { console.warn('Clear all.'); };
@@ -63,20 +64,22 @@ const onFocus = () => { console.warn('Focus.'); };
 const onSearch = (str) => { console.warn('Searching for', str); };
 const onSelect = (item) => { console.warn('Selected', item); };
 const onSelectAll = () => { console.warn('Select all.'); };
-const valueFunction = item => item.value;
 
 const renderEmpty = () => 'Empty!';
 const renderGroup = group => group.value;
 const renderItem = item => item.value;
 
+const slotBottom = <div className={sandboxStyles.slotBottom}>Bottom Slot</div>;
+const slotTitle = <div className={`fa fa-bus ${sandboxStyles.titleIcon}`} />;
+
 const stylesheets = [sandboxStyles];
+
+const titlePlaceholder = 'Make a selection...';
+const titleValue = 'Calypso';
 
 const keyField = 'key';
 const valueField = 'value';
-const titleValue = 'Calypso';
-const titlePlaceholder = 'Make a selection...';
-const slotTitle = <div className={`fa fa-bus ${sandboxStyles.titleIcon}`} />;
-const slotBottom = <div className={sandboxStyles.slotBottom}>Bottom Slot</div>;
+const valueFunction = item => item.value;
 
 render(
   <div className={sandboxStyles.wrapper}>
@@ -84,6 +87,7 @@ render(
       {...{
         closeOnSelect,
         data,
+        disabled,
         keyField,
         loading,
         onClearAll,
@@ -109,6 +113,7 @@ render(
       {...{
         closeOnSelect,
         data,
+        disabled,
         keyField,
         loading,
         onClearAll,

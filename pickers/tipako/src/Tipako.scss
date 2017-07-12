@@ -13,6 +13,10 @@ $h: 30px;
     box-sizing: border-box;
   }
 
+  &.disabled {
+    cursor: not-allowed;
+  }
+
   &:focus {
     outline: none;
   }
@@ -26,6 +30,17 @@ $h: 30px;
   display: flex;
   padding-right: $h;
   position: relative;
+
+  &.disabled,
+  &.disabled * {
+    color: #aaa;
+    pointer-events: none;
+    user-select: none;
+  }
+
+  &.expanded {
+    border-radius: 2px 2px 0 0;
+  }
 
   .slot {
     font-family: inherit;
@@ -43,10 +58,6 @@ $h: 30px;
     &.noClear {
       padding-right: 8px;
     }
-  }
-
-  &.expanded {
-    border-radius: 2px 2px 0 0;
   }
 }
 

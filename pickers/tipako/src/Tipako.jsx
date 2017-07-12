@@ -10,7 +10,6 @@ let groupCounter = 0;
 
 export default class Tipako extends React.Component {
   static propTypes = {
-    slotBottom: PropTypes.node,
     closeOnSelect: PropTypes.bool,
     data: PropTypes.arrayOf(PropTypes.shape({
       children: PropTypes.arrayOf(PropTypes.shape({
@@ -22,6 +21,7 @@ export default class Tipako extends React.Component {
       key: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
       value: PropTypes.string.isRequired
     })),
+    disabled: PropTypes.bool,
     keyField: PropTypes.string,
     loading: PropTypes.bool,
     onClear: PropTypes.func,
@@ -34,9 +34,10 @@ export default class Tipako extends React.Component {
     renderGroup: PropTypes.func,
     renderItem: PropTypes.func,
     searchable: PropTypes.bool,
+    slotBottom: PropTypes.node,
+    slotTitle: PropTypes.element,
     stylesheets: PropTypes.arrayOf(PropTypes.shape()),
     titlePlaceholder: PropTypes.string,
-    slotTitle: PropTypes.element,
     titleValue: PropTypes.string,
     updateOnSelect: PropTypes.bool,
     valueField: PropTypes.string,
@@ -44,9 +45,9 @@ export default class Tipako extends React.Component {
   }
 
   static defaultProps = {
-    slotBottom: null,
     closeOnSelect: false,
     data: [],
+    disabled: false,
     keyField: 'key',
     loading: false,
     onClear: null,
@@ -59,9 +60,10 @@ export default class Tipako extends React.Component {
     renderItem: null,
     searchable: false,
     selectedKey: null,
+    slotBottom: null,
+    slotTitle: null,
     stylesheets: [],
     titlePlaceholder: 'Select...',
-    slotTitle: null,
     titleValue: '',
     updateOnSelect: false,
     valueField: 'value',
@@ -269,6 +271,7 @@ export default class Tipako extends React.Component {
     const {
       slotBottom,
       data,
+      disabled,
       keyField,
       loading,
       onClearAll,
@@ -454,12 +457,16 @@ export default class Tipako extends React.Component {
 
     return (
       <div
-        className={cx(this.styles.container, { [this.styles.active]: this.state.expanded })}
+        className={cx(this.styles.container,
+          { [this.styles.active]: this.state.expanded,
+            [this.styles.disabled]: disabled })}
         onKeyDown={this.arrowKeyListener}
         tabIndex={-1}
       >
         <div
-          className={cx(this.styles.title, { [this.styles.expanded]: this.state.expanded })}
+          className={cx(this.styles.title,
+            { [this.styles.active]: this.state.expanded,
+              [this.styles.disabled]: disabled })}
         >
           {slot}
           {search}
