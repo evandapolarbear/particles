@@ -4,6 +4,9 @@ A picker with support for group or individual selections.
 
 # Change Log
 
+##### 3.9.1
+- Fixed button type to prevent submitting forms
+
 ##### 3.9.0
 - Added the `disabled` prop that disables the entire picker if `true`
 

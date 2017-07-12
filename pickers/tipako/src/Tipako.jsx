@@ -386,13 +386,13 @@ export default class Tipako extends React.Component {
     }, []);
 
     const selectAll = (onSelectAll && items.length > 0)
-      ? (<button className={this.styles.controlsButton} onClick={this.onSelectAll}>
+      ? (<button className={this.styles.controlsButton} onClick={this.onSelectAll} type='button'>
            Select All
         </button>)
       : null;
 
     const clearAll = onClearAll
-      ? (<button className={this.styles.controlsButton} onClick={this.onClearAll}>
+      ? (<button className={this.styles.controlsButton} onClick={this.onClearAll} type='button'>
           Clear All
         </button>)
       : null;
@@ -416,12 +416,12 @@ export default class Tipako extends React.Component {
 
     const caret = loading
       ? null
-      : (<button onClick={this.onCaretClick} className={this.styles.caret}>
+      : (<button onClick={this.onCaretClick} className={this.styles.caret} type='button'>
         <span className={cx('fa', 'fa-caret-down', this.styles.arrow, { [this.styles.expanded]: this.state.expanded })} />
       </button>);
 
     const clear = value
-      ? <button onClick={this.onInputClear} className={this.styles.clear} />
+      ? <button onClick={this.onInputClear} className={this.styles.clear} type='button'/>
       : null;
 
     const spinner = loading
