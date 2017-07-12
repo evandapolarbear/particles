@@ -8,49 +8,62 @@ const keyGen = (item, valueField) => (
   valueField ? item[valueField] : item
 );
 
-const BulkEditor = ({
-  cancelText,
-  children,
-  emptyMessage,
-  itemFormatter,
-  items,
-  itemsTitle,
-  onCancel,
-  onRemove,
-  onSubmit,
-  stylesheets,
-  submitText,
-  valueField
-}) => {
-  const styles = composeStyles(baseStyles, stylesheets);
+class BulkEditor extends React.Component {
+  constructor(props) {
+    super(props);
 
-  const itemsContainer = items.length > 0
-  ? items.map(item =>
-      (<div className={styles.itemContainer} key={`bulk-editor-item-${keyGen(item, valueField)}`}>
-        <button type='button' className={`fa fa-times ${styles.removeButton}`} onClick={() => onRemove(item)} />
-        {itemFormatter(item)}
-      </div>)
-    )
-  : <div className={styles.emptyMessage}>{emptyMessage}</div>;
+    this.styles = composeStyles(baseStyles, props.stylesheets);
 
-  return (
-    <div className={styles.container}>
-      <span className={styles.itemsTitle}>{itemsTitle}</span>
-      <div className={styles.subContainer}>
-        <div className={styles.selectedItems}>
-          <div className={`${styles.container} ${styles.itemsContainer}`}>{itemsContainer}</div>
+    this.state = {
+      submitDisabled: false
+    };
+  }
+
+  render() {
+    const {
+      cancelText,
+      children,
+      emptyMessage,
+      itemFormatter,
+      items,
+      itemsTitle,
+      onCancel,
+      onRemove,
+      onSubmit,
+      submitText,
+      valueField
+    } = this.props;
+
+    const { submitDisabled } = this.state;
+
+    const itemsContainer = items.length > 0
+    ? items.map(item =>
+        (<div className={this.styles.itemContainer} key={`bulk-editor-item-${keyGen(item, valueField)}`}>
+          <button type='button' className={`fa fa-times ${this.styles.removeButton}`} onClick={() => onRemove(item)} />
+          {itemFormatter(item)}
+        </div>)
+      )
+    : <div className={this.styles.emptyMessage}>{emptyMessage}</div>;
+
+    return (
+      <div className={this.styles.container}>
+        <span className={this.styles.itemsTitle}>{itemsTitle}</span>
+        <div className={this.styles.subContainer}>
+          <div className={this.styles.selectedItems}>
+            <div className={`${this.styles.container} ${this.styles.itemsContainer}`}>{itemsContainer}</div>
+          </div>
+          <div className={this.styles.fields} id='batch-editor-fields'>
+            <div className={this.styles.fieldsContainer}>{children}</div>
+          </div>
         </div>
-        <div className={styles.fields} id='batch-editor-fields'>
-          <div className={styles.fieldsContainer}>{children}</div>
-        </div>
+        <span className={this.styles.footer}>
+          <a className={this.styles.cancel} onClick={onCancel}>{cancelText}</a>
+          <button type='button' className={this.styles.submitButton} disabled={!items.length || submitDisabled} onClick={() => { this.setState({ submitDisabled: true }); onSubmit(); }}>{submitText}</button>
+        </span>
       </div>
-      <span className={styles.footer}>
-        <a className={styles.cancel} onClick={onCancel}>{cancelText}</a>
-        <button type='button' className={styles.submitButton} disabled={!items.length} onClick={onSubmit}>{submitText}</button>
-      </span>
-    </div>
-  );
-};
+    );
+  }
+}
 
 BulkEditor.propTypes = {
   cancelText: PropTypes.string,

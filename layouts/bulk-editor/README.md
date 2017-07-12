@@ -1,5 +1,8 @@
 # Bulk Editor
 
+##### 1.2.0
+- Added disabling the submit button after pressing it to prevent multiple submissions
+
 ##### 1.1.0
 - Added an empty state message
 - Update button disabled if empty
