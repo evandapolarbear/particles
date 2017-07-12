@@ -1,5 +1,8 @@
 # Bulk Editor
 
+##### 1.3.0
+- Changed the way that itemFormatter works, now only needs the string interpolator portion, BulkEditor will style the items accordingly
+
 ##### 1.2.0
 - Added disabling the submit button after pressing it to prevent multiple submissions
 

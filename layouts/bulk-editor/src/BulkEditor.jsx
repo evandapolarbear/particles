@@ -40,7 +40,7 @@ class BulkEditor extends React.Component {
     ? items.map(item =>
         (<div className={this.styles.itemContainer} key={`bulk-editor-item-${keyGen(item, valueField)}`}>
           <button type='button' className={`fa fa-times ${this.styles.removeButton}`} onClick={() => onRemove(item)} />
-          {itemFormatter(item)}
+          <span className={this.styles.item}>{itemFormatter(item)}</span>
         </div>)
       )
     : <div className={this.styles.emptyMessage}>{emptyMessage}</div>;
@@ -49,9 +49,7 @@ class BulkEditor extends React.Component {
       <div className={this.styles.container}>
         <span className={this.styles.itemsTitle}>{itemsTitle}</span>
         <div className={this.styles.subContainer}>
-          <div className={this.styles.selectedItems}>
-            <div className={`${this.styles.container} ${this.styles.itemsContainer}`}>{itemsContainer}</div>
-          </div>
+          <div className={this.styles.selectedItems}>{itemsContainer}</div>
           <div className={this.styles.fields} id='batch-editor-fields'>
             <div className={this.styles.fieldsContainer}>{children}</div>
           </div>
