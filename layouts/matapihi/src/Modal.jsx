@@ -72,8 +72,9 @@ class Modal extends Component {
     );
 
     return show ? (
-      <div onClick={this.onOverlayClicked} className={styles.overlay}>
-        <div className={modalClassName} onClick={e => e.stopPropagation()}>
+      <div className={styles.container}>
+        <div onClick={this.onOverlayClicked} className={styles.overlay} />
+        <div className={modalClassName}>
           <div>
             <header className={styles.header}>
               {header || <h1>{label}</h1>}

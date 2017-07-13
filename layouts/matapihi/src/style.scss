@@ -20,13 +20,22 @@ $white1: #fff;
   @extend .fixed, .fillContainer;
 }
 
-.overlay {
+.container {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
   z-index: 99;
+}
+
+.overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 100;
   background-color: rgba(0, 0, 0, 0.3);
 }
 
@@ -37,8 +46,10 @@ $white1: #fff;
   border-radius: 2px;
   box-shadow: 0 0 12px $black1;
   top: 200px;
+  bottom: 200px;
   left: 100px;
   right: 100px;
+  z-index: 101;
 }
 
 .modal-large {
