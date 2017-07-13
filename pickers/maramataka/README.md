@@ -4,6 +4,9 @@ A date picker.
 
 # Change Log
 
+##### 1.2.3
+- IE 11 alignment fixes
+
 ##### 1.2.2
 - Positions the clear button absolutely to work in opinionated environments
 

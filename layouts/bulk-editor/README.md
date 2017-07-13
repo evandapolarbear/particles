@@ -1,5 +1,8 @@
 # Bulk Editor
 
+##### 1.3.2
+- IE 11 alignment fixes
+
 ##### 1.3.1
 - Style fixes
 

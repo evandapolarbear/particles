@@ -4,6 +4,9 @@ A picker with support for group or individual selections.
 
 # Change Log
 
+##### 3.9.2
+- IE 11 alignment fixes
+
 ##### 3.9.1
 - Fixed button type to prevent submitting forms
 

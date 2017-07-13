@@ -421,7 +421,7 @@ export default class Tipako extends React.Component {
       </button>);
 
     const clear = value
-      ? <button onClick={this.onInputClear} className={this.styles.clear} type='button'/>
+      ? <button onClick={this.onInputClear} className={this.styles.clear} type='button' />
       : null;
 
     const spinner = loading

@@ -18,6 +18,7 @@
   margin-left: 8px;
   position: absolute;
   right: 0;
+  top: 0;
   width: 30px;
 
   &:hover {
@@ -86,8 +87,8 @@
   cursor: text;
   font-size: 13px;
   height: 20px;
-  line-height: 28px;
-  min-width: 24px;
+  line-height: 0;
+  width: 24px;
   padding: 0;
   text-align: center;
 
@@ -113,7 +114,7 @@
 
 .inputYear {
   composes: input;
-  min-width: 40px;
+  width: 40px;
 }
 
 .slash {

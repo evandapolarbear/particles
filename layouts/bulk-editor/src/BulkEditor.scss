@@ -45,7 +45,9 @@ $defaultSpacing: 8px;
 }
 
 .item {
-  margin: auto $defaultSpacing;
+  align-items: center;
+  display: flex;
+  margin: 0 $defaultSpacing;
   max-width: 205px;
   overflow: hidden;
   text-overflow: ellipsis;
