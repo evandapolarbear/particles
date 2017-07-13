@@ -50,6 +50,8 @@ $white1: #fff;
   left: 100px;
   right: 100px;
   z-index: 101;
+  overflow: auto;
+  min-width: 200px;
 }
 
 .modal-large {
