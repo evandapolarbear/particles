@@ -238,8 +238,9 @@ export default class Tipako extends React.Component {
     }
   }
 
-  arrowKeyListener = (evt) => {
+  handleKeyDown = (evt) => {
     let { currentIndex } = this.state;
+    const { expanded } = this.state;
     const { searchable } = this.props;
 
     let totalCounter = counter > groupCounter
@@ -250,20 +251,20 @@ export default class Tipako extends React.Component {
       totalCounter -= 1;
     }
 
-    if (evt.keyCode === 38 && this.state.expanded) {
+    if (evt.keyCode === 38 && expanded) { // arrow up 
       evt.preventDefault();
       if ((currentIndex > -1 && searchable) || (currentIndex > 0 && !searchable)) {
         currentIndex -= 1;
         this.setState({ currentIndex });
       }
-    }
-
-    if (evt.keyCode === 40 && this.state.expanded) {
+    } else if (evt.keyCode === 40 && expanded) { // arrow down
       evt.preventDefault();
       if (currentIndex < totalCounter) {
         currentIndex += 1;
         this.setState({ currentIndex });
       }
+    } else if (evt.keyCode === 27 && expanded) { // esc
+      this.onBlur();
     }
   }
 
@@ -288,13 +289,15 @@ export default class Tipako extends React.Component {
       valueField
     } = this.props;
 
-    const { value } = this.state;
+    const {
+      currentIndex,
+      expanded,
+      value
+    } = this.state;
 
     const searchTerm = (searchable && value && !onSearch)
       ? value.toLowerCase()
       : '';
-
-    const { currentIndex } = this.state;
 
     counter = 0;
     groupCounter = 0;
@@ -319,7 +322,9 @@ export default class Tipako extends React.Component {
                 [this.styles.keyFocus]: focusedItem })}
             key={`child-${v[keyField]}-${vv[keyField]}`}
             onClick={(e) => { this.onChildClick(e, vv); }}
-            onKeyDown={(e) => { if (focusedItem && e.keyCode === 13) this.onChildClick(e, vv); }}
+            onKeyDown={(e) => {
+              if (focusedItem && expanded && e.keyCode === 13) this.onChildClick(e, vv);
+            }}
             ref={(el) => { if (focusedItem) this.focusedItem = el; }}
             tabIndex={-1}
           >
@@ -341,7 +346,9 @@ export default class Tipako extends React.Component {
               [this.styles.keyFocus]: focusedItem })}
           key={`group-${v[keyField]}`}
           onClick={(evt) => { this.onGroupClick(evt, v); }}
-          onKeyDown={(e) => { if (focusedItem && e.keyCode === 13) this.onGroupClick(e, v); }}
+          onKeyDown={(e) => {
+            if (focusedItem && expanded && e.keyCode === 13) this.onGroupClick(e, v);
+          }}
           ref={(el) => { if (focusedItem) this.focusedItem = el; }}
           tabIndex={-1}
         >
@@ -371,7 +378,9 @@ export default class Tipako extends React.Component {
             [this.styles.keyFocus]: focusedItem })}
         key={`ungrouped-${v[keyField]}`}
         onClick={(evt) => { this.onUngroupedClick(evt, v); }}
-        onKeyDown={(e) => { if (focusedItem && e.keyCode === 13) this.onUngroupedClick(e, v); }}
+        onKeyDown={(e) => {
+          if (focusedItem && expanded && e.keyCode === 13) this.onUngroupedClick(e, v);
+        }}
         ref={(el) => { if (focusedItem) this.focusedItem = el; }}
         tabIndex={-1}
       >
@@ -417,7 +426,7 @@ export default class Tipako extends React.Component {
     const caret = loading
       ? null
       : (<button onClick={this.onCaretClick} className={this.styles.caret} type='button'>
-        <span className={cx('fa', 'fa-caret-down', this.styles.arrow, { [this.styles.expanded]: this.state.expanded })} />
+        <span className={cx('fa', 'fa-caret-down', this.styles.arrow, { [this.styles.expanded]: expanded })} />
       </button>);
 
     const clear = value
@@ -458,14 +467,14 @@ export default class Tipako extends React.Component {
     return (
       <div
         className={cx(this.styles.container,
-          { [this.styles.active]: this.state.expanded,
+          { [this.styles.active]: expanded,
             [this.styles.disabled]: disabled })}
-        onKeyDown={this.arrowKeyListener}
+        onKeyDown={this.handleKeyDown}
         tabIndex={-1}
       >
         <div
           className={cx(this.styles.title,
-            { [this.styles.active]: this.state.expanded,
+            { [this.styles.active]: expanded,
               [this.styles.disabled]: disabled })}
         >
           {slot}
@@ -478,8 +487,8 @@ export default class Tipako extends React.Component {
         <div className={this.styles.dropdownContainer}>
           <div
             className={cx(this.styles.dropdown, {
-              [this.styles.expanded]: this.state.expanded,
-              [this.styles.withSlotBottom]: slotBottom && this.state.expanded
+              [this.styles.expanded]: expanded,
+              [this.styles.withSlotBottom]: slotBottom && expanded
             })}
           >
             {controls}

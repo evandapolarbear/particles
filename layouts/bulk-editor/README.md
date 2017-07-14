@@ -1,5 +1,8 @@
 # Bulk Editor
 
+##### 1.3.3
+- Building in styles that should not be overridden
+
 ##### 1.3.2
 - IE 11 alignment fixes
 

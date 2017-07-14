@@ -4,6 +4,10 @@ A picker with support for group or individual selections.
 
 # Change Log
 
+##### 3.9.3
+- Key listener bug fix, `esc` key functionality
+- Building in styles that should not be overridden
+
 ##### 3.9.2
 - IE 11 alignment fixes
 

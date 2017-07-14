@@ -10,6 +10,7 @@ $defaultSpacing: 8px;
 
   &:hover {
     color: $darkGray;
+    text-decoration: none;
   }
 }
 
@@ -45,16 +46,16 @@ $defaultSpacing: 8px;
 }
 
 .item {
-  align-items: center;
-  display: flex;
   margin: 0 $defaultSpacing;
   max-width: 205px;
+  min-width: 0;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
 .itemContainer {
+  align-items: center;
   display: flex;
   flex-direction: row;
 }
@@ -90,7 +91,7 @@ $defaultSpacing: 8px;
 
 .selectedItems {
   border-radius: 2px;
-  border: 1px solid black;
+  border: 1px solid $darkGray;
   flex: 3;
   max-width: 248px;
   max-height: 296px;
@@ -110,10 +111,11 @@ $defaultSpacing: 8px;
 .submitButton {
   background: $darkGray;
   border-radius: 2px;
-  border: 1px solid $darkGray;
+  border: 0;
   color: white;
   cursor: pointer;
   font: $fontSize $main-font;
+  line-height: 16px;
   margin-right: $defaultSpacing;
   padding: $defaultSpacing ($defaultSpacing * 2);
   transition: background $transition;
