@@ -8,6 +8,99 @@ import generateId from '../../../shared/generateId';
 let counter = 0;
 let groupCounter = 0;
 
+const Pure = ({
+  caret,
+  clear,
+  controls,
+  count,
+  disabled,
+  empty,
+  expanded,
+  items,
+  onKeyDown,
+  search,
+  slot,
+  slotBottom,
+  spinner,
+  styles,
+  tabIndex
+}) => (
+  <div
+    className={cx(styles.container,
+      { [styles.active]: expanded,
+        [styles.disabled]: disabled })}
+    onKeyDown={onKeyDown}
+    tabIndex={tabIndex}
+  >
+    <div
+      className={cx(styles.title,
+        { [styles.active]: expanded,
+          [styles.disabled]: disabled })}
+    >
+      {slot}
+      {search}
+      {clear}
+      {caret}
+      {spinner}
+    </div>
+
+    <div className={styles.dropdownContainer}>
+      <div
+        className={cx(styles.dropdown, {
+          [styles.expanded]: expanded,
+          [styles.withSlotBottom]: slotBottom && expanded
+        })}
+      >
+        {controls}
+        <div className={styles.itemsContainer}>
+          {count ? items : empty}
+        </div>
+        {slotBottom &&
+          <div
+            className={styles.slotBottom}
+            onClick={e => e.stopPropagation()}
+          >{slotBottom}</div>}
+      </div>
+    </div>
+  </div>
+);
+
+Pure.propTypes = {
+  caret: PropTypes.element,
+  clear: PropTypes.element,
+  controls: PropTypes.element,
+  count: PropTypes.number,
+  disabled: PropTypes.bool,
+  empty: PropTypes.element,
+  expanded: PropTypes.bool,
+  items: PropTypes.arrayOf(PropTypes.element),
+  onKeyDown: PropTypes.func,
+  search: PropTypes.element,
+  slot: PropTypes.element,
+  slotBottom: PropTypes.element,
+  spinner: PropTypes.element,
+  styles: PropTypes.shape({}),
+  tabIndex: PropTypes.number
+};
+
+Pure.defaultProps = {
+  caret: null,
+  clear: null,
+  controls: null,
+  count: 0,
+  disabled: false,
+  empty: null,
+  expanded: false,
+  items: [],
+  onKeyDown: () => {},
+  search: null,
+  slot: null,
+  slotBottom: null,
+  spinner: null,
+  styles: {},
+  tabIndex: 0
+};
+
 export default class Tipako extends React.Component {
   static propTypes = {
     closeOnSelect: PropTypes.bool,
@@ -312,19 +405,20 @@ export default class Tipako extends React.Component {
             : counter += 1;
 
           const focusedItem = currentIndex === counter;
-
-          const childItem = result.concat(<div
-            className={cx(this.styles.item, this.styles.childItem,
-              { [this.styles.disabled]: vv.disabled,
-                [this.styles.keyFocus]: focusedItem })}
-            key={`child-${v[keyField]}-${vv[keyField]}`}
-            onClick={(e) => { this.onChildClick(e, vv); }}
-            onKeyDown={(e) => { if (focusedItem && e.keyCode === 13) this.onChildClick(e, vv); }}
-            ref={(el) => { if (focusedItem) this.focusedItem = el; }}
-            tabIndex={-1}
-          >
-            {renderItem ? renderItem(vv, ii) : vv[valueField]}
-          </div>);
+          const childItem = result.concat(
+            <div
+              className={cx(this.styles.item, this.styles.childItem,
+                { [this.styles.disabled]: vv.disabled,
+                  [this.styles.keyFocus]: focusedItem })}
+              key={`child-${v[keyField]}-${vv[keyField]}`}
+              onClick={(e) => { this.onChildClick(e, vv); }}
+              onKeyDown={(e) => { if (focusedItem && e.keyCode === 13) this.onChildClick(e, vv); }}
+              ref={(el) => { if (focusedItem) this.focusedItem = el; }}
+              tabIndex={-1}
+            >
+              {renderItem ? renderItem(vv, ii) : vv[valueField]}
+            </div>
+          );
 
           return childItem;
         }, []);
@@ -335,18 +429,20 @@ export default class Tipako extends React.Component {
 
         const focusedItem = currentIndex === groupCounter;
 
-        const group = (<div
-          className={cx(this.styles.item, this.styles.groupItem,
-            { [this.styles.disabled]: v.disabled,
-              [this.styles.keyFocus]: focusedItem })}
-          key={`group-${v[keyField]}`}
-          onClick={(evt) => { this.onGroupClick(evt, v); }}
-          onKeyDown={(e) => { if (focusedItem && e.keyCode === 13) this.onGroupClick(e, v); }}
-          ref={(el) => { if (focusedItem) this.focusedItem = el; }}
-          tabIndex={-1}
-        >
-          {renderGroup ? renderGroup(v, i) : v[valueField]}
-        </div>);
+        const group = (
+          <div
+            className={cx(this.styles.item, this.styles.groupItem,
+              { [this.styles.disabled]: v.disabled,
+                [this.styles.keyFocus]: focusedItem })}
+            key={`group-${v[keyField]}`}
+            onClick={(evt) => { this.onGroupClick(evt, v); }}
+            onKeyDown={(e) => { if (focusedItem && e.keyCode === 13) this.onGroupClick(e, v); }}
+            ref={(el) => { if (focusedItem) this.focusedItem = el; }}
+            tabIndex={-1}
+          >
+            {renderGroup ? renderGroup(v, i) : v[valueField]}
+          </div>
+        );
 
         groupCounter = counter + 1;
         return acc.concat(group).concat(children);
@@ -365,18 +461,20 @@ export default class Tipako extends React.Component {
 
       const focusedItem = currentIndex === counter;
 
-      const ungrouped = (<div
-        className={cx(this.styles.item, this.styles.ungroupedItem,
-          { [this.styles.disabled]: v.disabled,
-            [this.styles.keyFocus]: focusedItem })}
-        key={`ungrouped-${v[keyField]}`}
-        onClick={(evt) => { this.onUngroupedClick(evt, v); }}
-        onKeyDown={(e) => { if (focusedItem && e.keyCode === 13) this.onUngroupedClick(e, v); }}
-        ref={(el) => { if (focusedItem) this.focusedItem = el; }}
-        tabIndex={-1}
-      >
-        {renderItem ? renderItem(v, i) : v[valueField]}
-      </div>);
+      const ungrouped = (
+        <div
+          className={cx(this.styles.item, this.styles.ungroupedItem,
+            { [this.styles.disabled]: v.disabled,
+              [this.styles.keyFocus]: focusedItem })}
+          key={`ungrouped-${v[keyField]}`}
+          onClick={(evt) => { this.onUngroupedClick(evt, v); }}
+          onKeyDown={(e) => { if (focusedItem && e.keyCode === 13) this.onUngroupedClick(e, v); }}
+          ref={(el) => { if (focusedItem) this.focusedItem = el; }}
+          tabIndex={-1}
+        >
+          {renderItem ? renderItem(v, i) : v[valueField]}
+        </div>
+      );
 
       if (groupCounter === 0) {
         counter += 1;
@@ -385,17 +483,16 @@ export default class Tipako extends React.Component {
       return acc.concat(ungrouped);
     }, []);
 
-    const selectAll = (onSelectAll && items.length > 0)
-      ? (<button className={this.styles.controlsButton} onClick={this.onSelectAll} type='button'>
-           Select All
-        </button>)
-      : null;
+    const selectAll = (onSelectAll && items.length > 0) && (
+      <button className={this.styles.controlsButton} onClick={this.onSelectAll} type='button'>
+         Select All
+      </button>
+    );
 
-    const clearAll = onClearAll
-      ? (<button className={this.styles.controlsButton} onClick={this.onClearAll} type='button'>
-          Clear All
-        </button>)
-      : null;
+    const clearAll = onClearAll && (
+      <button className={this.styles.controlsButton} onClick={this.onClearAll} type='button'>
+        Clear All
+      </button>);
 
     const spacer = (clearAll && selectAll)
       ? <div className={this.styles.controlsSpacer}>/</div>
@@ -445,8 +542,7 @@ export default class Tipako extends React.Component {
           type='text'
           value={value || ''}
         />
-        )
-      : (
+      ) : (
         <div
           className={cx(this.styles.staticText, { [this.styles.noClear]: !updateOnSelect })}
           onClick={this.onCaretClick}
@@ -455,45 +551,22 @@ export default class Tipako extends React.Component {
         </div>
       );
 
-    return (
-      <div
-        className={cx(this.styles.container,
-          { [this.styles.active]: this.state.expanded,
-            [this.styles.disabled]: disabled })}
-        onKeyDown={this.arrowKeyListener}
-        tabIndex={-1}
-      >
-        <div
-          className={cx(this.styles.title,
-            { [this.styles.active]: this.state.expanded,
-              [this.styles.disabled]: disabled })}
-        >
-          {slot}
-          {search}
-          {clear}
-          {caret}
-          {spinner}
-        </div>
-
-        <div className={this.styles.dropdownContainer}>
-          <div
-            className={cx(this.styles.dropdown, {
-              [this.styles.expanded]: this.state.expanded,
-              [this.styles.withSlotBottom]: slotBottom && this.state.expanded
-            })}
-          >
-            {controls}
-            <div className={this.styles.itemsContainer}>
-              {items.length ? items : empty}
-            </div>
-            {slotBottom &&
-              <div
-                className={this.styles.slotBottom}
-                onClick={e => e.stopPropagation()}
-              >{slotBottom}</div>}
-          </div>
-        </div>
-      </div>
-    );
+    return (<Pure
+      caret={caret}
+      clear={clear}
+      controls={controls}
+      count={items.length}
+      disabled={disabled}
+      empty={empty}
+      items={items}
+      expanded={this.state.expanded}
+      onKeyDown={this.arrowKeyListener}
+      search={search}
+      slot={slot}
+      slotBottom={slotBottom}
+      spinner={spinner}
+      styles={this.styles}
+      tabIndex={-1}
+    />);
   }
 }
