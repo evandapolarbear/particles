@@ -4,6 +4,9 @@ A table component with self-managed checkboxes, sticky head, sticky right panel,
 
 # Change Log
 
+##### 2.5.1
+- Very minor padding fix
+
 ##### 2.5.0
 - Row height is passed in as a prop so that it can be controlled by other components
 
