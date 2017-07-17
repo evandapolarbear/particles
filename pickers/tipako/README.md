@@ -4,6 +4,9 @@ A picker with support for group or individual selections.
 
 # Change Log
 
+##### 3.9.4
+- Change border color when disabled
+
 ##### 3.9.3
 - Key listener bug fix, `esc` key functionality
 - Building in styles that should not be overridden

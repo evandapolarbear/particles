@@ -59,6 +59,8 @@ const columnDefinitions = [
   Object.assign({ ...def }, { label: 'Col C', key: 'colC' })
 ];
 
+const rowHeight = 48;
+
 render(
   <div className={sandboxStyles.sandboxContainer}>
     <button
@@ -83,6 +85,7 @@ render(
         renderSidebarBodyCell,
         renderSidebarGroupCell,
         renderSidebarHeadCell,
+        rowHeight,
         stylesheets: [sandboxStyles]
       }}
     />
