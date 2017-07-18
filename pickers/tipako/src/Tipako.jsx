@@ -24,6 +24,112 @@ import {
 let counter = 0;
 let groupCounter = 0;
 
+const buildOptions = ({
+  data,
+  valueField,
+  searchTerm,
+  currentIndex,
+  styles,
+  keyField,
+  onChildClick,
+  renderItem,
+  onGroupClick,
+  renderGroup,
+  onUngroupedClick
+}) => data.reduce((acc, item, i) => {
+  // Grouped
+  if (item.children) {
+    const children = item.children.reduce((result, subItem, ii) => {
+      if (subItem[valueField].toLowerCase().indexOf(searchTerm) === -1) {
+        return result;
+      }
+      groupCounter > counter
+        ? counter = groupCounter + 1
+        : counter += 1;
+
+      const focusedItem = currentIndex === counter;
+      const childItem = result.concat(
+        <div
+          className={cx(styles.item, styles.childItem,
+            { [styles.disabled]: subItem.disabled,
+              [styles.keyFocus]: focusedItem })}
+          key={`child-${item[keyField]}-${subItem[keyField]}`}
+          onClick={(e) => { onChildClick(e, subItem); }}
+          onKeyDown={(e) => {
+            if (focusedItem && e.keyCode === 13) {
+              onChildClick(e, subItem);
+            }
+          }}
+          ref={(el) => { if (focusedItem) this.focusedItem = el; }}
+          tabIndex={-1}
+        >
+          {renderItem ? renderItem(subItem, ii) : subItem[valueField]}
+        </div>
+      );
+
+      return childItem;
+    }, []);
+
+    if (children.length === 0 && item[valueField].toLowerCase().indexOf(searchTerm) === -1) {
+      return acc;
+    }
+
+    const focusedItem = currentIndex === groupCounter;
+
+    const group = (
+      <div
+        className={cx(styles.item, styles.groupItem,
+          { [styles.disabled]: item.disabled,
+            [styles.keyFocus]: focusedItem })}
+        key={`group-${item[keyField]}`}
+        onClick={(evt) => { onGroupClick(evt, item); }}
+        onKeyDown={(e) => { if (focusedItem && e.keyCode === 13) onGroupClick(e, item); }}
+        ref={(el) => { if (focusedItem) this.focusedItem = el; }}
+        tabIndex={-1}
+      >
+        {renderGroup ? renderGroup(item, i) : item[valueField]}
+      </div>
+    );
+
+    groupCounter = counter + 1;
+    return acc.concat(group).concat(children);
+  }
+
+  if (item[valueField].toLowerCase().indexOf(searchTerm) === -1) {
+    return acc;
+  }
+
+  // Ungrouped
+  if (groupCounter > 0) {
+    groupCounter > counter
+      ? counter = groupCounter + 1
+      : counter += 1;
+  }
+
+  const focusedItem = currentIndex === counter;
+
+  const ungrouped = (
+    <div
+      className={cx(styles.item, styles.ungroupedItem,
+        { [styles.disabled]: item.disabled,
+          [styles.keyFocus]: focusedItem })}
+      key={`ungrouped-${item[keyField]}`}
+      onClick={(evt) => { onUngroupedClick(evt, item); }}
+      onKeyDown={(e) => { if (focusedItem && e.keyCode === 13) onUngroupedClick(e, item); }}
+      ref={(el) => { if (focusedItem) this.focusedItem = el; }}
+      tabIndex={-1}
+    >
+      {renderItem ? renderItem(item, i) : item[valueField]}
+    </div>
+  );
+
+  if (groupCounter === 0) {
+    counter += 1;
+  }
+
+  return acc.concat(ungrouped);
+}, []);
+
 
 const enhancer = compose(
   withProps(({ stylesheets }) => ({
@@ -288,99 +394,19 @@ class Tipako extends React.Component {
     counter = 0;
     groupCounter = 0;
 
-    const items = data.reduce((acc, item, i) => {
-      // Grouped
-      if (item.children) {
-        const children = item.children.reduce((result, subItem, ii) => {
-          if (subItem[valueField].toLowerCase().indexOf(searchTerm) === -1) {
-            return result;
-          }
-          groupCounter > counter
-            ? counter = groupCounter + 1
-            : counter += 1;
-
-          const focusedItem = currentIndex === counter;
-          const childItem = result.concat(
-            <div
-              className={cx(styles.item, styles.childItem,
-                { [styles.disabled]: subItem.disabled,
-                  [styles.keyFocus]: focusedItem })}
-              key={`child-${item[keyField]}-${subItem[keyField]}`}
-              onClick={(e) => { onChildClick(e, subItem); }}
-              onKeyDown={(e) => {
-                if (focusedItem && e.keyCode === 13) {
-                  onChildClick(e, subItem);
-                }
-              }}
-              ref={(el) => { if (focusedItem) this.focusedItem = el; }}
-              tabIndex={-1}
-            >
-              {renderItem ? renderItem(subItem, ii) : subItem[valueField]}
-            </div>
-          );
-
-          return childItem;
-        }, []);
-
-        if (children.length === 0 && item[valueField].toLowerCase().indexOf(searchTerm) === -1) {
-          return acc;
-        }
-
-        const focusedItem = currentIndex === groupCounter;
-
-        const group = (
-          <div
-            className={cx(styles.item, styles.groupItem,
-              { [styles.disabled]: item.disabled,
-                [styles.keyFocus]: focusedItem })}
-            key={`group-${item[keyField]}`}
-            onClick={(evt) => { onGroupClick(evt, item); }}
-            onKeyDown={(e) => { if (focusedItem && e.keyCode === 13) onGroupClick(e, item); }}
-            ref={(el) => { if (focusedItem) this.focusedItem = el; }}
-            tabIndex={-1}
-          >
-            {renderGroup ? renderGroup(item, i) : item[valueField]}
-          </div>
-        );
-
-        groupCounter = counter + 1;
-        return acc.concat(group).concat(children);
-      }
-
-      if (item[valueField].toLowerCase().indexOf(searchTerm) === -1) {
-        return acc;
-      }
-
-      // Ungrouped
-      if (groupCounter > 0) {
-        groupCounter > counter
-          ? counter = groupCounter + 1
-          : counter += 1;
-      }
-
-      const focusedItem = currentIndex === counter;
-
-      const ungrouped = (
-        <div
-          className={cx(styles.item, styles.ungroupedItem,
-            { [styles.disabled]: item.disabled,
-              [styles.keyFocus]: focusedItem })}
-          key={`ungrouped-${item[keyField]}`}
-          onClick={(evt) => { onUngroupedClick(evt, item); }}
-          onKeyDown={(e) => { if (focusedItem && e.keyCode === 13) onUngroupedClick(e, item); }}
-          ref={(el) => { if (focusedItem) this.focusedItem = el; }}
-          tabIndex={-1}
-        >
-          {renderItem ? renderItem(item, i) : item[valueField]}
-        </div>
-      );
-
-      if (groupCounter === 0) {
-        counter += 1;
-      }
-
-      return acc.concat(ungrouped);
-    }, []);
+    const items = buildOptions({
+      data,
+      valueField,
+      searchTerm,
+      currentIndex,
+      styles,
+      keyField,
+      onChildClick,
+      renderItem,
+      onGroupClick,
+      renderGroup,
+      onUngroupedClick
+    });
 
 
     const count = items.length;
