@@ -13,6 +13,7 @@ export default class Maramataka extends React.Component {
     closeOnSelect: PropTypes.bool,
     onClear: PropTypes.func,
     onSelect: PropTypes.func.isRequired,
+    rightAlign: PropTypes.bool,
     stylesheets: PropTypes.arrayOf(PropTypes.shape()),
     value: PropTypes.shape()
   };
@@ -20,6 +21,7 @@ export default class Maramataka extends React.Component {
   static defaultProps = {
     closeOnSelect: true,
     onClear: () => {},
+    rightAlign: false,
     stylesheets: [],
     value: { day: '', month: '', year: '' }
   };
@@ -384,7 +386,11 @@ export default class Maramataka extends React.Component {
         {head}
 
         <div className={this.styles.dropdownContainer} onClick={evt => evt.stopPropagation()}>
-          <div className={cx(this.styles.dropdown, { [this.styles.expanded]: expanded })}>
+          <div className={cx(this.styles.dropdown,
+            { [this.styles.expanded]: expanded,
+              [this.styles.rightAlign]: this.props.rightAlign
+            })}
+          >
             <div className={this.styles.month}>
               <div className={this.styles.leftArrow} onClick={this.onLeftArrowClick} />
               <div className={this.styles.monthTitle}>{monthNames[active.month]} {active.year}</div>

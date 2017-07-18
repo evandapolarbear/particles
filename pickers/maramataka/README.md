@@ -4,6 +4,9 @@ A date picker.
 
 # Change Log
 
+##### 1.3.0
+- Right align the dropdown using the `rightAlign` prop
+
 ##### 1.2.3
 - IE 11 alignment fixes
 

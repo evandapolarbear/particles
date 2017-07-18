@@ -1,23 +1,28 @@
 .bulkEditorComponent {
-  margin: 10px 0;
+  margin: 16px 0;
 }
 
 .notifications {
-  margin: 10px 0;
+  margin: 16px 0;
 }
 
 .toolControls {
+  border-bottom: 1px dashed #343739;
+  border-top: 1px solid #c3c2c2;
   display: flex;
-  line-height: 35px;
-  padding: 15px 0;
+  line-height: 32px;
+  padding: 16px 0 8px 0;
+  position: relative;
 }
 
 .controlComponent {
-  width: 180px;
+  margin-right: 8px;
+  width: 128px;
 }
 
 .searchComponent {
-  width: 180px;
+  margin-right: 8px;
+  width: 200px;
 }
 
 .filterComponent {

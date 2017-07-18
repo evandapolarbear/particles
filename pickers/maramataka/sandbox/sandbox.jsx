@@ -21,6 +21,8 @@ const onClear = () => console.log('Cleared selected date!'); // eslint-disable-l
 
 const closeOnSelect = false;
 
+const rightAlign = false;
+
 render(
   <div>
     <Maramataka
@@ -28,6 +30,7 @@ render(
         closeOnSelect,
         onClear,
         onSelect,
+        rightAlign,
         stylesheets,
         value
       }}

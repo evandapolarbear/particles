@@ -2,6 +2,7 @@
 
 .container {
   font-family: sans-serif;
+  width: 160px;
   position: relative;
 
   * {
@@ -63,6 +64,11 @@
     max-height: 320px;
     z-index: 100;
   }
+
+  &.rightAlign {
+    border-radius: 2px 0 2px 2px;
+    right: 0;
+  }
 }
 
 .head {
@@ -74,7 +80,6 @@
   overflow: hidden;
   padding-left: 8px;
   position: relative;
-  width: 161px;
 
   &.expanded {
     border-radius: 2px 2px 0 0;

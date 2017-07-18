@@ -4,6 +4,9 @@ A template partial for showing list presentations.
 
 # Change Log
 
+##### 1.4.6 
+- Style updates (padding, borders)
+
 ##### 1.4.5
 - Updating packages, splitting out from shared config
 
