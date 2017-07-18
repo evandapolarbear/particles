@@ -1,6 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import cx from 'classnames';
+import {
+  compose,
+  withStateHandlers,
+  withHandlers,
+  withProps
+} from 'recompose';
 import baseStyles from './Tipako.scss';
 import composeStyles from '../../../shared/stylesheetComposer';
 import generateId from '../../../shared/generateId';
@@ -101,7 +107,136 @@ Pure.defaultProps = {
   tabIndex: 0
 };
 
-export default class Tipako extends React.Component {
+const enhancer = compose(
+  withProps(initialProps => ({ guid: generateId() })),
+  withStateHandlers(
+    ({ titleValue = '' }) => ({
+      value: titleValue,
+      expanded: false,
+      currentIndex: -1,
+      guid: null
+    }),
+    {
+      clearGuid: () => () => ({ guid: null }),
+      collapse: () => () => ({ expanded: false }),
+      expand: () => () => ({ expanded: true }),
+      setValue: () => value => ({ value }),
+      setCurrentIndex: () => currentIndex => ({ currentIndex }),
+      onSearch: (state, { onSearch }) => (value) => {
+        onSearch(value);
+        return {
+          value,
+          expanded: true
+        };
+      },
+      onInputClear: (state, { onClear, onSearch }) => (evt) => {
+        evt.stopPropagation();
+        onSearch && onSearch('');
+        onClear && onClear();
+        return { value: '' };
+      },
+      updateValue: (state, { valueFunction, valueField }) => item => ({
+        value: valueFunction
+          ? valueFunction(item)
+          : item[valueField]
+      }),
+      onCaretClick: ({ expanded }, { onFocus, guid }) => () => {
+        if (expanded === false) {
+          onFocus && onFocus();
+          return { currentIndex: -1, expanded: true, guid };
+        }
+        return {};
+      }
+    }
+  ),
+  withHandlers({
+    onChildClick: ({ collapse, onSelect, closeOnSelect, updateValue }) =>
+      (evt, child) => {
+        if (child.disabled) { return; }
+        onSelect(child);
+        if (closeOnSelect) { collapse(); }
+        updateValue(child);
+      },
+    onGroupClick: ({ collapse, onSelect, closeOnSelect, updateValue }) =>
+      (evt, group) => {
+        evt.stopPropagation();
+        if (group.disabled) { return; }
+        onSelect(group);
+        if (closeOnSelect) { collapse(); }
+        updateValue(group);
+      },
+    onUngroupedClick: ({ collapse, onSelect, closeOnSelect, updateValue }) =>
+      (evt, item) => {
+        evt.stopPropagation();
+        if (item.disabled) { return; }
+        onSelect(item);
+        if (closeOnSelect) { collapse(); }
+        updateValue(item);
+      },
+    onSelectAll: ({ collapse, onSelectAll }) => () => {
+      onSelectAll();
+      collapse();
+    },
+    onClearAll: ({ collapse, onClearAll }) => () => {
+      onClearAll();
+      collapse();
+    },
+    onSearchFocus: ({ onFocus }) => (evt) => {
+      evt.target.select();
+      onFocus && onFocus();
+    },
+    windowClick: ({ clearGuid, guid, expand, collapse }) => () => {
+      guid ? expand() : collapse();
+      clearGuid();
+    },
+    onInputBlur: ({ value, setValue, titleValue }) => () => {
+      if (value.length === 0 && titleValue) {
+        setValue(titleValue);
+      }
+    },
+    getEmptyString: ({ value, loading }) => {
+      if (value) {
+        return `No matches for "${value}".`;
+      }
+
+      if (loading) {
+        return 'Retrieving items...';
+      }
+
+      return 'No items found.';
+    },
+    arrowKeyListener: ({
+      setCurrentIndex,
+      currentIndex,
+      searchable,
+      expanded
+    }) => (evt) => {
+      let totalCounter = counter > groupCounter
+        ? counter
+        : groupCounter;
+
+      if (groupCounter === 0) {
+        totalCounter -= 1;
+      }
+
+      if (evt.keyCode === 38 && expanded) {
+        evt.preventDefault();
+        if ((currentIndex > -1 && searchable) || (currentIndex > 0 && !searchable)) {
+          setCurrentIndex(currentIndex - 1);
+        }
+      }
+
+      if (evt.keyCode === 40 && expanded) {
+        evt.preventDefault();
+        if (currentIndex < totalCounter) {
+          setCurrentIndex(currentIndex + 1);
+        }
+      }
+    }
+  })
+);
+
+class Tipako extends React.Component {
   static propTypes = {
     closeOnSelect: PropTypes.bool,
     data: PropTypes.arrayOf(PropTypes.shape({
@@ -168,27 +303,19 @@ export default class Tipako extends React.Component {
 
     this.styles = composeStyles(baseStyles, [...props.stylesheets]);
 
-    this.guid = generateId();
-
     if (props.searchable === false && props.onSearch !== null) {
       console.error('An instance of Tipako has an "onSearch()" ' // eslint-disable-line
         + 'callback defined, but its "searchable" prop is false, '
         + 'so the callback will have no effect.');
     }
-
-    this.state = {
-      currentIndex: -1,
-      expanded: false,
-      value: props.titleValue
-    };
   }
 
   componentWillMount() {
-    window.addEventListener('click', this.onBlur);
+    window.addEventListener('click', this.props.windowClick);
   }
 
   componentDidUpdate() {
-    const { currentIndex, expanded } = this.state;
+    const { currentIndex, expanded } = this.props;
 
     if (expanded) {
       if (this.focusedItem && currentIndex > -1) {
@@ -202,166 +329,12 @@ export default class Tipako extends React.Component {
   }
 
   componentWillUnmount() {
-    window.removeEventListener('click', this.onBlur);
-  }
-
-  onSearch = (evt) => {
-    const str = evt.target.value;
-    this.setState({ value: str, expanded: true }, () => {
-      if (this.props.onSearch) {
-        this.props.onSearch(str);
-      }
-    });
-  }
-
-  onChildClick = (evt, child) => {
-    evt.stopPropagation();
-
-    if (child.disabled) {
-      return;
-    }
-
-    this.props.onSelect(child);
-
-    if (this.props.closeOnSelect) {
-      this.setState({ expanded: false });
-    }
-
-    this.updateValue(child);
-  }
-
-  onGroupClick = (evt, group) => {
-    evt.stopPropagation();
-
-    if (group.disabled) {
-      return;
-    }
-
-    this.props.onSelect(group);
-
-    if (this.props.closeOnSelect) {
-      this.setState({ expanded: false });
-    }
-
-    this.updateValue(group);
-  }
-
-  onUngroupedClick = (evt, item) => {
-    evt.stopPropagation();
-
-    if (item.disabled) {
-      return;
-    }
-
-    this.props.onSelect(item);
-
-    if (this.props.closeOnSelect) {
-      this.setState({ expanded: false });
-    }
-
-    this.updateValue(item);
-  }
-
-  onCaretClick = () => {
-    if (this.state.expanded === false) {
-      this.setState({ currentIndex: -1, expanded: true, guid: this.guid });
-      this.props.onFocus && this.props.onFocus();
-    }
-  }
-
-  onSelectAll = () => {
-    this.props.onSelectAll();
-    this.setState({ expanded: false });
-  }
-
-  onClearAll = () => {
-    this.props.onClearAll([]);
-    this.setState({ expanded: false });
-  }
-
-  onSearchFocus = (evt) => {
-    evt.target.select();
-    this.props.onFocus && this.props.onFocus();
-  }
-
-  onBlur = () => {
-    const expanded = (this.state.guid === this.guid);
-    this.setState({ expanded, guid: null });
-  };
-
-  onInputBlur = () => {
-    if (this.state.value.length === 0 && this.props.titleValue) {
-      this.setState({ value: this.props.titleValue });
-    }
-  };
-
-  onInputClear = (evt) => {
-    evt.stopPropagation();
-
-    if (this.props.onSearch) {
-      this.props.onSearch('');
-    }
-
-    if (this.props.onClear) {
-      this.props.onClear();
-    }
-
-    this.setState({ value: '' });
-  }
-
-  getEmptyString = () => {
-    if (this.state.value) {
-      return `No matches for "${this.state.value}".`;
-    }
-
-    if (this.props.loading) {
-      return 'Retrieving items...';
-    }
-
-    return 'No items found.';
-  }
-
-  updateValue = (item) => {
-    if (this.props.updateOnSelect) {
-      if (this.props.valueFunction) {
-        this.setState({ value: this.props.valueFunction(item) });
-      } else {
-        this.setState({ value: item[this.props.valueField] });
-      }
-    }
-  }
-
-  arrowKeyListener = (evt) => {
-    let { currentIndex } = this.state;
-    const { searchable } = this.props;
-
-    let totalCounter = counter > groupCounter
-      ? counter
-      : groupCounter;
-
-    if (groupCounter === 0) {
-      totalCounter -= 1;
-    }
-
-    if (evt.keyCode === 38 && this.state.expanded) {
-      evt.preventDefault();
-      if ((currentIndex > -1 && searchable) || (currentIndex > 0 && !searchable)) {
-        currentIndex -= 1;
-        this.setState({ currentIndex });
-      }
-    }
-
-    if (evt.keyCode === 40 && this.state.expanded) {
-      evt.preventDefault();
-      if (currentIndex < totalCounter) {
-        currentIndex += 1;
-        this.setState({ currentIndex });
-      }
-    }
+    window.removeEventListener('click', this.props.windowClick);
   }
 
   render() {
     const {
+      arrowKeyListener,
       slotBottom,
       data,
       disabled,
@@ -378,16 +351,23 @@ export default class Tipako extends React.Component {
       slotTitle,
       titleValue,
       updateOnSelect,
-      valueField
+      valueField,
+      expanded,
+      onInputBlur,
+      getEmptyString,
+      onCaretClick,
+      onSearchFocus,
+      currentIndex,
+      onChildClick,
+      value,
+      onInputClear,
+      onUngroupedClick,
+      onGroupClick
     } = this.props;
-
-    const { value } = this.state;
 
     const searchTerm = (searchable && value && !onSearch)
       ? value.toLowerCase()
       : '';
-
-    const { currentIndex } = this.state;
 
     counter = 0;
     groupCounter = 0;
@@ -411,8 +391,8 @@ export default class Tipako extends React.Component {
                 { [this.styles.disabled]: vv.disabled,
                   [this.styles.keyFocus]: focusedItem })}
               key={`child-${v[keyField]}-${vv[keyField]}`}
-              onClick={(e) => { this.onChildClick(e, vv); }}
-              onKeyDown={(e) => { if (focusedItem && e.keyCode === 13) this.onChildClick(e, vv); }}
+              onClick={(e) => { onChildClick(e, vv); }}
+              onKeyDown={(e) => { if (focusedItem && e.keyCode === 13) onChildClick(e, vv); }}
               ref={(el) => { if (focusedItem) this.focusedItem = el; }}
               tabIndex={-1}
             >
@@ -435,8 +415,8 @@ export default class Tipako extends React.Component {
               { [this.styles.disabled]: v.disabled,
                 [this.styles.keyFocus]: focusedItem })}
             key={`group-${v[keyField]}`}
-            onClick={(evt) => { this.onGroupClick(evt, v); }}
-            onKeyDown={(e) => { if (focusedItem && e.keyCode === 13) this.onGroupClick(e, v); }}
+            onClick={(evt) => { onGroupClick(evt, v); }}
+            onKeyDown={(e) => { if (focusedItem && e.keyCode === 13) onGroupClick(e, v); }}
             ref={(el) => { if (focusedItem) this.focusedItem = el; }}
             tabIndex={-1}
           >
@@ -467,8 +447,8 @@ export default class Tipako extends React.Component {
             { [this.styles.disabled]: v.disabled,
               [this.styles.keyFocus]: focusedItem })}
           key={`ungrouped-${v[keyField]}`}
-          onClick={(evt) => { this.onUngroupedClick(evt, v); }}
-          onKeyDown={(e) => { if (focusedItem && e.keyCode === 13) this.onUngroupedClick(e, v); }}
+          onClick={(evt) => { onUngroupedClick(evt, v); }}
+          onKeyDown={(e) => { if (focusedItem && e.keyCode === 13) onUngroupedClick(e, v); }}
           ref={(el) => { if (focusedItem) this.focusedItem = el; }}
           tabIndex={-1}
         >
@@ -484,13 +464,13 @@ export default class Tipako extends React.Component {
     }, []);
 
     const selectAll = (onSelectAll && items.length > 0) && (
-      <button className={this.styles.controlsButton} onClick={this.onSelectAll} type='button'>
+      <button className={this.styles.controlsButton} onClick={onSelectAll} type='button'>
          Select All
       </button>
     );
 
     const clearAll = onClearAll && (
-      <button className={this.styles.controlsButton} onClick={this.onClearAll} type='button'>
+      <button className={this.styles.controlsButton} onClick={onClearAll} type='button'>
         Clear All
       </button>);
 
@@ -508,17 +488,17 @@ export default class Tipako extends React.Component {
       );
 
     const empty = (<div className={this.styles.empty}>
-      {renderEmpty ? renderEmpty() : this.getEmptyString()}
+      {renderEmpty ? renderEmpty() : getEmptyString()}
     </div>);
 
     const caret = loading
       ? null
-      : (<button onClick={this.onCaretClick} className={this.styles.caret} type='button'>
-        <span className={cx('fa', 'fa-caret-down', this.styles.arrow, { [this.styles.expanded]: this.state.expanded })} />
+      : (<button onClick={onCaretClick} className={this.styles.caret} type='button'>
+        <span className={cx('fa', 'fa-caret-down', this.styles.arrow, { [this.styles.expanded]: expanded })} />
       </button>);
 
     const clear = value
-      ? <button onClick={this.onInputClear} className={this.styles.clear} type='button' />
+      ? <button onClick={onInputClear} className={this.styles.clear} type='button' />
       : null;
 
     const spinner = loading
@@ -532,20 +512,22 @@ export default class Tipako extends React.Component {
     const search = searchable
       ? (
         <input
-          className={cx(this.styles.input, { [this.styles.noClear]: !updateOnSelect })}
-          onBlur={this.onInputBlur}
-          onChange={this.onSearch}
-          onClick={this.onCaretClick}
-          onFocus={this.onSearchFocus}
+          className={cx(this.styles.input, {
+            [this.styles.noClear]: !updateOnSelect
+          })}
+          onBlur={onInputBlur}
+          onChange={evt => onSearch(evt.target.value)}
+          onClick={onCaretClick}
+          onFocus={onSearchFocus}
           placeholder={titlePlaceholder}
-          ref={(input) => { this.searchInput = input; }}
+          ref={input => (this.searchInput = input)}
           type='text'
           value={value || ''}
         />
       ) : (
         <div
           className={cx(this.styles.staticText, { [this.styles.noClear]: !updateOnSelect })}
-          onClick={this.onCaretClick}
+          onClick={onCaretClick}
         >
           {(value.length > 0 && value) || titleValue || titlePlaceholder}
         </div>
@@ -559,8 +541,8 @@ export default class Tipako extends React.Component {
       disabled={disabled}
       empty={empty}
       items={items}
-      expanded={this.state.expanded}
-      onKeyDown={this.arrowKeyListener}
+      expanded={expanded}
+      onKeyDown={arrowKeyListener}
       search={search}
       slot={slot}
       slotBottom={slotBottom}
@@ -570,3 +552,6 @@ export default class Tipako extends React.Component {
     />);
   }
 }
+
+
+export default enhancer(Tipako);
