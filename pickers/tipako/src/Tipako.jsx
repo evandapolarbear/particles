@@ -11,95 +11,19 @@ import baseStyles from './Tipako.scss';
 import composeStyles from '../../../shared/stylesheetComposer';
 import generateId from '../../../shared/generateId';
 
+import {
+  Controls,
+  Empty,
+  Caret,
+  Clear,
+  Spinner,
+  Slot,
+  Search
+} from './Components';
+
 let counter = 0;
 let groupCounter = 0;
 
-const Spacer = ({ className }) => (<div className={className}>/</div>);
-const ControlsButton = text => ({ onClick, className }) => (
-  <button className={className} onClick={onClick} type='button'>
-    {text}
-  </button>
-);
-
-const SelectAll = ControlsButton('Select All');
-const ClearAll = ControlsButton('Clear All');
-
-const Controls = ({
-  onClearAll,
-  onSelectAll,
-  count,
-  styles,
-}) => {
-  const selectAll = (onSelectAll && count) && (
-    <SelectAll className={styles.controlsButton} onClick={onSelectAll} />
-  );
-  const clearAll = (onClearAll) && (
-    <ClearAll className={styles.controlsButton} onClick={onClearAll} />
-  );
-  return (
-    <div className={styles.controls}>
-      {selectAll}
-      {(clearAll && selectAll) && <Spacer className={styles.controlsSpacer} />}
-      {clearAll}
-    </div>
-  );
-};
-
-
-const Empty = ({ className, content }) => (
-  <div className={className}>{content}</div>
-);
-
-const Caret = ({ onClick, expanded, styles }) => (
-  <button onClick={onClick} className={styles.caret} type='button'>
-    <span className={cx('fa', 'fa-caret-down', styles.arrow, { [styles.expanded]: expanded })} />
-  </button>
-);
-
-const Clear = ({ onClick, className }) => (
-  <button onClick={onClick} className={className} type='button' />
-);
-
-const Spinner = ({ className }) => (<span className={className} />);
-
-const Slot = ({ text, className }) => (<div className={className}>{text}</div>);
-
-const Search = ({
-  searchable,
-  styles,
-  onBlur,
-  onChange,
-  onClick,
-  onFocus,
-  placeholder,
-  inputRef,
-  titleValue,
-  value,
-  updateOnSelect
-}) =>
-  searchable
-  ? (
-    <input
-      className={cx(styles.input, {
-        [styles.noClear]: !updateOnSelect
-      })}
-      onBlur={onBlur}
-      onChange={onChange}
-      onClick={onClick}
-      onFocus={onFocus}
-      placeholder={placeholder}
-      ref={inputRef}
-      type='text'
-      value={value || ''}
-    />
-  ) : (
-    <div
-      className={cx(styles.staticText, { [styles.noClear]: !updateOnSelect })}
-      onClick={onClick}
-    >
-      {(value.length > 0 && value) || titleValue || placeholder}
-    </div>
-  );
 
 const enhancer = compose(
   withProps(({ stylesheets }) => ({
@@ -235,7 +159,6 @@ const enhancer = compose(
 
 class Tipako extends React.Component {
   static propTypes = {
-    closeOnSelect: PropTypes.bool,
     data: PropTypes.arrayOf(PropTypes.shape({
       children: PropTypes.arrayOf(PropTypes.shape({
         disabled: PropTypes.bool,
@@ -249,11 +172,8 @@ class Tipako extends React.Component {
     disabled: PropTypes.bool,
     keyField: PropTypes.string,
     loading: PropTypes.bool,
-    onClear: PropTypes.func,
     onClearAll: PropTypes.func,
-    onFocus: PropTypes.func,
     onSearch: PropTypes.func,
-    onSelect: PropTypes.func.isRequired,
     onSelectAll: PropTypes.func,
     renderEmpty: PropTypes.func,
     renderGroup: PropTypes.func,
@@ -261,12 +181,10 @@ class Tipako extends React.Component {
     searchable: PropTypes.bool,
     slotBottom: PropTypes.node,
     slotTitle: PropTypes.element,
-    stylesheets: PropTypes.arrayOf(PropTypes.shape()),
     titlePlaceholder: PropTypes.string,
     titleValue: PropTypes.string,
     updateOnSelect: PropTypes.bool,
-    valueField: PropTypes.string,
-    valueFunction: PropTypes.func
+    valueField: PropTypes.string
   }
 
   static defaultProps = {
@@ -464,50 +382,6 @@ class Tipako extends React.Component {
       return acc.concat(ungrouped);
     }, []);
 
-    const empty = Empty({
-      className: styles.empty,
-      content: renderEmpty ? renderEmpty() : getEmptyString()
-    });
-    const caret = Caret({
-      onClick: onCaretClick,
-      expanded,
-      styles: styles
-    });
-    const clear = Clear({
-      onClick: onInputClear,
-      className: styles.clear
-    });
-    const spinner = loading
-      ? Spinner({ className: styles.spinner })
-      : null;
-    const slot = slotTitle && Slot({
-      text: slotTitle,
-      className: styles.slot
-    });
-
-    const search = (
-      <Search
-        searchable={searchable}
-        styles={styles}
-        onBlur={onInputBlur}
-        onClick={onCaretClick}
-        onFocus={onSearchFocus}
-        onChange={evt => onInputChange(evt.target.value)}
-        placeholder={titlePlaceholder}
-        updateOnSelect={updateOnSelect}
-        value={value}
-        inputRef={input => (this.searchInput = input)}
-      />
-    );
-
-    const controls = (
-      <Controls
-        styles={styles}
-        count={items.length}
-        onSelectAll={onSelectAll}
-        onClearAll={onClearAll}
-      />
-    );
 
     const count = items.length;
 
@@ -524,11 +398,22 @@ class Tipako extends React.Component {
             { [styles.active]: expanded,
               [styles.disabled]: disabled })}
         >
-          {slot}
-          {search}
-          {clear}
-          {caret}
-          {spinner}
+          <Slot text={slotTitle} className={styles.slot} />
+          <Search
+            searchable={searchable}
+            styles={styles}
+            onBlur={onInputBlur}
+            onClick={onCaretClick}
+            onFocus={onSearchFocus}
+            onChange={evt => onInputChange(evt.target.value)}
+            placeholder={titlePlaceholder}
+            updateOnSelect={updateOnSelect}
+            value={value}
+            inputRef={input => (this.searchInput = input)}
+          />
+          <Clear onClick={onInputClear} className={styles.clear} />
+          <Caret onClick={onCaretClick} expanded={expanded} styles={styles} />
+          { loading ? <Spinner className={styles.spinner} /> : null}
         </div>
 
         <div className={styles.dropdownContainer}>
@@ -538,9 +423,20 @@ class Tipako extends React.Component {
               [styles.withSlotBottom]: slotBottom && expanded
             })}
           >
-            {controls}
+            <Controls
+              styles={styles}
+              count={items.length}
+              onSelectAll={onSelectAll}
+              onClearAll={onClearAll}
+            />
             <div className={styles.itemsContainer}>
-              {count ? items : empty}
+              {count
+                ? items
+                : <Empty
+                  className={styles.empty}
+                  content={renderEmpty ? renderEmpty() : getEmptyString()}
+                />
+              }
             </div>
             {slotBottom &&
               <div
