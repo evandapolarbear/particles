@@ -119,8 +119,8 @@ const enhancer = compose(
       expand: () => () => ({ expanded: true }),
       setValue: () => value => ({ value }),
       setCurrentIndex: () => currentIndex => ({ currentIndex }),
-      onSearch: (state, { onSearch }) => (value) => {
-        onSearch(value);
+      onInputChange: (state, { onSearch }) => (value) => {
+        onSearch && onSearch(value);
         return {
           value,
           expanded: true
@@ -337,6 +337,7 @@ class Tipako extends React.Component {
       loading,
       onClearAll,
       onSearch,
+      onInputChange,
       onSelectAll,
       renderEmpty,
       renderGroup,
@@ -357,6 +358,7 @@ class Tipako extends React.Component {
       value,
       onInputClear,
       onUngroupedClick,
+      setValue,
       styles,
       onGroupClick
     } = this.props;
@@ -368,14 +370,13 @@ class Tipako extends React.Component {
     counter = 0;
     groupCounter = 0;
 
-    const items = data.reduce((acc, v, i) => {
+    const items = data.reduce((acc, item, i) => {
       // Grouped
-      if (v.children) {
-        const children = v.children.reduce((result, vv, ii) => {
-          if (vv[valueField].toLowerCase().indexOf(searchTerm) === -1) {
+      if (item.children) {
+        const children = item.children.reduce((result, subItem, ii) => {
+          if (subItem[valueField].toLowerCase().indexOf(searchTerm) === -1) {
             return result;
           }
-
           groupCounter > counter
             ? counter = groupCounter + 1
             : counter += 1;
@@ -384,22 +385,26 @@ class Tipako extends React.Component {
           const childItem = result.concat(
             <div
               className={cx(styles.item, styles.childItem,
-                { [styles.disabled]: vv.disabled,
+                { [styles.disabled]: subItem.disabled,
                   [styles.keyFocus]: focusedItem })}
-              key={`child-${v[keyField]}-${vv[keyField]}`}
-              onClick={(e) => { onChildClick(e, vv); }}
-              onKeyDown={(e) => { if (focusedItem && e.keyCode === 13) onChildClick(e, vv); }}
+              key={`child-${item[keyField]}-${subItem[keyField]}`}
+              onClick={(e) => { onChildClick(e, subItem); }}
+              onKeyDown={(e) => {
+                if (focusedItem && e.keyCode === 13) {
+                  onChildClick(e, subItem);
+                }
+              }}
               ref={(el) => { if (focusedItem) this.focusedItem = el; }}
               tabIndex={-1}
             >
-              {renderItem ? renderItem(vv, ii) : vv[valueField]}
+              {renderItem ? renderItem(subItem, ii) : subItem[valueField]}
             </div>
           );
 
           return childItem;
         }, []);
 
-        if (children.length === 0 && v[valueField].toLowerCase().indexOf(searchTerm) === -1) {
+        if (children.length === 0 && item[valueField].toLowerCase().indexOf(searchTerm) === -1) {
           return acc;
         }
 
@@ -408,15 +413,15 @@ class Tipako extends React.Component {
         const group = (
           <div
             className={cx(styles.item, styles.groupItem,
-              { [styles.disabled]: v.disabled,
+              { [styles.disabled]: item.disabled,
                 [styles.keyFocus]: focusedItem })}
-            key={`group-${v[keyField]}`}
-            onClick={(evt) => { onGroupClick(evt, v); }}
-            onKeyDown={(e) => { if (focusedItem && e.keyCode === 13) onGroupClick(e, v); }}
+            key={`group-${item[keyField]}`}
+            onClick={(evt) => { onGroupClick(evt, item); }}
+            onKeyDown={(e) => { if (focusedItem && e.keyCode === 13) onGroupClick(e, item); }}
             ref={(el) => { if (focusedItem) this.focusedItem = el; }}
             tabIndex={-1}
           >
-            {renderGroup ? renderGroup(v, i) : v[valueField]}
+            {renderGroup ? renderGroup(item, i) : item[valueField]}
           </div>
         );
 
@@ -424,7 +429,7 @@ class Tipako extends React.Component {
         return acc.concat(group).concat(children);
       }
 
-      if (v[valueField].toLowerCase().indexOf(searchTerm) === -1) {
+      if (item[valueField].toLowerCase().indexOf(searchTerm) === -1) {
         return acc;
       }
 
@@ -440,15 +445,15 @@ class Tipako extends React.Component {
       const ungrouped = (
         <div
           className={cx(styles.item, styles.ungroupedItem,
-            { [styles.disabled]: v.disabled,
+            { [styles.disabled]: item.disabled,
               [styles.keyFocus]: focusedItem })}
-          key={`ungrouped-${v[keyField]}`}
-          onClick={(evt) => { onUngroupedClick(evt, v); }}
-          onKeyDown={(e) => { if (focusedItem && e.keyCode === 13) onUngroupedClick(e, v); }}
+          key={`ungrouped-${item[keyField]}`}
+          onClick={(evt) => { onUngroupedClick(evt, item); }}
+          onKeyDown={(e) => { if (focusedItem && e.keyCode === 13) onUngroupedClick(e, item); }}
           ref={(el) => { if (focusedItem) this.focusedItem = el; }}
           tabIndex={-1}
         >
-          {renderItem ? renderItem(v, i) : v[valueField]}
+          {renderItem ? renderItem(item, i) : item[valueField]}
         </div>
       );
 
@@ -487,7 +492,7 @@ class Tipako extends React.Component {
         onBlur={onInputBlur}
         onClick={onCaretClick}
         onFocus={onSearchFocus}
-        onChange={evt => onSearch(evt.target.value)}
+        onChange={evt => onInputChange(evt.target.value)}
         placeholder={titlePlaceholder}
         updateOnSelect={updateOnSelect}
         value={value}
