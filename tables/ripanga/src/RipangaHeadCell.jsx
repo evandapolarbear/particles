@@ -18,10 +18,11 @@ const RipangaHeadCell = ({
   };
 
   let arrow = null;
-  if (sortState.attribute && sortState.attribute === def.sortKey && sortState.direction !== SORT_DIRECTION.NONE) {
+  if (sortState.attribute && sortState.attribute === def.sortKey && sortState.direction
+    !== SORT_DIRECTION.NONE) {
     arrow = (sortState.direction === SORT_DIRECTION.DESC
-      ? <i className='fa fa-long-arrow-down' />
-      : <i className='fa fa-long-arrow-up' />);
+      ? <i className={cx('fa fa-long-arrow-down', styles.sortArrow)} />
+      : <i className={cx('fa fa-long-arrow-up', styles.sortArrow)} />);
   }
 
   if (!def.key) {

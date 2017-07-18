@@ -79,6 +79,10 @@ $tableZ: 0;
   }
 }
 
+.sortArrow {
+  margin-left: $padding;
+}
+
 .groupRow {
   composes: tableRow;
   background: #f2f2f2;
