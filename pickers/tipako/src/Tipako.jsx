@@ -14,101 +14,98 @@ import generateId from '../../../shared/generateId';
 let counter = 0;
 let groupCounter = 0;
 
-const Pure = ({
-  caret,
-  clear,
-  controls,
-  count,
-  disabled,
-  empty,
-  expanded,
-  items,
-  onKeyDown,
-  search,
-  slot,
-  slotBottom,
-  spinner,
-  styles,
-  tabIndex
-}) => (
-  <div
-    className={cx(styles.container,
-      { [styles.active]: expanded,
-        [styles.disabled]: disabled })}
-    onKeyDown={onKeyDown}
-    tabIndex={tabIndex}
-  >
-    <div
-      className={cx(styles.title,
-        { [styles.active]: expanded,
-          [styles.disabled]: disabled })}
-    >
-      {slot}
-      {search}
-      {clear}
-      {caret}
-      {spinner}
-    </div>
-
-    <div className={styles.dropdownContainer}>
-      <div
-        className={cx(styles.dropdown, {
-          [styles.expanded]: expanded,
-          [styles.withSlotBottom]: slotBottom && expanded
-        })}
-      >
-        {controls}
-        <div className={styles.itemsContainer}>
-          {count ? items : empty}
-        </div>
-        {slotBottom &&
-          <div
-            className={styles.slotBottom}
-            onClick={e => e.stopPropagation()}
-          >{slotBottom}</div>}
-      </div>
-    </div>
-  </div>
+const Spacer = ({ className }) => (<div className={className}>/</div>);
+const ControlsButton = text => ({ onClick, className }) => (
+  <button className={className} onClick={onClick} type='button'>
+    {text}
+  </button>
 );
 
-Pure.propTypes = {
-  caret: PropTypes.element,
-  clear: PropTypes.element,
-  controls: PropTypes.element,
-  count: PropTypes.number,
-  disabled: PropTypes.bool,
-  empty: PropTypes.element,
-  expanded: PropTypes.bool,
-  items: PropTypes.arrayOf(PropTypes.element),
-  onKeyDown: PropTypes.func,
-  search: PropTypes.element,
-  slot: PropTypes.element,
-  slotBottom: PropTypes.element,
-  spinner: PropTypes.element,
-  styles: PropTypes.shape({}),
-  tabIndex: PropTypes.number
+const SelectAll = ControlsButton('Select All');
+const ClearAll = ControlsButton('Clear All');
+
+const Controls = ({
+  onClearAll,
+  onSelectAll,
+  count,
+  styles,
+}) => {
+  const selectAll = (onSelectAll && count) && (
+    <SelectAll className={styles.controlsButton} onClick={onSelectAll} />
+  );
+  const clearAll = (onClearAll) && (
+    <ClearAll className={styles.controlsButton} onClick={onClearAll} />
+  );
+  return (
+    <div className={styles.controls}>
+      {selectAll}
+      {(clearAll && selectAll) && <Spacer className={styles.controlsSpacer} />}
+      {clearAll}
+    </div>
+  );
 };
 
-Pure.defaultProps = {
-  caret: null,
-  clear: null,
-  controls: null,
-  count: 0,
-  disabled: false,
-  empty: null,
-  expanded: false,
-  items: [],
-  onKeyDown: () => {},
-  search: null,
-  slot: null,
-  slotBottom: null,
-  spinner: null,
-  styles: {},
-  tabIndex: 0
-};
+
+const Empty = ({ className, content }) => (
+  <div className={className}>{content}</div>
+);
+
+const Caret = ({ onClick, expanded, styles }) => (
+  <button onClick={onClick} className={styles.caret} type='button'>
+    <span className={cx('fa', 'fa-caret-down', styles.arrow, { [styles.expanded]: expanded })} />
+  </button>
+);
+
+const Clear = ({ onClick, className }) => (
+  <button onClick={onClick} className={className} type='button' />
+);
+
+const Spinner = ({ className }) => (<span className={className} />);
+
+const Slot = ({ text, className }) => (<div className={className}>{text}</div>);
+
+const Search = ({
+  searchable,
+  styles,
+  onBlur,
+  onChange,
+  onClick,
+  onFocus,
+  placeholder,
+  inputRef,
+  titleValue,
+  value,
+  updateOnSelect
+}) =>
+  searchable
+  ? (
+    <input
+      className={cx(styles.input, {
+        [styles.noClear]: !updateOnSelect
+      })}
+      onBlur={onBlur}
+      onChange={onChange}
+      onClick={onClick}
+      onFocus={onFocus}
+      placeholder={placeholder}
+      ref={inputRef}
+      type='text'
+      value={value || ''}
+    />
+  ) : (
+    <div
+      className={cx(styles.staticText, { [styles.noClear]: !updateOnSelect })}
+      onClick={onClick}
+    >
+      {(value.length > 0 && value) || titleValue || placeholder}
+    </div>
+  );
 
 const enhancer = compose(
-  withProps(initialProps => ({ guid: generateId() })),
+  withProps(({ stylesheets }) => ({
+    guid: generateId(),
+    styles: composeStyles(baseStyles, [...stylesheets])
+  })),
   withStateHandlers(
     ({ titleValue = '' }) => ({
       value: titleValue,
@@ -301,8 +298,6 @@ class Tipako extends React.Component {
   constructor(props) {
     super(props);
 
-    this.styles = composeStyles(baseStyles, [...props.stylesheets]);
-
     if (props.searchable === false && props.onSearch !== null) {
       console.error('An instance of Tipako has an "onSearch()" ' // eslint-disable-line
         + 'callback defined, but its "searchable" prop is false, '
@@ -362,6 +357,7 @@ class Tipako extends React.Component {
       value,
       onInputClear,
       onUngroupedClick,
+      styles,
       onGroupClick
     } = this.props;
 
@@ -387,9 +383,9 @@ class Tipako extends React.Component {
           const focusedItem = currentIndex === counter;
           const childItem = result.concat(
             <div
-              className={cx(this.styles.item, this.styles.childItem,
-                { [this.styles.disabled]: vv.disabled,
-                  [this.styles.keyFocus]: focusedItem })}
+              className={cx(styles.item, styles.childItem,
+                { [styles.disabled]: vv.disabled,
+                  [styles.keyFocus]: focusedItem })}
               key={`child-${v[keyField]}-${vv[keyField]}`}
               onClick={(e) => { onChildClick(e, vv); }}
               onKeyDown={(e) => { if (focusedItem && e.keyCode === 13) onChildClick(e, vv); }}
@@ -411,9 +407,9 @@ class Tipako extends React.Component {
 
         const group = (
           <div
-            className={cx(this.styles.item, this.styles.groupItem,
-              { [this.styles.disabled]: v.disabled,
-                [this.styles.keyFocus]: focusedItem })}
+            className={cx(styles.item, styles.groupItem,
+              { [styles.disabled]: v.disabled,
+                [styles.keyFocus]: focusedItem })}
             key={`group-${v[keyField]}`}
             onClick={(evt) => { onGroupClick(evt, v); }}
             onKeyDown={(e) => { if (focusedItem && e.keyCode === 13) onGroupClick(e, v); }}
@@ -443,9 +439,9 @@ class Tipako extends React.Component {
 
       const ungrouped = (
         <div
-          className={cx(this.styles.item, this.styles.ungroupedItem,
-            { [this.styles.disabled]: v.disabled,
-              [this.styles.keyFocus]: focusedItem })}
+          className={cx(styles.item, styles.ungroupedItem,
+            { [styles.disabled]: v.disabled,
+              [styles.keyFocus]: focusedItem })}
           key={`ungrouped-${v[keyField]}`}
           onClick={(evt) => { onUngroupedClick(evt, v); }}
           onKeyDown={(e) => { if (focusedItem && e.keyCode === 13) onUngroupedClick(e, v); }}
@@ -463,93 +459,93 @@ class Tipako extends React.Component {
       return acc.concat(ungrouped);
     }, []);
 
-    const selectAll = (onSelectAll && items.length > 0) && (
-      <button className={this.styles.controlsButton} onClick={onSelectAll} type='button'>
-         Select All
-      </button>
+    const empty = Empty({
+      className: styles.empty,
+      content: renderEmpty ? renderEmpty() : getEmptyString()
+    });
+    const caret = Caret({
+      onClick: onCaretClick,
+      expanded,
+      styles: styles
+    });
+    const clear = Clear({
+      onClick: onInputClear,
+      className: styles.clear
+    });
+    const spinner = loading
+      ? Spinner({ className: styles.spinner })
+      : null;
+    const slot = slotTitle && Slot({
+      text: slotTitle,
+      className: styles.slot
+    });
+
+    const search = (
+      <Search
+        searchable={searchable}
+        styles={styles}
+        onBlur={onInputBlur}
+        onClick={onCaretClick}
+        onFocus={onSearchFocus}
+        onChange={evt => onSearch(evt.target.value)}
+        placeholder={titlePlaceholder}
+        updateOnSelect={updateOnSelect}
+        value={value}
+        inputRef={input => (this.searchInput = input)}
+      />
     );
 
-    const clearAll = onClearAll && (
-      <button className={this.styles.controlsButton} onClick={onClearAll} type='button'>
-        Clear All
-      </button>);
+    const controls = (
+      <Controls
+        styles={styles}
+        count={items.length}
+        onSelectAll={onSelectAll}
+        onClearAll={onClearAll}
+      />
+    );
 
-    const spacer = (clearAll && selectAll)
-      ? <div className={this.styles.controlsSpacer}>/</div>
-      : null;
+    const count = items.length;
 
-    const controls =
-      (selectAll || clearAll) && (
-        <div className={this.styles.controls}>
-          {selectAll}
-          {spacer}
-          {clearAll}
-        </div>
-      );
-
-    const empty = (<div className={this.styles.empty}>
-      {renderEmpty ? renderEmpty() : getEmptyString()}
-    </div>);
-
-    const caret = loading
-      ? null
-      : (<button onClick={onCaretClick} className={this.styles.caret} type='button'>
-        <span className={cx('fa', 'fa-caret-down', this.styles.arrow, { [this.styles.expanded]: expanded })} />
-      </button>);
-
-    const clear = value
-      ? <button onClick={onInputClear} className={this.styles.clear} type='button' />
-      : null;
-
-    const spinner = loading
-      ? <span className={this.styles.spinner} />
-      : null;
-
-    const slot = slotTitle
-      ? <div className={this.styles.slot}>{slotTitle}</div>
-      : null;
-
-    const search = searchable
-      ? (
-        <input
-          className={cx(this.styles.input, {
-            [this.styles.noClear]: !updateOnSelect
-          })}
-          onBlur={onInputBlur}
-          onChange={evt => onSearch(evt.target.value)}
-          onClick={onCaretClick}
-          onFocus={onSearchFocus}
-          placeholder={titlePlaceholder}
-          ref={input => (this.searchInput = input)}
-          type='text'
-          value={value || ''}
-        />
-      ) : (
+    return (
+      <div
+        className={cx(styles.container,
+          { [styles.active]: expanded,
+            [styles.disabled]: disabled })}
+        onKeyDown={arrowKeyListener}
+        tabIndex={-1}
+      >
         <div
-          className={cx(this.styles.staticText, { [this.styles.noClear]: !updateOnSelect })}
-          onClick={onCaretClick}
+          className={cx(styles.title,
+            { [styles.active]: expanded,
+              [styles.disabled]: disabled })}
         >
-          {(value.length > 0 && value) || titleValue || titlePlaceholder}
+          {slot}
+          {search}
+          {clear}
+          {caret}
+          {spinner}
         </div>
-      );
 
-    return (<Pure
-      caret={caret}
-      clear={clear}
-      controls={controls}
-      count={items.length}
-      disabled={disabled}
-      empty={empty}
-      items={items}
-      expanded={expanded}
-      onKeyDown={arrowKeyListener}
-      search={search}
-      slot={slot}
-      slotBottom={slotBottom}
-      spinner={spinner}
-      styles={this.styles}
-      tabIndex={-1}
-    />);
+        <div className={styles.dropdownContainer}>
+          <div
+            className={cx(styles.dropdown, {
+              [styles.expanded]: expanded,
+              [styles.withSlotBottom]: slotBottom && expanded
+            })}
+          >
+            {controls}
+            <div className={styles.itemsContainer}>
+              {count ? items : empty}
+            </div>
+            {slotBottom &&
+              <div
+                className={styles.slotBottom}
+                onClick={e => e.stopPropagation()}
+              >{slotBottom}</div>}
+          </div>
+        </div>
+      </div>
+    );
   }
 }
 
