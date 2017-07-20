@@ -311,20 +311,28 @@ export default class Maramataka extends React.Component {
   renderDateRange() {
     const { dateRange } = this.props;
 
+    /* add inputs for range */
+    const renderRangeInput = (
+      <div />
+    );
+
     return dateRange && (
-      <div className={this.styles.dateRangeBtnGroup}>
-        <button
-          className={cx(this.styles.dateRangeBtn, { [this.styles.selected]: this.state.dateRangeTypeSelection === 'single' })}
-          onClick={() => this.setState({ dateRangeTypeSelection: 'single' })}
-        >
-          Single Day
-        </button>
-        <button
-          className={cx(this.styles.dateRangeBtn, { [this.styles.selected]: this.state.dateRangeTypeSelection === 'range' })}
-          onClick={() => this.setState({ dateRangeTypeSelection: 'range' })}
-        >
-          Date Range
-        </button>
+      <div>
+        <div className={this.styles.dateRangeBtnGroup}>
+          <button
+            className={cx(this.styles.dateRangeBtn, { [this.styles.selected]: this.state.dateRangeTypeSelection === 'single' })}
+            onClick={() => this.setState({ dateRangeTypeSelection: 'single' })}
+          >
+            Single Day
+          </button>
+          <button
+            className={cx(this.styles.dateRangeBtn, { [this.styles.selected]: this.state.dateRangeTypeSelection === 'range' })}
+            onClick={() => this.setState({ dateRangeTypeSelection: 'range' })}
+          >
+            Date Range
+          </button>
+        </div>
+        {this.state.dateRangeTypeSelection === 'range' && renderRangeInput}
       </div>
     );
   }
