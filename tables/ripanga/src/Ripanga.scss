@@ -48,6 +48,7 @@ $tableZ: 0;
 
 .tableRow {
   display: flex;
+  height: 32px; // for IE 11 
 }
 
 .tableCell {

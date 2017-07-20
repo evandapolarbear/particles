@@ -4,6 +4,9 @@ A table component with self-managed checkboxes, sticky head, sticky right panel,
 
 # Change Log
 
+##### 2.5.3
+- Fixed IE 11 row height bug introduced in 2.5.0
+
 ##### 2.5.2
 - Added margin-left to the sort arrow
 
