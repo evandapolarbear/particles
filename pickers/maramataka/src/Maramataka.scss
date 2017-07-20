@@ -121,6 +121,26 @@
   margin: 0 4px;
 }
 
+.dateRangeBtnGroup {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 16px;
+
+  .dateRangeBtn {
+    width: 50%;
+    padding: 12px;
+    background: none;
+    border: 1px solid $lightGray;
+
+    &.selected {
+      background: $darkGray;
+      color: $white;
+    }
+  }
+}
+
 .days {
   font-size: 0;
   padding: 8px;

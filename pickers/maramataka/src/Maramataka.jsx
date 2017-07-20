@@ -14,14 +14,17 @@ export default class Maramataka extends React.Component {
     onClear: PropTypes.func,
     onSelect: PropTypes.func.isRequired,
     stylesheets: PropTypes.arrayOf(PropTypes.shape()),
-    value: PropTypes.shape()
+    value: PropTypes.shape(),
+    dateRange: PropTypes.bool
+    // i18n: PropTypes.shape()
   };
 
   static defaultProps = {
     closeOnSelect: true,
-    onClear: () => {},
+    onClear: () => { },
     stylesheets: [],
-    value: { day: '', month: '', year: '' }
+    value: { day: '', month: '', year: '' },
+    dateRange: false
   };
 
   constructor(props) {
@@ -38,7 +41,8 @@ export default class Maramataka extends React.Component {
       errors: { day: false, month: false, year: false },
       expanded: false,
       selected: { day: null, month: null, year: null },
-      value: { day: props.value.day * 1, month: props.value.month * 1, year: props.value.year * 1 }
+      value: { day: props.value.day * 1, month: props.value.month * 1, year: props.value.year * 1 },
+      dateRangeTypeSelection: 'single'
     };
   }
 
@@ -249,8 +253,8 @@ export default class Maramataka extends React.Component {
     const { errors, expanded, value } = this.state;
 
     const button = (value.day || value.month || value.year)
-        ? <button className={this.styles.clearButton} onClick={this.onClear} />
-        : null;
+      ? <button className={this.styles.clearButton} onClick={this.onClear} />
+      : null;
 
     return (
       <div
@@ -300,6 +304,27 @@ export default class Maramataka extends React.Component {
         />
 
         {button}
+      </div>
+    );
+  }
+
+  renderDateRange() {
+    const { dateRange } = this.props;
+
+    return dateRange && (
+      <div className={this.styles.dateRangeBtnGroup}>
+        <button
+          className={cx(this.styles.dateRangeBtn, { [this.styles.selected]: this.state.dateRangeTypeSelection === 'single' })}
+          onClick={() => this.setState({ dateRangeTypeSelection: 'single' })}
+        >
+          Single Day
+        </button>
+        <button
+          className={cx(this.styles.dateRangeBtn, { [this.styles.selected]: this.state.dateRangeTypeSelection === 'range' })}
+          onClick={() => this.setState({ dateRangeTypeSelection: 'range' })}
+        >
+          Date Range
+        </button>
       </div>
     );
   }
@@ -374,6 +399,8 @@ export default class Maramataka extends React.Component {
 
     const head = this.renderHead();
 
+    const dateRange = this.renderDateRange();
+
     const days = this.renderDays();
 
     const dayTitles = dayNames.map(name =>
@@ -385,6 +412,7 @@ export default class Maramataka extends React.Component {
 
         <div className={this.styles.dropdownContainer} onClick={evt => evt.stopPropagation()}>
           <div className={cx(this.styles.dropdown, { [this.styles.expanded]: expanded })}>
+            {dateRange}
             <div className={this.styles.month}>
               <div className={this.styles.leftArrow} onClick={this.onLeftArrowClick} />
               <div className={this.styles.monthTitle}>{monthNames[active.month]} {active.year}</div>

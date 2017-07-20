@@ -29,7 +29,8 @@ render(
         onClear,
         onSelect,
         stylesheets,
-        value
+        value,
+        dateRange: true
       }}
     />
   </div>,
