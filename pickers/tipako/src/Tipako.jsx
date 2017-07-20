@@ -29,6 +29,7 @@ const buildOptions = ({
   valueField,
   searchTerm,
   currentIndex,
+  focusedItemRef,
   styles,
   keyField,
   onChildClick,
@@ -60,7 +61,7 @@ const buildOptions = ({
               onChildClick(e, subItem);
             }
           }}
-          ref={(el) => { if (focusedItem) this.focusedItem = el; }}
+          ref={ref => focusedItem && focusedItemRef(ref)}
           tabIndex={-1}
         >
           {renderItem ? renderItem(subItem, ii) : subItem[valueField]}
@@ -84,7 +85,7 @@ const buildOptions = ({
         key={`group-${item[keyField]}`}
         onClick={(evt) => { onGroupClick(evt, item); }}
         onKeyDown={(e) => { if (focusedItem && e.keyCode === 13) onGroupClick(e, item); }}
-        ref={(el) => { if (focusedItem) this.focusedItem = el; }}
+        ref={ref => focusedItem && focusedItemRef(ref)}
         tabIndex={-1}
       >
         {renderGroup ? renderGroup(item, i) : item[valueField]}
@@ -116,7 +117,7 @@ const buildOptions = ({
       key={`ungrouped-${item[keyField]}`}
       onClick={(evt) => { onUngroupedClick(evt, item); }}
       onKeyDown={(e) => { if (focusedItem && e.keyCode === 13) onUngroupedClick(e, item); }}
-      ref={(el) => { if (focusedItem) this.focusedItem = el; }}
+      ref={ref => focusedItem && focusedItemRef(ref)}
       tabIndex={-1}
     >
       {renderItem ? renderItem(item, i) : item[valueField]}
@@ -405,7 +406,8 @@ class Tipako extends React.Component {
       renderItem,
       onGroupClick,
       renderGroup,
-      onUngroupedClick
+      onUngroupedClick,
+      focusedItemRef: ref => (this.focusedItem = ref)
     });
 
 
