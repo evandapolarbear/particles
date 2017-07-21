@@ -66,7 +66,8 @@ export default class TatariDropdownPlain extends React.Component {
 
     return (<div className={styles.dropdownContainer}>
       <div
-        className={cx(styles.dropdownHead, { [styles.expanded]: isExpanded })}
+        className={cx(styles.dropdownHead, styles.dropdownHeadPlain,
+          { [styles.expanded]: isExpanded })}
         data-key={'inactive'}
         onClick={onExpand}
         onKeyDown={keyListeners}
@@ -78,7 +79,8 @@ export default class TatariDropdownPlain extends React.Component {
       </div>
 
       <div
-        className={cx(styles.dropdownBody, { [styles.expanded]: isExpanded })}
+        className={cx(styles.dropdownBody, styles.dropdownBodyPlain,
+          { [styles.expanded]: isExpanded })}
         onKeyDown={keyListeners}
         tabIndex={-1}
       >

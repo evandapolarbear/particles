@@ -198,6 +198,14 @@ $h: 30px;
   }
 }
 
+.dropdownHeadPlain {
+  user-select: none;
+}
+
+.dropdownBodyPlain {
+  user-select: none;
+}
+
 .dropdownLoading {
   animation-duration: 1.5s;
   animation-name: spin;
