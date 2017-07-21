@@ -30,7 +30,8 @@ render(
         onSelect,
         stylesheets,
         value,
-        dateRange: true
+        dateRange: true,
+        dateInputFormat: 'full'
       }}
     />
   </div>,

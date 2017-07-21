@@ -1,12 +1,14 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import cx from 'classnames';
+import moment from 'moment';
 import baseStyles from './Maramataka.scss';
 import composeStyles from '../../../shared/stylesheetComposer';
 import generateId from '../../../shared/generateId';
+import { dayNames, monthNames, validDateFormats } from './helpers';
 
-const dayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+
+const i18n = window.I18n || {};
 
 export default class Maramataka extends React.Component {
   static propTypes = {
@@ -15,8 +17,8 @@ export default class Maramataka extends React.Component {
     onSelect: PropTypes.func.isRequired,
     stylesheets: PropTypes.arrayOf(PropTypes.shape()),
     value: PropTypes.shape(),
-    dateRange: PropTypes.bool
-    // i18n: PropTypes.shape()
+    dateRange: PropTypes.bool,
+    dateInputFormat: PropTypes.oneOf(['full', 'short'])
   };
 
   static defaultProps = {
@@ -24,7 +26,8 @@ export default class Maramataka extends React.Component {
     onClear: () => { },
     stylesheets: [],
     value: { day: '', month: '', year: '' },
-    dateRange: false
+    dateRange: false,
+    dateInputFormat: 'short'
   };
 
   constructor(props) {
@@ -36,6 +39,7 @@ export default class Maramataka extends React.Component {
     const d = new Date();
 
     this.state = {
+      date: d,
       active: { day: d.getDate(), month: d.getMonth(), year: d.getFullYear() },
       days: { previous: [], active: [], next: [] },
       errors: { day: false, month: false, year: false },
@@ -179,6 +183,20 @@ export default class Maramataka extends React.Component {
     this.setState({ value }, this.onInputChange);
   }
 
+  handleFreeInputDate = (evt) => {
+    const { value } = this.state;
+    if (evt.target.value.length > 5) {
+      const m = moment(evt.target.value, validDateFormats, 'en' || moment.locale(), true);
+      // console.log(m);
+      if (m.isValid()) {
+        value.day = m.date();
+        value.month = m.month() + 1;
+        value.year = m.year();
+        this.setState({ value }, this.onInputChange);
+      }
+    }
+  }
+
   validateDay = (day) => {
     if (day === null) {
       return true;
@@ -249,14 +267,14 @@ export default class Maramataka extends React.Component {
     this.setState({ days: { previous, active, next } });
   }
 
-  renderHead() {
+  renderHead(dateInputFormat) {
     const { errors, expanded, value } = this.state;
 
     const button = (value.day || value.month || value.year)
       ? <button className={this.styles.clearButton} onClick={this.onClear} />
       : null;
 
-    return (
+    const short = (
       <div
         className={cx(this.styles.head, { [this.styles.expanded]: expanded })}
         onClick={this.onHeadClick}
@@ -306,6 +324,29 @@ export default class Maramataka extends React.Component {
         {button}
       </div>
     );
+
+    const full = (
+      <div
+        className={cx(this.styles.head, { [this.styles.expanded]: expanded })}
+        onClick={this.onHeadClick}
+      >
+        <input
+          onChange={this.handleFreeInputDate}
+          placeholder='Today'
+          value={this.formatFreeInputDate}
+        />
+        {button}
+      </div>
+    );
+
+    switch (dateInputFormat) {
+      case 'short':
+        return short;
+      case 'full':
+        return full;
+      default:
+        return 'short';
+    }
   }
 
   renderDateRange() {
@@ -403,9 +444,10 @@ export default class Maramataka extends React.Component {
   }
 
   render() {
+    // console.log(this.state);
     const { active, expanded } = this.state;
 
-    const head = this.renderHead();
+    const head = this.renderHead(this.props.dateInputFormat);
 
     const dateRange = this.renderDateRange();
 
