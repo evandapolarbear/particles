@@ -4,6 +4,9 @@ Manages column definition arrays to configure columns.
 
 # Change Log
 
+##### 2.4.1
+- Updated the ellipses button to a custom `.svg`
+
 ##### 2.4.0
 - Added row height control
 

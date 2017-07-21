@@ -241,9 +241,22 @@ export default class Tiwae extends React.Component {
       items.splice(index, 0, <div key='ghost' className={styles.ghost} />);
     }
 
+    const verticalEllipsis = (
+      <svg width='4px' height='16px' viewBox='0 0 4 16'>
+        <g stroke='none' strokeWidth='1' fill='none' fillRule='evenodd'>
+          <g transform='translate(-6, 0)' fill='#83888D'>
+            <path d='M8,4 C9.1,4 10,3.1 10,2 C10,0.9 9.1,0 8,0 C6.9,0 6,0.9 6,2 C6,3.1 6.9,4 8,4 L8,4 Z M8,
+              6 C6.9,6 6,6.9 6,8 C6,9.1 6.9,10 8,10 C9.1,10 10,9.1 10,8 C10,6.9 9.1,6 8,6 L8,6 Z M6,14 C6,
+              15.1 6.9,16 8,16 C9.1,16 10,15.1 10,14 C10,12.9 9.1,12 8,12 C6.9,12 6,12.9 6,14 Z'
+            />
+          </g>
+        </g>
+      </svg>
+    );
+
     return (
       <div className={styles.container}>
-        <div className={`${styles.button} fa fa-ellipsis-v`} onClick={this.onExpand} />
+        <div className={styles.button} onClick={this.onExpand}>{verticalEllipsis}</div>
         <div className={`${styles.dropdownContainer} ${this.state.expanded ? styles.expanded : ''}`}>
           <div className={styles.dropdownTriangle} />
           <div

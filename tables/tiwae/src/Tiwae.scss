@@ -4,15 +4,14 @@ $buttonH: 24px;
 $itemH: 24px;
 
 .button {
+  align-items: center;
   border-radius: 2px;
-  color: #888;
   cursor: pointer;
-  font-size: 16px;
+  display: flex;
   height: $buttonH;
-  line-height: $buttonH;
+  justify-content: center;
   position: absolute;
   right: 0;
-  text-align: center;
   top: 0;
   transition: background 0.2s ease, color 0.2s ease;
   width: $buttonH;
@@ -68,7 +67,7 @@ $itemH: 24px;
   overflow: hidden;
   position: relative;
   transition: max-height 0.3s ease, opacity 0.3s $bezier;
-  top: -4px;
+  top: -3px;
 
   &.expanded {
     box-shadow: -8px 8px 8px -8px rgba(0, 0, 0, 0.26);
