@@ -4,6 +4,10 @@ A Modal Component
 
 # Change Log
 
+##### 1.0.3
+
+Provide option of headerless and footerless.
+
 ##### 1.0.2
 
 Give the modal a minimum width and auto overflow.

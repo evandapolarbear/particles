@@ -51,10 +51,13 @@ class Modal extends Component {
   render() {
     const {
       className: propClassName,
+      closeClassName: propCloseClassName,
       children,
       custom,
       footer,
       header,
+      disableHeader,
+      disableFooter,
       label,
       large,
       medium,
@@ -67,7 +70,12 @@ class Modal extends Component {
       styles['modal-window'], propClassName, {
         [styles['modal-small']]: small,
         [styles['modal-medium']]: medium,
-        [styles['modal-large']]: large,
+        [styles['modal-large']]: large
+      }
+    );
+    const closeClassName = cx(
+      styles.close, propCloseClassName, {
+        [styles['close-black']]: disableHeader
       }
     );
 
@@ -76,21 +84,23 @@ class Modal extends Component {
         <div onClick={this.onOverlayClicked} className={styles.overlay} />
         <div className={modalClassName}>
           <div>
-            <header className={styles.header}>
-              {header || <h1>{label}</h1>}
-              <div className={styles.close}>
-                <i
-                  className="fa fa-close"
-                  onClick={this.onCloseClicked}
-                />
-              </div>
-            </header>
+            <div className={closeClassName}>
+              <i
+                className='fa fa-close'
+                onClick={this.onCloseClicked}
+              />
+            </div>
+            { !disableHeader &&
+              <header className={styles.header}>
+                {header || <h1>{label}</h1>}
+              </header>
+            }
             <div className={styles.content}>
               {children}
             </div>
-            {footer && (
+            { !disableFooter && (
               <footer className={styles.footer}>
-                {footer}
+                {footer || 'footer'}
               </footer>
             )}
           </div>
@@ -103,6 +113,8 @@ class Modal extends Component {
 export default Modal;
 
 Modal.propTypes = {
+  disableHeader: PropTypes.bool,
+  disableFooter: PropTypes.bool,
   onCloseClicked: PropTypes.func,
   onOverlayClicked: PropTypes.func,
   beforeOpen: PropTypes.func,

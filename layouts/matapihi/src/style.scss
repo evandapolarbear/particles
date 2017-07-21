@@ -89,4 +89,9 @@ $white1: #fff;
   color: $gray4;
   font-weight: bold;
   cursor: pointer;
+  z-index: 1;
+}
+
+.close-black {
+  color: $black1;
 }

@@ -15,6 +15,8 @@ class Component extends React.Component {
       <div>
         <div>
           <Modal
+            disableHeader
+            disableFooter
             closeOnOverlayClicked
             show={this.state.show}
             closeModal={() => this.setState({ show: false })}
