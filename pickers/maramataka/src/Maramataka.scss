@@ -100,6 +100,17 @@
     background: $lightGray;
     outline: 0;
   }
+
+  &.full {
+    width: 100%;
+    text-align: left;
+    margin-right: 8px;
+  }
+
+  &.range {
+    width: 100%;
+    text-align: left;
+  }
 }
 
 .input::-webkit-inner-spin-button,
@@ -122,21 +133,60 @@
 }
 
 .dateRangeBtnGroup {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: center;
   padding: 10px 16px;
 
   .dateRangeBtn {
     width: 50%;
-    padding: 12px;
+    padding: 8px;
     background: none;
     border: 1px solid $lightGray;
 
     &.selected {
       background: $darkGray;
       color: $white;
+    }
+
+    &:focus {
+      outline: 0;
+    }
+  }
+}
+
+.dateRangeInputsContainer {
+  padding: 10px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  .inputContainer {
+    display: flex;
+    flex: 1;
+    align-items: center;
+    position: relative;
+    height: 32px;
+    border: 1px solid $darkGray;
+    width: 0;
+    padding-left: 8px;
+    
+    .inputs {
+      border-radius: 1px;
+      border: 0;
+      cursor: text;
+      font-size: 13px;
+      height: 20px;
+      line-height: 0;
+      padding: 0;
+      text-align: left;
+      width: 100%;
+
+      &:focus {
+        background: $lightGray;
+        outline: 0;
+      }
+      
+      &.invalid {
+        background: $xLightRed;
+      }
     }
   }
 }

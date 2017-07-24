@@ -9,10 +9,18 @@ const onSelect = (value) => {
   console.info('Selected:', value); // eslint-disable-line
 };
 
+// const value = {
+//   day: '28',
+//   month: '2',
+//   year: '2017'
+// };
+
+const d = new Date();
+
 const value = {
-  day: '28',
-  month: '2',
-  year: '2017'
+  day: d.getDate(),
+  month: d.getMonth() + 1,
+  year: d.getFullYear()
 };
 
 const stylesheets = [sandboxStyles];
@@ -30,7 +38,7 @@ render(
         onSelect,
         stylesheets,
         value,
-        dateRange: true,
+        showDateRange: true,
         dateInputFormat: 'full'
       }}
     />
