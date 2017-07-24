@@ -134,8 +134,9 @@ export default class Maramataka extends React.Component {
     const selected = { day, month, year };
     const value = { day, month: month + 1, year };
     let formattedDate;
+    const selectedDate = `${month + 1} ${day} ${year}`;
     if (this.state.dateRangeTypeSelection === 'single') {
-      formattedDate = { full: moment(`${month + 1} ${day} ${year}`, 'M D YYYY').format('ddd MMM D, YYYY') };
+      formattedDate = { full: moment(selectedDate, 'M D YYYY').format(fullDateFormat) };
       this.setState({ selected, value, formattedDate, expanded: !this.props.closeOnSelect }, () => {
         this.updateDateArrays();
         this.props.onSelect(value);
@@ -145,14 +146,18 @@ export default class Maramataka extends React.Component {
     if (this.state.dateRangeTypeSelection === 'range') {
       const { dateRange, dateRangeStep } = this.state;
       if (dateRangeStep === 0) {
-        dateRange.from = moment(`${month + 1} ${day} ${year}`, 'M D YYYY').format('MMM D, YYYY');
-        this.setState({ selected, value, expanded: !this.props.closeOnSelect, dateRange, dateRangeStep: dateRangeStep + 1 }, () => {
+        dateRange.from = moment(selectedDate, 'M D YYYY').format('MMM D, YYYY');
+        if (dateRange.to !== '') {
+          dateRange.to = moment(dateRange.from, longDateFormat).diff(moment(dateRange.to, longDateFormat)) > 0 ? '' : dateRange.to;
+        }
+        formattedDate = { full: moment(selectedDate, 'M D YYYY').format(fullDateFormat) };
+        this.setState({ selected, value, expanded: !this.props.closeOnSelect, dateRange, dateRangeStep: dateRangeStep + 1, formattedDate }, () => {
           this.updateDateArrays();
           this.props.onSelect(value);
         });
       }
       if (dateRangeStep === 1) {
-        dateRange.to = moment(`${month + 1} ${day} ${year}`, 'M D YYYY').format('MMM D, YYYY');
+        dateRange.to = moment(selectedDate, 'M D YYYY').format(longDateFormat);
         this.setState({ selected, value, expanded: !this.props.closeOnSelect, dateRange, dateRangeStep: 0 }, () => {
           this.updateDateArrays();
           this.props.onSelect(value);
