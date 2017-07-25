@@ -146,7 +146,7 @@ export default class Maramataka extends React.Component {
     if (this.state.dateRangeTypeSelection === 'range') {
       const { dateRange, dateRangeStep } = this.state;
       if (dateRangeStep === 0) {
-        dateRange.from = moment(selectedDate, 'M D YYYY').format('MMM D, YYYY');
+        dateRange.from = moment(selectedDate, 'M D YYYY').format(longDateFormat);
         if (dateRange.to !== '') {
           dateRange.to = moment(dateRange.from, longDateFormat).diff(moment(dateRange.to, longDateFormat)) > 0 ? '' : dateRange.to;
         }
@@ -158,6 +158,9 @@ export default class Maramataka extends React.Component {
       }
       if (dateRangeStep === 1) {
         dateRange.to = moment(selectedDate, 'M D YYYY').format(longDateFormat);
+        if (dateRange.from !== '') {
+          dateRange.to = moment(dateRange.from, longDateFormat).diff(moment(dateRange.to, longDateFormat)) > 0 ? '' : dateRange.to;
+        }
         this.setState({ selected, value, expanded: !this.props.closeOnSelect, dateRange, dateRangeStep: 0 }, () => {
           this.updateDateArrays();
           this.props.onSelect(value);
@@ -463,14 +466,27 @@ export default class Maramataka extends React.Component {
   }
 
   renderDays() {
-    const { active, days, selected } = this.state;
+    const { active, days, selected, dateRangeTypeSelection, dateRange } = this.state;
 
     const result = [];
 
     days.previous.forEach((day) => {
-      const isSelected = (day === selected.day &&
-        active.month === (selected.month + 1) &&
-        active.year === selected.year);
+      let isSelected;
+
+      if (dateRangeTypeSelection === 'single') {
+        isSelected = (day === selected.day &&
+          (active.month === (selected.month + 1) ||
+            active.month + 11 === selected.month) &&
+          (active.year === selected.year ||
+            active.year - 1 === selected.year)
+        );
+      } else {
+        isSelected = ((dateRange.from !== '' && dateRange.to !== '') &&
+          (
+            moment(`${active.month > 0 ? active.month : active.month + 12} ${day} ${active.year}`, 'M D YYYY').isBetween(moment(dateRange.from, longDateFormat), moment(dateRange.to, longDateFormat), null, '[]')
+          )
+        );
+      }
 
       result.push(
         <div
@@ -487,9 +503,22 @@ export default class Maramataka extends React.Component {
     });
 
     days.active.forEach((day) => {
-      const isSelected = (day === selected.day &&
-        active.month === selected.month &&
-        active.year === selected.year);
+      // const isSelected = (day === selected.day &&
+      //   active.month === selected.month &&
+      //   active.year === selected.year);
+
+      let isSelected;
+
+      if (dateRangeTypeSelection === 'single') {
+        isSelected = (day === selected.day &&
+          active.month === selected.month &&
+          active.year === selected.year
+        );
+      } else {
+        isSelected = ((dateRange.from !== '' && dateRange.to !== '') &&
+          moment(`${active.month + 1} ${day} ${active.year}`, 'M D YYYY').isBetween(moment(dateRange.from, longDateFormat), moment(dateRange.to, longDateFormat), null, '[]')
+        );
+      }
 
       result.push(
         <div
@@ -506,9 +535,20 @@ export default class Maramataka extends React.Component {
     });
 
     days.next.forEach((day) => {
-      const isSelected = (day === selected.day &&
-        active.month === (selected.month - 1) &&
-        active.year === selected.year);
+      let isSelected;
+
+      if (dateRangeTypeSelection === 'single') {
+        isSelected = (day === selected.day &&
+          (active.month === (selected.month - 1) ||
+            active.month - 11 === selected.month) &&
+          (active.year === selected.year ||
+            active.year + 1 === selected.year)
+        );
+      } else {
+        isSelected = ((dateRange.from !== '' && dateRange.to !== '') &&
+          moment(`${active.month >= 0 && active.month < 11 ? active.month + 2 : 1} ${day} ${active.month < 11 ? active.year : active.year + 1}`, 'M D YYYY').isBetween(moment(dateRange.from, longDateFormat), moment(dateRange.to, longDateFormat), null, '[]')
+        );
+      }
 
       result.push(
         <div

@@ -9,12 +9,6 @@ const onSelect = (value) => {
   console.info('Selected:', value); // eslint-disable-line
 };
 
-// const value = {
-//   day: '28',
-//   month: '2',
-//   year: '2017'
-// };
-
 const d = new Date();
 
 const value = {
