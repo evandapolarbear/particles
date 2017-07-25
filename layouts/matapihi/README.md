@@ -4,6 +4,10 @@ A Modal Component
 
 # Change Log
 
+##### 1.0.4
+
+New `size` props.
+
 ##### 1.0.3
 
 Provide option of headerless and footerless.

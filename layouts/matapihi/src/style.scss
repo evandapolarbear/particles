@@ -45,8 +45,8 @@ $white1: #fff;
   background-color: $white1;
   border-radius: 2px;
   box-shadow: 0 0 12px $black1;
-  top: 200px;
-  bottom: 200px;
+  top: 125px;
+  bottom: 125px;
   left: 100px;
   right: 100px;
   z-index: 101;
@@ -55,10 +55,24 @@ $white1: #fff;
 }
 
 .modal-large {
-  top: 100px;
-  bottom: 100px;
+  top: 75px;
+  bottom: 75px;
   left: 50px;
   right: 50px;
+}
+
+.modal-medium {
+  top: 125px;
+  bottom: 125px;
+  left: 100px;
+  right: 100px;
+}
+
+.modal-small {
+  top: 200px;
+  bottom: 200px;
+  left: 100px;
+  right: 100px;
 }
 
 .header {

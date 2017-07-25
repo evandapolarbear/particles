@@ -59,18 +59,16 @@ class Modal extends Component {
       disableHeader,
       disableFooter,
       label,
-      large,
-      medium,
+      size,
       scrollBody,
       show,
-      small,
     } = this.props;
 
     const modalClassName = cx(
       styles['modal-window'], propClassName, {
-        [styles['modal-small']]: small,
-        [styles['modal-medium']]: medium,
-        [styles['modal-large']]: large
+        [styles['modal-small']]: size === 'small',
+        [styles['modal-medium']]: size === 'medium',
+        [styles['modal-large']]: size === 'large'
       }
     );
     const closeClassName = cx(

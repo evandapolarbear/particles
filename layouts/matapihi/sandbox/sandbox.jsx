@@ -20,6 +20,7 @@ class Component extends React.Component {
             closeOnOverlayClicked
             show={this.state.show}
             closeModal={() => this.setState({ show: false })}
+            size='large'
             header={(<div>Header</div>)}
             footer={(<div>Footer</div>)}
             onShow={show => this.setState({ show })}
