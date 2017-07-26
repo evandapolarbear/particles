@@ -103,11 +103,27 @@ export default class Maramataka extends React.Component {
     this.setState({ active }, this.updateDateArrays);
   }
 
-  onClear = (event) => {
+  onClear = (event, type) => {
     event.stopPropagation();
 
+    const { dateRange } = this.state;
+    let step;
+
+    dateRange[type] = '';
+
+    if (type === 'from') {
+      step = 0;
+    } else {
+      step = 1;
+    }
+
     this.setState(
-      state => ({ ...state, value: { day: '', month: '', year: '' } }),
+      state => ({
+        ...state,
+        value: { day: '', month: '', year: '' },
+        dateRange,
+        dateRangeStep: step
+      }),
       this.props.onClear
     );
   }
@@ -145,23 +161,42 @@ export default class Maramataka extends React.Component {
 
     if (this.state.dateRangeTypeSelection === 'range') {
       const { dateRange, dateRangeStep } = this.state;
+      let expanded;
       if (dateRangeStep === 0) {
-        dateRange.from = moment(selectedDate, 'M D YYYY').format(longDateFormat);
+        const from = moment(selectedDate, 'M D YYYY').format(longDateFormat);
+        let nextStep;
         if (dateRange.to !== '') {
-          dateRange.to = moment(dateRange.from, longDateFormat).diff(moment(dateRange.to, longDateFormat)) > 0 ? '' : dateRange.to;
+          if (moment(selectedDate, 'M D YYYY').diff(moment(dateRange.from, longDateFormat)) < 0) {
+            dateRange.to = moment(from, longDateFormat).diff(moment(dateRange.to, longDateFormat)) > 0 ? from : dateRange.to;
+            dateRange.from = moment(from, longDateFormat).diff(moment(dateRange.to, longDateFormat)) < 0 ? from : dateRange.to;
+            nextStep = 0;
+            expanded = true;
+            formattedDate = { full: moment(dateRange.from, longDateFormat).format('MM/DD/YY') + ' - ' + moment(dateRange.to, longDateFormat).format('MM/DD/YY') };
+          } else {
+            dateRange.to = moment(selectedDate, 'M D YYYY').format(longDateFormat);
+            nextStep = 0;
+            expanded = false;
+            formattedDate = { full: moment(dateRange.from, longDateFormat).format('MM/DD/YY') + ' - ' + moment(dateRange.to, longDateFormat).format('MM/DD/YY') };
+          }
+        } else {
+          dateRange.from = moment(selectedDate, 'M D YYYY').format(longDateFormat);
+          nextStep = dateRangeStep + 1;
+          expanded = true;
+          formattedDate = { full: moment(selectedDate, 'M D YYYY').format(fullDateFormat) };
         }
-        formattedDate = { full: moment(selectedDate, 'M D YYYY').format(fullDateFormat) };
-        this.setState({ selected, value, expanded: !this.props.closeOnSelect, dateRange, dateRangeStep: dateRangeStep + 1, formattedDate }, () => {
+        this.setState({ selected, value, dateRange, dateRangeStep: nextStep, formattedDate, expanded }, () => {
           this.updateDateArrays();
           this.props.onSelect(value);
         });
       }
       if (dateRangeStep === 1) {
-        dateRange.to = moment(selectedDate, 'M D YYYY').format(longDateFormat);
+        const to = moment(selectedDate, 'M D YYYY').format(longDateFormat);
         if (dateRange.from !== '') {
-          dateRange.to = moment(dateRange.from, longDateFormat).diff(moment(dateRange.to, longDateFormat)) > 0 ? '' : dateRange.to;
+          dateRange.to = moment(dateRange.from, longDateFormat).diff(moment(to, longDateFormat)) > 0 ? dateRange.from : to;
+          dateRange.from = moment(dateRange.from, longDateFormat).diff(moment(to, longDateFormat)) < 0 ? dateRange.from : to;
         }
-        this.setState({ selected, value, expanded: !this.props.closeOnSelect, dateRange, dateRangeStep: 0 }, () => {
+        formattedDate = { full: moment(dateRange.from, longDateFormat).format('MM/DD/YY') + ' - ' + moment(dateRange.to, longDateFormat).format('MM/DD/YY') };
+        this.setState({ selected, value, dateRange, expanded: false, dateRangeStep: 0, formattedDate }, () => {
           this.updateDateArrays();
           this.props.onSelect(value);
         });
@@ -414,32 +449,34 @@ export default class Maramataka extends React.Component {
 
   renderDateRange() {
     const { showDateRange } = this.props;
-    const { dateRange, dateRangeErrors } = this.state;
+    const { dateRange, dateRangeErrors, dateRangeStep } = this.state;
 
     const renderRangeInput = (
       <div className={this.styles.dateRangeInputsContainer}>
         <div className={cx(this.styles.inputContainer)}>
           <input
-            className={cx(this.styles.inputs, { [this.styles.invalid]: dateRangeErrors.from })}
+            className={cx(this.styles.inputs, { [this.styles.invalid]: dateRangeErrors.from, [this.styles.selected]: dateRangeStep === 0 })}
             onChange={e => this.onInputDateRange(e, 'from')}
             onBlur={() => this.onInputDateRangeBlur('from')}
+            onFocus={() => this.setState({ dateRangeStep: 0 })}
             type='text'
             value={dateRange.from}
             placeholder='Start Date'
           />
-          <button className={this.styles.clearButton} onClick={this.onClear} />
+          <button className={this.styles.clearButton} onClick={e => this.onClear(e, 'from')} />
         </div>
         <div style={{ width: 10 }} />
         <div className={cx(this.styles.inputContainer)}>
           <input
-            className={cx(this.styles.inputs, { [this.styles.invalid]: dateRangeErrors.to })}
+            className={cx(this.styles.inputs, { [this.styles.invalid]: dateRangeErrors.to, [this.styles.selected]: dateRangeStep === 1 })}
             onChange={e => this.onInputDateRange(e, 'to')}
             onBlur={() => this.onInputDateRangeBlur('to')}
+            onFocus={() => this.setState({ dateRangeStep: 1 })}
             type='text'
             value={dateRange.to}
             placeholder='End Date'
           />
-          <button className={this.styles.clearButton} onClick={this.onClear} />
+          <button className={this.styles.clearButton} onClick={e => this.onClear(e, 'to')} />
         </div>
       </div>
     );

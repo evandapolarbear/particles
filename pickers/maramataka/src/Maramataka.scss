@@ -74,7 +74,7 @@
   overflow: hidden;
   padding-left: 8px;
   position: relative;
-  width: 161px;
+  width: 180px;
 
   &.expanded {
     border-radius: 2px 2px 0 0;
@@ -183,9 +183,13 @@
         background: $lightGray;
         outline: 0;
       }
-      
+
       &.invalid {
         background: $xLightRed;
+      }
+
+      &.selected {
+        background: $lightGray;
       }
     }
   }

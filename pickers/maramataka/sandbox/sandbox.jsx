@@ -21,7 +21,7 @@ const stylesheets = [sandboxStyles];
 
 const onClear = () => console.log('Cleared selected date!'); // eslint-disable-line
 
-const closeOnSelect = false;
+const closeOnSelect = true;
 
 render(
   <div>
