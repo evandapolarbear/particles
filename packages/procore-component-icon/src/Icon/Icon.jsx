@@ -187,7 +187,7 @@ const Icon = ({className, disabled, icon, clickable}) => {
       <i  className={iconClass} />
     </QaTag>
   );
-}
+};
 
 Icon.propTypes = {
   icon: PropTypes.string.isRequired,

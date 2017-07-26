@@ -1,10 +1,10 @@
-module.exports = ({ config, options }) => {
+module.exports = ({ config }) => {
   config.output
     .filename('[name].js')
     .libraryTarget('commonjs2')
-    .end()
+    .end();
 
-  config.plugins.delete('chunk').end()
+  config.plugins.delete('chunk').end();
 
-  config.plugins.delete('html').end()
-}
+  config.plugins.delete('html').end();
+};

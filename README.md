@@ -1,8 +1,9 @@
-# component-library
+# Procore Component Catalogue
 
 [![NSP Status](https://nodesecurity.io/orgs/nyx/projects/daca1adf-9fc6-42fa-9186-5fb81d5cf9c6/badge)](https://nodesecurity.io/orgs/nyx/projects/daca1adf-9fc6-42fa-9186-5fb81d5cf9c6)
 
 ## Design Principles
+
 Simple is better than complex.
 
 Explicit is better than implicit.
@@ -22,11 +23,21 @@ Maintain sandboxes for components.
 Ship it.
 
 ## How do I get started?
+
+### Classic
+
 1. Run `yarn` at the root.
 2. Navigate to the directory of the component you're interested in.
 3. Run `yarn` in that directory.
 
-# Development
+### Modern
+
+1. `$> yarn bootstrap`
+The command will link and install dependencies for all npm packages in the `packages` folder.
+
+## Development
+
+### Classic
 
 To develop a component `FOO`, all you need is these commands:
 
@@ -40,7 +51,16 @@ Builds the dev bundle and watches the folder, rebuilding on a change.
 
 In the tool which is importing `FOO`, use `yarn link FOO` to take advantage of these hot builds.
 
+### Modern
+
+1. `$> cd packages/<component>` - Switch to the component package you want to alter.
+
+2. `$> yarn start` - Start the sandbox mode for the component. Open [http://localhost:5000](http://localhost:5000)
+
 # Publishing
+
+### Classic
+
 Make sure the sandbox works.
 
 Please update the README for each component with each change.
@@ -57,3 +77,38 @@ If you have publishing rights, run `npm publish`.
 
 If not, find and go ask the maintainers of the component for code review to ensure quality and continuity.
 Or, make a new component and try to consolidate at a later time.
+
+### Modern
+
+1. Update the `CHANGELOG.md` of the package with changes made
+2. `$> yarn publish` - Follow prompt to upgrade versions and publish to npm
+
+
+### Package Naming
+
+### Components
+
+#### No `@procore` dependencies
+
+`procore-component-atom-qa-tag`
+
+#### With `@procore` dependencies
+
+`procore-component-particle-icon`
+
+### Collections
+I set of components exposed via a single package for usability.
+
+`procore-collection-form`
+
+```javascript
+// procore-collection-form/src/index.js
+
+export `@procore/label`
+export `@procore/dropdown`
+export `@procore/icon`
+```
+
+```javascript
+import { Dropdown, Label, Icon } from '@procore/form'
+```

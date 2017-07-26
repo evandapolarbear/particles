@@ -4,7 +4,9 @@
   "description": "A small, organized, component library",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "bootstrap": "lerna bootstrap",
+    "publish": "lerna publish"
   },
   "repository": {
     "type": "git",
