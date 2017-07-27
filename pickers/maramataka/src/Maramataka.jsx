@@ -74,7 +74,8 @@ export default class Maramataka extends React.Component {
       active.month -= 1;
     }
 
-    this.setState({ active }, this.updateDateArrays);
+    this.setState({ active });
+    this.updateDateArrays();
   }
 
   onRightArrowClick = (evt) => {
@@ -89,16 +90,15 @@ export default class Maramataka extends React.Component {
       active.month += 1;
     }
 
-    this.setState({ active }, this.updateDateArrays);
+    this.setState({ active });
+    this.updateDateArrays();
   }
 
   onClear = (event) => {
     event.stopPropagation();
 
-    this.setState(
-      state => ({ ...state, value: { day: '', month: '', year: '' } }),
-      this.props.onClear
-    );
+    this.setState(state => ({ ...state, value: { day: '', month: '', year: '' } }));
+    this.props.onClear();
   }
 
   onDayClick = (evt) => {
@@ -123,10 +123,10 @@ export default class Maramataka extends React.Component {
     const selected = { day, month, year };
     const value = { day, month: month + 1, year };
 
-    this.setState({ selected, value, expanded: !this.props.closeOnSelect }, () => {
-      this.updateDateArrays();
-      this.props.onSelect(value);
-    });
+    this.setState({ selected, value, expanded: !this.props.closeOnSelect })
+
+    this.updateDateArrays();
+    this.props.onSelect(value);
   }
 
   onInputChange = () => {
@@ -156,25 +156,29 @@ export default class Maramataka extends React.Component {
       selected = { day: null, month: null, year: null };
     }
 
-    this.setState({ active, errors, selected, value }, this.updateDateArrays);
+    this.setState({ active, errors, selected, value });
+    this.updateDateArrays();
   }
 
   onInputDay = (evt) => {
     const { value } = this.state;
     value.day = evt.target.value * 1;
-    this.setState({ value }, this.onInputChange);
+    this.setState({ value });
+    this.onInputChange();
   }
 
   onInputMonth = (evt) => {
     const { value } = this.state;
     value.month = evt.target.value * 1;
-    this.setState({ value }, this.onInputChange);
+    this.setState({ value });
+    this.onInputChange();
   }
 
   onInputYear = (evt) => {
     const { value } = this.state;
     value.year = evt.target.value * 1;
-    this.setState({ value }, this.onInputChange);
+    this.setState({ value });
+    this.onInputChange();
   }
 
   validateDay = (day) => {

@@ -4,6 +4,9 @@ A date picker.
 
 # Change Log
 
+##### 2.0.0
+- Update setState callbacks to be synchronous for React 16
+
 ##### 1.3.0
 - Right align the dropdown using the `rightAlign` prop
 
