@@ -37,7 +37,7 @@ export default class Maramataka extends React.Component {
 
     const d = new Date();
 
-    // moment.locale();
+    // moment.locale('es');
 
     this.state = {
       active: { day: d.getDate(), month: d.getMonth(), year: d.getFullYear() },
@@ -166,7 +166,7 @@ export default class Maramataka extends React.Component {
         const from = moment(selectedDate, 'M D YYYY').format(longDateFormat);
         let nextStep;
         if (dateRange.to !== '') {
-          if (moment(selectedDate, 'M D YYYY').diff(moment(dateRange.from, longDateFormat)) < 0) {
+          if (moment(selectedDate, 'M D YYYY').diff(moment(dateRange.to, longDateFormat)) < 0) {
             dateRange.to = moment(from, longDateFormat).diff(moment(dateRange.to, longDateFormat)) > 0 ? from : dateRange.to;
             dateRange.from = moment(from, longDateFormat).diff(moment(dateRange.to, longDateFormat)) < 0 ? from : dateRange.to;
             nextStep = 0;
@@ -194,9 +194,14 @@ export default class Maramataka extends React.Component {
         if (dateRange.from !== '') {
           dateRange.to = moment(dateRange.from, longDateFormat).diff(moment(to, longDateFormat)) > 0 ? dateRange.from : to;
           dateRange.from = moment(dateRange.from, longDateFormat).diff(moment(to, longDateFormat)) < 0 ? dateRange.from : to;
+          expanded = false;
+        }
+        if (dateRange.from === '') {
+          dateRange.to = to;
+          expanded = true;
         }
         formattedDate = { full: moment(dateRange.from, longDateFormat).format('MM/DD/YY') + ' - ' + moment(dateRange.to, longDateFormat).format('MM/DD/YY') };
-        this.setState({ selected, value, dateRange, expanded: false, dateRangeStep: 0, formattedDate }, () => {
+        this.setState({ selected, value, dateRange, expanded, dateRangeStep: 0, formattedDate }, () => {
           this.updateDateArrays();
           this.props.onSelect(value);
         });
