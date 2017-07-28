@@ -4,6 +4,10 @@ A picker with support for group or individual selections.
 
 # Change Log
 
+##### 3.10.0
+- `titleValue` not updating properly bug fix
+- new prop `dropdownContent` to pass in something other than `items`
+
 ##### 3.9.4
 - Change border color when disabled
 

@@ -11,6 +11,7 @@ let groupCounter = 0;
 export default class Tipako extends React.Component {
   static propTypes = {
     closeOnSelect: PropTypes.bool,
+    dropdownContent: PropTypes.node,
     data: PropTypes.arrayOf(PropTypes.shape({
       children: PropTypes.arrayOf(PropTypes.shape({
         disabled: PropTypes.bool,
@@ -46,6 +47,7 @@ export default class Tipako extends React.Component {
 
   static defaultProps = {
     closeOnSelect: false,
+    dropdownContent: null,
     data: [],
     disabled: false,
     keyField: 'key',
@@ -92,6 +94,12 @@ export default class Tipako extends React.Component {
 
   componentWillMount() {
     window.addEventListener('click', this.onBlur);
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.titleValue && nextProps.titleValue !== this.props.titleValue) {
+      this.setState({ value: nextProps.titleValue });
+    }
   }
 
   componentDidUpdate() {
@@ -169,10 +177,16 @@ export default class Tipako extends React.Component {
     this.updateValue(item);
   }
 
-  onCaretClick = () => {
+  onTitleClick = (evt) => {
     if (this.state.expanded === false) {
       this.setState({ currentIndex: -1, expanded: true, guid: this.guid });
       this.props.onFocus && this.props.onFocus();
+    } else if (evt.target !== this.searchInput) {
+      this.onBlur();
+      this.setState({ currentIndex: -1 });
+    } else {
+      evt.stopPropagation();
+      this.setState({ currentIndex: -1 });
     }
   }
 
@@ -194,12 +208,6 @@ export default class Tipako extends React.Component {
   onBlur = () => {
     const expanded = (this.state.guid === this.guid);
     this.setState({ expanded, guid: null });
-  };
-
-  onInputBlur = () => {
-    if (this.state.value.length === 0 && this.props.titleValue) {
-      this.setState({ value: this.props.titleValue });
-    }
   };
 
   onInputClear = (evt) => {
@@ -251,7 +259,7 @@ export default class Tipako extends React.Component {
       totalCounter -= 1;
     }
 
-    if (evt.keyCode === 38 && expanded) { // arrow up 
+    if (evt.keyCode === 38 && expanded) { // arrow up
       evt.preventDefault();
       if ((currentIndex > -1 && searchable) || (currentIndex > 0 && !searchable)) {
         currentIndex -= 1;
@@ -270,7 +278,7 @@ export default class Tipako extends React.Component {
 
   render() {
     const {
-      slotBottom,
+      dropdownContent,
       data,
       disabled,
       keyField,
@@ -282,9 +290,9 @@ export default class Tipako extends React.Component {
       renderGroup,
       renderItem,
       searchable,
-      titlePlaceholder,
+      slotBottom,
       slotTitle,
-      titleValue,
+      titlePlaceholder,
       updateOnSelect,
       valueField
     } = this.props;
@@ -411,7 +419,7 @@ export default class Tipako extends React.Component {
       : null;
 
     const controls =
-      (selectAll || clearAll) && (
+      (!dropdownContent && (selectAll || clearAll)) && (
         <div className={this.styles.controls}>
           {selectAll}
           {spacer}
@@ -425,7 +433,7 @@ export default class Tipako extends React.Component {
 
     const caret = loading
       ? null
-      : (<button onClick={this.onCaretClick} className={this.styles.caret} type='button'>
+      : (<button onClick={this.onTitleClick} className={this.styles.caret} type='button'>
         <span className={cx('fa', 'fa-caret-down', this.styles.arrow, { [this.styles.expanded]: expanded })} />
       </button>);
 
@@ -445,9 +453,8 @@ export default class Tipako extends React.Component {
       ? (
         <input
           className={cx(this.styles.input, { [this.styles.noClear]: !updateOnSelect })}
-          onBlur={this.onInputBlur}
           onChange={this.onSearch}
-          onClick={this.onCaretClick}
+          onClick={this.onTitleClick}
           onFocus={this.onSearchFocus}
           placeholder={titlePlaceholder}
           ref={(input) => { this.searchInput = input; }}
@@ -458,11 +465,17 @@ export default class Tipako extends React.Component {
       : (
         <div
           className={cx(this.styles.staticText, { [this.styles.noClear]: !updateOnSelect })}
-          onClick={this.onCaretClick}
+          onClick={this.onTitleClick}
         >
-          {(value.length > 0 && value) || titleValue || titlePlaceholder}
+          {value || titlePlaceholder}
         </div>
       );
+
+    const itemsContainer = !dropdownContent && (
+      <div className={this.styles.itemsContainer}>
+        {items.length ? items : empty}
+      </div>
+    );
 
     return (
       <div
@@ -491,10 +504,9 @@ export default class Tipako extends React.Component {
               [this.styles.withSlotBottom]: slotBottom && expanded
             })}
           >
+            {expanded ? dropdownContent : null}
             {controls}
-            <div className={this.styles.itemsContainer}>
-              {items.length ? items : empty}
-            </div>
+            {itemsContainer}
             {slotBottom &&
               <div
                 className={this.styles.slotBottom}

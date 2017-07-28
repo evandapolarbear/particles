@@ -57,7 +57,7 @@ const closeOnSelect = false;
 const disabled = false;
 const loading = false;
 const searchable = true;
-const updateOnSelect = false;
+const updateOnSelect = true;
 
 const onClearAll = () => { console.warn('Clear all.'); };
 const onFocus = () => { console.warn('Focus.'); };
