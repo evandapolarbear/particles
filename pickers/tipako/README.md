@@ -4,6 +4,9 @@ A picker with support for group or individual selections.
 
 # Change Log
 
+##### 3.11.0
+- Update to React 15
+
 ##### 3.10.0
 - `titleValue` not updating properly bug fix
 - new prop `dropdownContent` to pass in something other than `items`

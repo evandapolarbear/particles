@@ -97,7 +97,7 @@ export default class Tipako extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if (nextProps.titleValue && nextProps.titleValue !== this.props.titleValue) {
+    if (nextProps.titleValue !== this.props.titleValue) {
       this.setState({ value: nextProps.titleValue });
     }
   }
