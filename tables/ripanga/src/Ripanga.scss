@@ -6,17 +6,10 @@ $tableZ: 0;
 
 .contentContainer {
   border: 1px solid #c3c2c2;
-  border-width: 0 1px 0 1px;
+  border-width: 0 1px;
   box-sizing: border-box;
   padding-right: 100px;
   position: relative;
-
-  * {
-    box-sizing: border-box;
-    cursor: default;
-    margin: 0;
-    padding: 0;
-  }
 }
 
 .tableContainer {
@@ -48,13 +41,13 @@ $tableZ: 0;
 
 .tableRow {
   display: flex;
-  height: 32px; // for IE 11 
+  height: 32px; // for IE 11
 }
 
 .tableCell {
   align-items: center;
   border: 1px solid #c3c2c2;
-  border-width: 0 0 1px 0;
+  border-width: 0 0 1px;
   display: flex;
   flex-grow: 1;
   padding: 0 $padding;
@@ -149,7 +142,7 @@ $tableZ: 0;
 .sidebarCell {
   align-items: center;
   border: 1px solid #c3c2c2;
-  border-width: 0 0 1px 0;
+  border-width: 0 0 1px;
   display: flex;
   padding: 10px;
   position: relative;
@@ -169,13 +162,9 @@ $tableZ: 0;
 }
 
 .overflowContainer {
-  height: 100%;
-  width: 100%;
-}
-
-.overflowContainer {
   background: 0 !important;
   border: 0 !important;
+  height: 100%;
   left: 0;
   outline: 0 !important;
   padding: 0 !important;
