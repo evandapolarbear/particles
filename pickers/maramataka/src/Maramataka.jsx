@@ -149,64 +149,85 @@ export default class Maramataka extends React.Component {
 
     const selected = { day, month, year };
     const value = { day, month: month + 1, year };
-    let formattedDate;
     const selectedDate = `${month + 1} ${day} ${year}`;
+
     if (this.state.dateRangeTypeSelection === 'single') {
-      formattedDate = { full: moment(selectedDate, 'M D YYYY').format(fullDateFormat) };
-      this.setState({ selected, value, formattedDate, expanded: !this.props.closeOnSelect }, () => {
-        this.updateDateArrays();
-        this.props.onSelect(value);
-      });
+      const formattedDate = { full: moment(selectedDate, 'M D YYYY').format(fullDateFormat) };
+      this.dayClickSetState({ selected, value, formattedDate, expanded: !this.props.closeOnSelect });
+    } else if (this.state.dateRangeTypeSelection === 'range') {
+      this.handleRangeSelection(selectedDate, selected, value);
+    }
+  }
+
+  handleRangeSelection(selectedDate, selected, value) {
+    let expanded,
+      formattedDate;
+    const { dateRange, dateRangeStep } = this.state;
+
+    if (dateRangeStep === 0) {
+      const from = moment(selectedDate, 'M D YYYY').format(longDateFormat);
+      let nextStep;
+
+      if (dateRange.to !== '') {
+       const rangeSwap = this.handleRangeSwap(selectedDate, dateRange, from);
+       nextStep = rangeSwap.nextStep;
+       expanded = rangeSwap.expanded;
+       formattedDate = rangeSwap.formattedDate;
+      } else {
+        dateRange.from = moment(selectedDate, 'M D YYYY').format(longDateFormat);
+        nextStep = dateRangeStep + 1;
+        expanded = true;
+        formattedDate = { full: moment(selectedDate, 'M D YYYY').format(fullDateFormat) };
+      }
+
+      this.dayClickSetState({ selected, value, dateRange, dateRangeStep: nextStep, formattedDate, expanded });
+    } else if (dateRangeStep === 1) {
+      const to = moment(selectedDate, 'M D YYYY').format(longDateFormat);
+
+      if (dateRange.from !== '') {
+        dateRange.to = moment(dateRange.from, longDateFormat).diff(moment(to, longDateFormat)) > 0 ? dateRange.from : to;
+        dateRange.from = moment(dateRange.from, longDateFormat).diff(moment(to, longDateFormat)) < 0 ? dateRange.from : to;
+        expanded = false;
+      } else if (dateRange.from === '') {
+        dateRange.to = to;
+        expanded = true;
+      }
+
+      formattedDate = { full: moment(dateRange.from, longDateFormat).format('MM/DD/YY') + ' - ' + moment(dateRange.to, longDateFormat).format('MM/DD/YY') };
+      this.dayClickSetState({ selected, value, dateRange, expanded, dateRangeStep: 0, formattedDate });
+    }
+  }
+
+  handleRangeSwap(selectedDate, dateRange, from) {
+    let nextStep,
+      expanded,
+      formattedDate;
+
+    if (moment(selectedDate, 'M D YYYY').diff(moment(dateRange.to, longDateFormat)) < 0) {
+      dateRange.to = moment(from, longDateFormat).diff(moment(dateRange.to, longDateFormat)) > 0 ? from : dateRange.to;
+      dateRange.from = moment(from, longDateFormat).diff(moment(dateRange.to, longDateFormat)) < 0 ? from : dateRange.to;
+      nextStep = 0;
+      expanded = true;
+      formattedDate = { full: moment(dateRange.from, longDateFormat).format('MM/DD/YY') + ' - ' + moment(dateRange.to, longDateFormat).format('MM/DD/YY') };
+    } else {
+      dateRange.to = moment(selectedDate, 'M D YYYY').format(longDateFormat);
+      nextStep = 0;
+      expanded = false;
+      formattedDate = { full: moment(dateRange.from, longDateFormat).format('MM/DD/YY') + ' - ' + moment(dateRange.to, longDateFormat).format('MM/DD/YY') };
     }
 
-    if (this.state.dateRangeTypeSelection === 'range') {
-      const { dateRange, dateRangeStep } = this.state;
-      let expanded;
-      if (dateRangeStep === 0) {
-        const from = moment(selectedDate, 'M D YYYY').format(longDateFormat);
-        let nextStep;
-        if (dateRange.to !== '') {
-          if (moment(selectedDate, 'M D YYYY').diff(moment(dateRange.to, longDateFormat)) < 0) {
-            dateRange.to = moment(from, longDateFormat).diff(moment(dateRange.to, longDateFormat)) > 0 ? from : dateRange.to;
-            dateRange.from = moment(from, longDateFormat).diff(moment(dateRange.to, longDateFormat)) < 0 ? from : dateRange.to;
-            nextStep = 0;
-            expanded = true;
-            formattedDate = { full: moment(dateRange.from, longDateFormat).format('MM/DD/YY') + ' - ' + moment(dateRange.to, longDateFormat).format('MM/DD/YY') };
-          } else {
-            dateRange.to = moment(selectedDate, 'M D YYYY').format(longDateFormat);
-            nextStep = 0;
-            expanded = false;
-            formattedDate = { full: moment(dateRange.from, longDateFormat).format('MM/DD/YY') + ' - ' + moment(dateRange.to, longDateFormat).format('MM/DD/YY') };
-          }
-        } else {
-          dateRange.from = moment(selectedDate, 'M D YYYY').format(longDateFormat);
-          nextStep = dateRangeStep + 1;
-          expanded = true;
-          formattedDate = { full: moment(selectedDate, 'M D YYYY').format(fullDateFormat) };
-        }
-        this.setState({ selected, value, dateRange, dateRangeStep: nextStep, formattedDate, expanded }, () => {
-          this.updateDateArrays();
-          this.props.onSelect(value);
-        });
-      }
-      if (dateRangeStep === 1) {
-        const to = moment(selectedDate, 'M D YYYY').format(longDateFormat);
-        if (dateRange.from !== '') {
-          dateRange.to = moment(dateRange.from, longDateFormat).diff(moment(to, longDateFormat)) > 0 ? dateRange.from : to;
-          dateRange.from = moment(dateRange.from, longDateFormat).diff(moment(to, longDateFormat)) < 0 ? dateRange.from : to;
-          expanded = false;
-        }
-        if (dateRange.from === '') {
-          dateRange.to = to;
-          expanded = true;
-        }
-        formattedDate = { full: moment(dateRange.from, longDateFormat).format('MM/DD/YY') + ' - ' + moment(dateRange.to, longDateFormat).format('MM/DD/YY') };
-        this.setState({ selected, value, dateRange, expanded, dateRangeStep: 0, formattedDate }, () => {
-          this.updateDateArrays();
-          this.props.onSelect(value);
-        });
-      }
-    }
+    return {
+      nextStep,
+      expanded,
+      formattedDate
+    };
+  }
+
+  dayClickSetState(newState) {
+    this.setState(newState, () => {
+      this.updateDateArrays();
+      this.props.onSelect(newState.value);
+    });
   }
 
   onInputChange = () => {
