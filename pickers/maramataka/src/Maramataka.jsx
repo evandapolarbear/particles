@@ -1,4 +1,5 @@
 import React from 'react';
+import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
 import cx from 'classnames';
 import moment from 'moment';
@@ -156,6 +157,38 @@ export default class Maramataka extends React.Component {
       this.dayClickSetState({ selected, value, formattedDate, expanded: !this.props.closeOnSelect });
     } else if (this.state.dateRangeTypeSelection === 'range') {
       this.handleRangeSelection(selectedDate, selected, value);
+    }
+  }
+
+  formatDate(type, day, dateElement) {
+    const { active, dateRange, selected } = this.state;
+    
+    return function(dateElement) {
+      if (dateElement === undefined) {
+        switch (type) {
+          case 'previous':
+            return moment(`${active.month > 0 ? active.month : active.month + 12} ${day} ${active.year}`, 'M D YYYY').isBetween(moment(dateRange.from, longDateFormat), moment(dateRange.to, longDateFormat), null, '[]');
+            break;
+          case 'next':
+            return moment(`${active.month >= 0 && active.month < 11 ? active.month + 2 : 1} ${day} ${active.month < 11 ? active.year : active.year + 1}`, 'M D YYYY').isBetween(moment(dateRange.from, longDateFormat), moment(dateRange.to, longDateFormat), null, '[]');
+          default:
+            break;
+        }
+      } else {
+        if (type === 'previous') {
+          if (dateElement === 'month') {
+            return active.month === 0 ? active.month + 11 : active.month - 1;
+          } else if (dateElement === 'year') {
+            return active.month === 0 ? active.year - 1 : active.year;
+          }
+        } else if (type === 'next') {
+          if (dateElement === 'month') {
+            return active.month === 11 ? active.month - 11 : active.month + 1;
+          } else if (dateElement === 'year') {
+            return active.month === 11 ? active.year + 1 : active.year;
+          }
+        }
+      }
     }
   }
 
@@ -528,6 +561,10 @@ export default class Maramataka extends React.Component {
     );
   }
 
+  rangeHover(day, month, year) {
+    console.log(day, month, year);
+  }
+
   renderDays() {
     const { active, days, selected, dateRangeTypeSelection, dateRange } = this.state;
 
@@ -546,7 +583,7 @@ export default class Maramataka extends React.Component {
       } else {
         isSelected = ((dateRange.from !== '' && dateRange.to !== '') &&
           (
-            moment(`${active.month > 0 ? active.month : active.month + 12} ${day} ${active.year}`, 'M D YYYY').isBetween(moment(dateRange.from, longDateFormat), moment(dateRange.to, longDateFormat), null, '[]')
+            this.formatDate('previous', day)()
           )
         );
       }
@@ -555,10 +592,19 @@ export default class Maramataka extends React.Component {
         <div
           className={cx(this.styles.dayPrevious, { [this.styles.selected]: isSelected })}
           data-day={day}
-          data-month={active.month - 1}
-          data-year={active.year}
+          data-month={this.formatDate('previous')('month')}
+          data-year={this.formatDate('previous')('year')}
           key={`prev-${day}`}
           onClick={this.onDayClick}
+          onMouseEnter={(e) => {
+            if (dateRange.from || dateRange.to) {
+              const day = e.target.getAttribute('data-day');
+              const month = e.target.getAttribute('data-month');
+              const year = e.target.getAttribute('data-year');
+
+              this.rangeHover(day, month, year);
+            }
+          }}
         >
           {day}
         </div>
@@ -591,6 +637,15 @@ export default class Maramataka extends React.Component {
           data-year={active.year}
           key={`active-${day}`}
           onClick={this.onDayClick}
+          onMouseEnter={(e) => {
+            if (dateRange.from || dateRange.to) {
+              const day = e.target.getAttribute('data-day');
+              const month = e.target.getAttribute('data-month');
+              const year = e.target.getAttribute('data-year');
+
+              this.rangeHover(day, month, year);
+            }
+          }}
         >
           {day}
         </div>
@@ -609,7 +664,7 @@ export default class Maramataka extends React.Component {
         );
       } else {
         isSelected = ((dateRange.from !== '' && dateRange.to !== '') &&
-          moment(`${active.month >= 0 && active.month < 11 ? active.month + 2 : 1} ${day} ${active.month < 11 ? active.year : active.year + 1}`, 'M D YYYY').isBetween(moment(dateRange.from, longDateFormat), moment(dateRange.to, longDateFormat), null, '[]')
+         this.formatDate('next', day)()
         );
       }
 
@@ -617,10 +672,19 @@ export default class Maramataka extends React.Component {
         <div
           className={cx(this.styles.dayNext, { [this.styles.selected]: isSelected })}
           data-day={day}
-          data-month={active.month + 1}
-          data-year={active.year}
+          data-month={this.formatDate('next')('month')}
+          data-year={this.formatDate('next')('year')}
           key={`next-${day}`}
           onClick={this.onDayClick}
+          onMouseEnter={(e) => {
+            if (dateRange.from || dateRange.to) {
+              const day = e.target.getAttribute('data-day');
+              const month = e.target.getAttribute('data-month');
+              const year = e.target.getAttribute('data-year');
+
+              this.rangeHover(day, month, year);
+            }
+          }}
         >
           {day}
         </div>
