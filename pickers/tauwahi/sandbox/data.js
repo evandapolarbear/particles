@@ -58,5 +58,17 @@ module.exports = [
     parent_id: 3,
     name: 'Bakersfield',
     full_name: 'United States > California > Bakersfield'
+  },
+  {
+    id: 11,
+    parent_id: 10,
+    name: 'Neighborhood',
+    full_name: 'United States > California > Bakersfield > Neighborhood'
+  },
+  {
+    id: 12,
+    parent_id: 11,
+    name: 'Street',
+    full_name: 'United States > California > Bakersfield > Neighborhood > Street'
   }
 ];

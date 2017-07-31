@@ -1,8 +1,11 @@
 # Tauwahi
 
-A location picker.
+A tiered picker.
 
 # Change Log
+
+##### 2.0.0
+- Overhaul to allow for tiered data to be navigated, selected, and created  
 
 ##### 1.0.1
 - Style fixes

@@ -1,35 +1,25 @@
-/* eslint-disable no-console */
+/* eslint-disable import/no-extraneous-dependencies */
 import React from 'react';
 import { render } from 'react-dom';
 
 import sandboxStyles from './sandbox.scss';
-
 import Tauwahi from '../src';
-
 import data from './data';
 
-const stylesheets = [sandboxStyles];
-
-const onSelect = (item) => {
-  console.warn('An item was selected', item);
-};
-
-const onClose = () => {
-  console.warn('Closing.');
-};
-
-const onCreate = (names) => {
-  console.warn('Creating:', names);
-};
-
 const canAdd = true;
+const currentSelection = {};
+const limit = 9;
+const onCreate = (item) => { console.log('Creating:', item); }; // eslint-disable-line
+const onSelect = (item) => { console.log('Selected:', item); }; // eslint-disable-line
+const stylesheets = [sandboxStyles];
 
 render(
   <Tauwahi
     {...{
       canAdd,
+      currentSelection,
       data,
-      onClose,
+      limit,
       onCreate,
       onSelect,
       stylesheets
