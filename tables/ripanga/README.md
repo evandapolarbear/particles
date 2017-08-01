@@ -4,6 +4,9 @@ A table component with self-managed checkboxes, sticky head, sticky right panel,
 
 # Change Log
 
+##### 2.5.5
+- The fix in v2.5.3 ended up being a hack, this fixes it for real
+
 ##### 2.5.4
 - Removed the star selector from styling
 

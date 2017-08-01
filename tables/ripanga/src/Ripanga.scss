@@ -36,12 +36,13 @@ $tableZ: 0;
 }
 
 .tableBody {
+  display: flex;
+  flex-direction: column;
   font-family: inherit;
 }
 
 .tableRow {
   display: flex;
-  height: 32px; // for IE 11
 }
 
 .tableCell {
@@ -50,7 +51,7 @@ $tableZ: 0;
   border-width: 0 0 1px;
   display: flex;
   flex-grow: 1;
-  padding: 0 $padding;
+  padding: $padding;
 }
 
 .headRow {
