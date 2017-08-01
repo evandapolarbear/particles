@@ -125,7 +125,7 @@ export default class Maramataka extends React.Component {
 
     this.setState({ selected, value, expanded: !this.props.closeOnSelect }, () => {
       this.updateDateArrays();
-      this.props.onSelect(value);
+      this.props.onSelect({ day, month, year });
     });
   }
 
@@ -386,10 +386,12 @@ export default class Maramataka extends React.Component {
         {head}
 
         <div className={this.styles.dropdownContainer} onClick={evt => evt.stopPropagation()}>
-          <div className={cx(this.styles.dropdown,
-            { [this.styles.expanded]: expanded,
-              [this.styles.rightAlign]: this.props.rightAlign
-            })}
+          <div
+            className={
+              cx(this.styles.dropdown,
+                { [this.styles.expanded]: expanded,
+                  [this.styles.rightAlign]: this.props.rightAlign
+                })}
           >
             <div className={this.styles.month}>
               <div className={this.styles.leftArrow} onClick={this.onLeftArrowClick} />

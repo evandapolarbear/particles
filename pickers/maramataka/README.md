@@ -4,6 +4,9 @@ A date picker.
 
 # Change Log
 
+##### 1.3.1
+- Fixed a bug where the return of onSelect was a month off
+
 ##### 1.3.0
 - Right align the dropdown using the `rightAlign` prop
 
