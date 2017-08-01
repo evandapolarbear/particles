@@ -1,10 +1,11 @@
-import React, { PropTypes } from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 import qs from 'qs';
 import cx from 'classnames';
-import baseStyles from './Wharangi.scss';
+import baseStyles from './Paginator.scss';
 import composeStyles from '../../../shared/stylesheetComposer';
 
-export default class Wharangi extends React.Component {
+export default class Paginator extends React.Component {
   static propTypes = {
     active: PropTypes.number,
     i18n: PropTypes.shape(),
@@ -86,14 +87,16 @@ export default class Wharangi extends React.Component {
 
     const items = [];
     for (let i = pageRange.start; i <= pageRange.end; i++) {
-      items.push(<button
-        key={`page-${i}`}
-        className={cx(this.styles.item, { [this.styles.active]: i === active })}
-        onClick={() => this.handleSelect(i)}
+      items.push(
+        <button
+          key={`page-${i}`}
+          className={cx(this.styles.item, { [this.styles.active]: i === active })}
+          onClick={() => this.handleSelect(i)}
         >
-        {i}
-        </button>); 
-      }
+          {i}
+        </button>
+      );
+    }
 
     const firstitem = (active > 2)
       ? (<button

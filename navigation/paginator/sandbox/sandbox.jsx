@@ -4,7 +4,7 @@ import { render } from 'react-dom';
 import React, { PropTypes } from 'react';
 import qs from 'qs';
 
-import Wharangi from '../src';
+import Paginator from '../src';
 
 class PaginationExample extends React.Component {
   static propTypes = {
@@ -27,7 +27,7 @@ class PaginationExample extends React.Component {
 
   onChange = (page) => {
     this.setState({ active: page }, () => {
-      Wharangi.updateUrl({ page });
+      Paginator.updateUrl({ page });
     });
   }
 
@@ -41,7 +41,7 @@ class PaginationExample extends React.Component {
     const paramPage = parseInt(params.page, 10) || 1;
     const page = Math.max(1, Math.min(paramPage, totalPages));
 
-    Wharangi.updateUrl({ per_page: perPage, page });
+    Paginator.updateUrl({ per_page: perPage, page });
   }
 
   render() {
@@ -49,7 +49,7 @@ class PaginationExample extends React.Component {
     const { active } = this.state;
 
     return (
-      <Wharangi
+      <Paginator
         {...{
           active,
           onMount: this.onMount,

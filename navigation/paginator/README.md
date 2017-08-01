@@ -1,4 +1,4 @@
-# Wharangi
+# Paginator
 
 A pagination component.
 
