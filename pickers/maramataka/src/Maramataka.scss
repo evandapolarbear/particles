@@ -250,6 +250,14 @@
 
 .dayActive {
   composes: day;
+
+  &.selected {
+    background: $lightGray;
+  }
+
+  &.hovered {
+    background: $xLightGray;
+  }
 }
 
 .dayPrevious,
@@ -260,7 +268,7 @@
 
   &.selected {
     background: $lightGray;
-  }
+  } 
 }
 
 .arrow {
