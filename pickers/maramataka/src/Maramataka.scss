@@ -251,12 +251,13 @@
 .dayActive {
   composes: day;
 
-  &.selected {
+  &.hovered {
     background: $lightGray;
   }
 
-  &.hovered {
-    background: $xLightGray;
+  &.selected {
+    background: $darkGray;
+    color: $white;
   }
 }
 
