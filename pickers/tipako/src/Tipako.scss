@@ -191,12 +191,12 @@ $h: 30px;
     background: #fff;
     border: 1px solid #939393;
     height: auto;
-    max-height: 300px;
+    max-height: 360px;
     z-index: 100;
   }
 
   &.withSlotBottom {
-    max-height: 340px;
+    max-height: 400px;
   }
 }
 
@@ -206,6 +206,7 @@ $h: 30px;
 
 .item {
   cursor: pointer;
+  min-height: 32px;
   line-height: normal;
   padding: 8px 16px;
   user-select: none;
@@ -288,7 +289,7 @@ $h: 30px;
 }
 
 .itemsContainer {
-  max-height: 250px;
+  max-height: 272px;
   overflow-y: auto;
 }
 

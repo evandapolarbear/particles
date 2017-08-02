@@ -1,0 +1,49 @@
+module.exports = [
+  { value: 'Animals',
+    key: 100,
+    disabled: true,
+    children: [
+      { value: 'Dolphin', key: 2, disabled: true },
+      { value: 'Albatross', key: 3 },
+      { value: 'German Shepherd', key: 4 },
+      { value: 'Mole', key: 5 },
+      { value: 'Lesser Southern Floridian Muskrat', key: 6 }
+    ]
+  },
+
+  {
+    children: [
+      { value: 'Lutherie', key: 8 },
+      { value: 'Carpentry', key: 9 },
+      { value: 'Parquetry', key: 10 },
+      { value: 'Joinery', key: 11 },
+      { value: 'Cabinetry', key: 12 }
+    ],
+    key: 7,
+    value: 'Woodworking'
+  },
+
+  {
+    children: [
+      { value: 'Tethys', key: 14 },
+      { value: 'Calypso', key: 15 },
+      { value: 'Enceladus', key: 16 },
+      { value: 'Rhea', key: 17 },
+      { value: 'Iapetus', key: 18 }
+    ],
+    key: 13,
+    value: 'Saturnian Moons Found Around Saturn'
+  },
+
+  { value: 'An empty group appears!', key: 19, children: [] },
+
+  { value: 'Magnetic poles are points to and from which the lines of magnetic force are directed.', key: 20, disabled: true },
+  { value: 'Guacamole', key: 21 },
+  { value: 'Crankshaft', key: 22 },
+  { value: 'Demographic', key: 23 },
+  { value: 'Almond', key: 24 },
+  { value: 'Guacamole', key: 25 },
+  { value: 'Crankshaft', key: 26 },
+  { value: 'Demographic', key: 27 },
+  { value: 'Almond', key: 28 }
+];

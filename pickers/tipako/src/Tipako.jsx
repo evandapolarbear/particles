@@ -86,7 +86,7 @@ export default class Tipako extends React.Component {
     }
 
     this.state = {
-      currentIndex: -1,
+      currentIndex: 0,
       expanded: false,
       value: props.titleValue
     };
@@ -103,17 +103,7 @@ export default class Tipako extends React.Component {
   }
 
   componentDidUpdate() {
-    const { currentIndex, expanded } = this.state;
-
-    if (expanded) {
-      if (this.focusedItem && currentIndex > -1) {
-        this.focusedItem.focus();
-      }
-
-      if (this.searchInput && currentIndex === -1) {
-        this.searchInput.focus();
-      }
-    }
+    if (this.state.expanded && this.searchInput) this.searchInput.focus();
   }
 
   componentWillUnmount() {
@@ -122,7 +112,7 @@ export default class Tipako extends React.Component {
 
   onSearch = (evt) => {
     const str = evt.target.value;
-    this.setState({ value: str, expanded: true }, () => {
+    this.setState({ currentIndex: 0, expanded: true, value: str }, () => {
       if (this.props.onSearch) {
         this.props.onSearch(str);
       }
@@ -179,14 +169,14 @@ export default class Tipako extends React.Component {
 
   onTitleClick = (evt) => {
     if (this.state.expanded === false) {
-      this.setState({ currentIndex: -1, expanded: true, guid: this.guid });
+      this.setState({ currentIndex: 0, expanded: true, guid: this.guid });
       this.props.onFocus && this.props.onFocus();
     } else if (evt.target !== this.searchInput) {
       this.onBlur();
-      this.setState({ currentIndex: -1 });
+      this.setState({ currentIndex: 0 });
     } else {
       evt.stopPropagation();
-      this.setState({ currentIndex: -1 });
+      this.setState({ currentIndex: 0 });
     }
   }
 
@@ -249,7 +239,12 @@ export default class Tipako extends React.Component {
   handleKeyDown = (evt) => {
     let { currentIndex } = this.state;
     const { expanded } = this.state;
-    const { searchable } = this.props;
+
+    const containerHeight = this.itemsContainer.offsetHeight;
+    const containerTop = this.itemsContainer.offsetTop;
+    const itemHeight = this.focusedItem.offsetHeight;
+    const itemTop = this.focusedItem.offsetTop;
+    const scrollTop = this.itemsContainer.scrollTop;
 
     let totalCounter = counter > groupCounter
       ? counter
@@ -261,12 +256,20 @@ export default class Tipako extends React.Component {
 
     if (evt.keyCode === 38 && expanded) { // arrow up
       evt.preventDefault();
-      if ((currentIndex > -1 && searchable) || (currentIndex > 0 && !searchable)) {
+      if (this.prevItem && itemTop - itemHeight < scrollTop + containerTop) {
+        this.itemsContainer.scrollTop = itemTop - this.prevItem.offsetHeight - containerTop;
+      }
+      if (currentIndex > 0) {
         currentIndex -= 1;
         this.setState({ currentIndex });
       }
     } else if (evt.keyCode === 40 && expanded) { // arrow down
       evt.preventDefault();
+
+      if (this.nextItem && itemTop + itemHeight > containerHeight + scrollTop) {
+        this.itemsContainer.scrollTop = (this.nextItem.offsetHeight - containerHeight) +
+          (this.nextItem.offsetTop - containerTop);
+      }
       if (currentIndex < totalCounter) {
         currentIndex += 1;
         this.setState({ currentIndex });
@@ -323,6 +326,8 @@ export default class Tipako extends React.Component {
             : counter += 1;
 
           const focusedItem = currentIndex === counter;
+          const nextItem = currentIndex + 1 === counter;
+          const prevItem = currentIndex - 1 === counter;
 
           const childItem = result.concat(<div
             className={cx(this.styles.item, this.styles.childItem,
@@ -330,10 +335,11 @@ export default class Tipako extends React.Component {
                 [this.styles.keyFocus]: focusedItem })}
             key={`child-${v[keyField]}-${vv[keyField]}`}
             onClick={(e) => { this.onChildClick(e, vv); }}
-            onKeyDown={(e) => {
-              if (focusedItem && expanded && e.keyCode === 13) this.onChildClick(e, vv);
+            ref={(el) => {
+              if (focusedItem) this.focusedItem = el;
+              else if (nextItem) this.nextItem = el;
+              else if (prevItem) this.prevItem = el;
             }}
-            ref={(el) => { if (focusedItem) this.focusedItem = el; }}
             tabIndex={-1}
           >
             {renderItem ? renderItem(vv, ii) : vv[valueField]}
@@ -347,6 +353,8 @@ export default class Tipako extends React.Component {
         }
 
         const focusedItem = currentIndex === groupCounter;
+        const nextItem = currentIndex + 1 === groupCounter;
+        const prevItem = currentIndex - 1 === groupCounter;
 
         const group = (<div
           className={cx(this.styles.item, this.styles.groupItem,
@@ -354,10 +362,11 @@ export default class Tipako extends React.Component {
               [this.styles.keyFocus]: focusedItem })}
           key={`group-${v[keyField]}`}
           onClick={(evt) => { this.onGroupClick(evt, v); }}
-          onKeyDown={(e) => {
-            if (focusedItem && expanded && e.keyCode === 13) this.onGroupClick(e, v);
+          ref={(el) => {
+            if (focusedItem) this.focusedItem = el;
+            else if (nextItem) this.nextItem = el;
+            else if (prevItem) this.prevItem = el;
           }}
-          ref={(el) => { if (focusedItem) this.focusedItem = el; }}
           tabIndex={-1}
         >
           {renderGroup ? renderGroup(v, i) : v[valueField]}
@@ -379,6 +388,8 @@ export default class Tipako extends React.Component {
       }
 
       const focusedItem = currentIndex === counter;
+      const nextItem = currentIndex + 1 === counter;
+      const prevItem = currentIndex - 1 === counter;
 
       const ungrouped = (<div
         className={cx(this.styles.item, this.styles.ungroupedItem,
@@ -386,10 +397,11 @@ export default class Tipako extends React.Component {
             [this.styles.keyFocus]: focusedItem })}
         key={`ungrouped-${v[keyField]}`}
         onClick={(evt) => { this.onUngroupedClick(evt, v); }}
-        onKeyDown={(e) => {
-          if (focusedItem && expanded && e.keyCode === 13) this.onUngroupedClick(e, v);
+        ref={(el) => {
+          if (focusedItem) this.focusedItem = el;
+          else if (nextItem) this.nextItem = el;
+          else if (prevItem) this.prevItem = el;
         }}
-        ref={(el) => { if (focusedItem) this.focusedItem = el; }}
         tabIndex={-1}
       >
         {renderItem ? renderItem(v, i) : v[valueField]}
@@ -405,13 +417,13 @@ export default class Tipako extends React.Component {
     const selectAll = (onSelectAll && items.length > 0)
       ? (<button className={this.styles.controlsButton} onClick={this.onSelectAll} type='button'>
            Select All
-        </button>)
+      </button>)
       : null;
 
     const clearAll = onClearAll
       ? (<button className={this.styles.controlsButton} onClick={this.onClearAll} type='button'>
           Clear All
-        </button>)
+      </button>)
       : null;
 
     const spacer = (clearAll && selectAll)
@@ -461,7 +473,7 @@ export default class Tipako extends React.Component {
           type='text'
           value={value || ''}
         />
-        )
+      )
       : (
         <div
           className={cx(this.styles.staticText, { [this.styles.noClear]: !updateOnSelect })}
@@ -472,7 +484,10 @@ export default class Tipako extends React.Component {
       );
 
     const itemsContainer = !dropdownContent && (
-      <div className={this.styles.itemsContainer}>
+      <div
+        className={this.styles.itemsContainer}
+        ref={(el) => { this.itemsContainer = el; }}
+      >
         {items.length ? items : empty}
       </div>
     );
