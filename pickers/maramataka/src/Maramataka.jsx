@@ -209,8 +209,6 @@ export default class Maramataka extends React.Component {
   }
 
   handleRangeSelection(selectedDateObj, selected, value) {
-    console.log('handleRangeSelection');
-
     let expanded,
       formattedDate;
     const { dateRange, dateRangeStep } = this.state;
@@ -251,14 +249,12 @@ export default class Maramataka extends React.Component {
       const dateRangeFrom = moment(`${dateRange.from.month} ${dateRange.from.day} ${dateRange.from.year}`, `M D YYYY`);
       const dateRangeTo = moment(`${dateRange.to.month} ${dateRange.to.day} ${dateRange.to.year}`, `M D YYYY`);
 
-      formattedDate = 'test';
+      formattedDate = { full: moment(dateRangeFrom, longDateFormat).format('MM/DD/YY') + ' - ' + moment(dateRangeTo, longDateFormat).format('MM/DD/YY') };
       this.dayClickSetState({ selected, value, dateRange, expanded, dateRangeStep: 0, formattedDate });
     }
   }
 
   handleRangeSwap(selectedDateObj, dateRange, from) {
-    console.log('handleRangeSwap');
-
     let nextStep,
       expanded,
       formattedDate;
@@ -280,10 +276,6 @@ export default class Maramataka extends React.Component {
       expanded = false;
       formattedDate = { full: dateRangeFrom.format('MM/DD/YY') + ' - ' + dateRangeTo.format('MM/DD/YY') };
     }
-
-    console.log('nextStep', nextStep);
-    console.log('expanded', expanded);
-    console.log('formattedDate', formattedDate);
 
     return {
       nextStep,
