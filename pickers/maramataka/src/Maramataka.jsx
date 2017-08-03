@@ -587,17 +587,42 @@ export default class Maramataka extends React.Component {
     );
   }
 
-  rangeHover(day, month, year) {
-    const hoverDate = {
-      day,
-      month,
-      year
-    };
-    this.setState({ hoverDate });
+  isCurrentDay = (dateObj1, dateObj2) => {
+    return (dateObj1.day === dateObj2.day &&
+      dateObj1.month === dateObj2.month &&
+      dateObj1.year === dateObj2.year
+    )
   }
 
-  rangeHoverSet(date, dateRangeFrom, dateRangeTo) {
+  handleSelectedDay(dateObj, dayType) {
+    const { dateRange } = this.state;
+    const dateRangeFrom = this.formatDateObject(dateRange.from);
+    const dateRangeTo = this.formatDateObject(dateRange.to);
+    let isSelected;
+
+    if (dateRange.from.day && !dateRange.to.day) {
+      isSelected = this.isCurrentDay(dateObj, dateRange.from);
+    } else if (dateRange.to.day && !dateRange.from.day) {
+      isSelected = this.isCurrentDay(dateObj, dateRange.to);
+    } else if (dateRange.to.day && dateRange.from.day) {
+      switch (dayType) {
+        case 'active':
+          isSelected = this.formatDateObject(dateObj).isBetween(dateRangeFrom, dateRangeTo, null, '[]');
+          break;
+        default:
+          isSelected = this.formatDate(dayType, dateObj.day)();
+          break;
+      }
+    }
+
+    return isSelected;
+  }
+
+    handleRangeHover(dateObj) {
     const { dateRange, hoverDate } = this.state;
+    const date = this.formatDateObject(dateObj);
+    const dateRangeFrom = this.formatDateObject(dateRange.from);
+    const dateRangeTo = this.formatDateObject(dateRange.to);
     const hoveredDateFormated = this.formatDateObject(hoverDate);
     let isHovered;
 
@@ -620,28 +645,21 @@ export default class Maramataka extends React.Component {
     days.previous.forEach((day) => {
       let isSelected;
       let isHovered;
-      const dateRangeFrom = this.formatDateObject(dateRange.from);
-      const dateRangeTo = this.formatDateObject(dateRange.to);
       const month = this.formatDate('previous')('month');
       const year = this.formatDate('previous')('year');
 
       if (dateRangeTypeSelection === 'single') {
         isSelected = (day === selected.day &&
-          (active.month === (selected.month + 1) ||
-            active.month + 11 === selected.month) &&
-          (active.year === selected.year ||
-            active.year - 1 === selected.year)
+        (active.month === (selected.month + 1) ||
+          active.month + 11 === selected.month) &&
+        (active.year === selected.year ||
+          active.year - 1 === selected.year)
         );
       } else {
-        isSelected = ((dateRange.from.day !== null && dateRange.to.day !== null) &&
-          (
-            this.formatDate('previous', day)()
-          )
-        );
+        isSelected = this.handleSelectedDay({month, day, year}, 'previous');
 
         if (hoverDate.day) {
-          const date = this.formatDateObject({month, day, year});
-          isHovered = this.rangeHoverSet(date, dateRangeFrom, dateRangeTo);
+          isHovered = this.handleRangeHover({month, day, year});
         }
       }
 
@@ -659,12 +677,12 @@ export default class Maramataka extends React.Component {
               const month = Number(e.target.getAttribute('data-month'));
               const year = Number(e.target.getAttribute('data-year'));
 
-              this.rangeHover(day, month, year);
+              this.setState({hoverDate: {day, month, year}});
             }
           }}
           onMouseLeave={(e) => {
             if (dateRange.from.day || dateRange.to.day) {
-              this.rangeHover(null, null, null);
+              this.setState({hoverDate: {day: null, month: null, year: null}});
             }
           }}
         >
@@ -676,11 +694,10 @@ export default class Maramataka extends React.Component {
     days.active.forEach((day) => {
       let isSelected;
       let isHovered;
-
-      const dateRangeFrom = this.formatDateObject(dateRange.from);
-      const dateRangeTo = this.formatDateObject(dateRange.to);
       const month = active.month;
       const year = active.year;
+
+      // console.log('state', this.state);
 
       if (dateRangeTypeSelection === 'single') {
         isSelected = (day === selected.day &&
@@ -688,15 +705,11 @@ export default class Maramataka extends React.Component {
           active.year === selected.year
         );
       } else {
-        isSelected = ((dateRange.from.day !== null && dateRange.to.day !== null) &&
-          this.formatDateObject(active).isBetween(dateRangeFrom, dateRangeTo, null, '[]')
-        );
+        isSelected = this.handleSelectedDay({month, day, year}, 'active');
 
         if (hoverDate.day) {
-          const date = this.formatDateObject({month, day, year});
-          isHovered = this.rangeHoverSet(date, dateRangeFrom, dateRangeTo);
+          isHovered = this.handleRangeHover({month, day, year});
         }
-
       }
 
       result.push(
@@ -713,12 +726,12 @@ export default class Maramataka extends React.Component {
               const month = Number(e.target.getAttribute('data-month'));
               const year = Number(e.target.getAttribute('data-year'));
 
-              this.rangeHover(day, month, year);
+              this.setState({hoverDate: {day, month, year}});
             }
           }}
           onMouseLeave={(e) => {
             if (dateRange.from.day || dateRange.to.day) {
-              this.rangeHover(null, null, null);
+              this.setState({hoverDate: {day: null, month: null, year: null}});
             }
           }}
         >
@@ -730,10 +743,8 @@ export default class Maramataka extends React.Component {
     days.next.forEach((day) => {
       let isSelected;
       let isHovered;
-      const dateRangeFrom = this.formatDateObject(dateRange.from);
-      const dateRangeTo = this.formatDateObject(dateRange.to);
       const month = this.formatDate('next')('month');
-      const year = this.formatDate('next')('year')
+      const year = this.formatDate('next')('year');
 
       if (dateRangeTypeSelection === 'single') {
         isSelected = (day === selected.day &&
@@ -743,15 +754,11 @@ export default class Maramataka extends React.Component {
             active.year + 1 === selected.year)
         );
       } else {
-        isSelected = ((dateRange.from.day !== null && dateRange.to.day !== null) &&
-          this.formatDate('next', day)()
-        );
+        isSelected = this.handleSelectedDay({month, day, year}, 'next');
 
         if (hoverDate.day) {
-          const date = this.formatDateObject({month, day, year});
-          isHovered = this.rangeHoverSet(date, dateRangeFrom, dateRangeTo);
+          isHovered = this.handleRangeHover({month, day, year});
         }
-
       }
 
       result.push(
@@ -768,12 +775,12 @@ export default class Maramataka extends React.Component {
               const month = Number(e.target.getAttribute('data-month'));
               const year = Number(e.target.getAttribute('data-year'));
 
-              this.rangeHover(day, month, year);
+              this.setState({hoverDate: {day, month, year}});
             }
           }}
           onMouseLeave={(e) => {
             if (dateRange.from.day || dateRange.to.day) {
-              this.rangeHover(null, null, null);
+              this.setState({hoverDate: {day: null, month: null, year: null}});
             }
           }}
         >
