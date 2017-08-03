@@ -36,6 +36,7 @@ export default class RipangaSidebar extends React.Component {
   };
 
   static defaultProps = {
+    collapsedIds: {},
     renderSidebarBodyCell: null,
     renderSidebarHeadCell: null,
     renderSidebarGroupCell: null

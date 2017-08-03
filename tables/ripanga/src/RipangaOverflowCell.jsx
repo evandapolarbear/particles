@@ -26,11 +26,10 @@ export default class RipangaOverflowCell extends React.Component {
     this.state = { isFocused: false };
   }
 
-  onFocus = (evt) => {
+  onFocus = () => {
     if (this.container === null) {
       return;
     }
-    evt.stopPropagation();
 
     bounds = this.container.parentNode.getBoundingClientRect();
     table = document.querySelector(`.${styles.tableContainer.split(' ').slice(0, 1)}`);

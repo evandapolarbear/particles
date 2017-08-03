@@ -51,7 +51,7 @@ export default class Ripanga extends React.Component {
 
   static defaultProps = {
     idKey: 'id',
-    onCheck: ids => console.info('No onCheck passed to Ripanga. Current checked state: ', ids), // eslint-disable-line
+    onCheck: () => {},
     onMounted: () => {},
     onSort: null,
     renderEmpty: null,
@@ -70,11 +70,15 @@ export default class Ripanga extends React.Component {
 
     styles = composeStyles(baseStyles, [defaultStyles, ...props.stylesheets]);
 
+    const checkedIds = JSON.parse(sessionStorage.getItem(`${props.scope}/CHECKED`)) || {};
+    const collapsedIds = JSON.parse(sessionStorage.getItem(`${props.scope}/COLLAPSED`)) || {};
+
     this.state = {
-      allChecked: false,
+      allChecked: this.getAllChecked(props, checkedIds),
       allCollapsed: false,
-      checkedIds: JSON.parse(sessionStorage.getItem(`${props.scope}/CHECKED`)) || {},
-      collapsedIds: JSON.parse(sessionStorage.getItem(`${props.scope}/COLLAPSED`)) || {}
+      allGroupIds: this.getGroupIds(props.tableData),
+      checkedIds,
+      collapsedIds
     };
   }
 
@@ -88,21 +92,10 @@ export default class Ripanga extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    const { checkedIds } = this.state;
-    let allChecked = false;
+    const allGroupIds = this.getGroupIds(nextProps.tableData);
+    const allChecked = this.getAllChecked(nextProps, this.state.checkedIds);
 
-    if (nextProps.tableData && nextProps.tableData[0] && nextProps.tableData[0].data) {
-      allChecked =
-        nextProps.tableData[0].data
-        .reduce((acc, item) =>
-          acc
-            && checkedIds[item[nextProps.idKey]]
-            && (checkedIds[item[nextProps.idKey]] !== undefined)
-          , true
-      );
-    }
-
-    this.setState({ allChecked });
+    this.setState({ allChecked, allGroupIds });
   }
 
   componentWillUnmount() {
@@ -125,10 +118,10 @@ export default class Ripanga extends React.Component {
   }
 
   onCollapseAll = () => {
-    const keys = Object.keys(this.state.collapsedIds);
     const allCollapsed = !this.state.allCollapsed;
 
-    const collapsedIds = keys.reduce((acc, k) => Object.assign(acc, { [k]: allCollapsed }), {});
+    const collapsedIds = this.state.allGroupIds.reduce(
+      (acc, id) => Object.assign(acc, { [id]: allCollapsed }), {});
 
     this.setState({ allCollapsed, collapsedIds }, this.updateStorage);
   }
@@ -136,20 +129,11 @@ export default class Ripanga extends React.Component {
   onRowCheck = (id) => {
     const { checkedIds } = this.state;
 
-    if (id) {
-      checkedIds[id] = !checkedIds[id];
-    }
+    checkedIds[id] = !checkedIds[id];
 
     this.onCheck(checkedIds);
 
-    const allChecked =
-      this.props.tableData[0].data
-      .reduce((acc, item) =>
-        acc
-        && checkedIds[item[this.props.idKey]]
-        && checkedIds[item[this.props.idKey]] !== undefined
-        , true
-      );
+    const allChecked = this.getAllChecked(this.props, checkedIds);
 
     this.setState({ allChecked, checkedIds }, this.updateStorage);
   }
@@ -164,7 +148,7 @@ export default class Ripanga extends React.Component {
     groupIds.forEach((id) => { checkedIds[id] = !groupIsChecked; });
 
     this.onCheck(checkedIds);
-    const allChecked = Object.values(checkedIds).reduce((acc, v) => acc && v, true);
+    const allChecked = this.getAllChecked(this.props, checkedIds);
 
     this.setState({ allChecked, checkedIds }, this.updateStorage);
   }
@@ -172,9 +156,13 @@ export default class Ripanga extends React.Component {
   onCheckAll = () => {
     const allChecked = true;
 
-    const checkedIds =
-      this.props.tableData[0].data
-        .reduce((acc, item) => Object.assign(acc, { [item[this.props.idKey]]: allChecked }), {});
+    const checkedIds = this.props.tableData.reduce((acc, group) => {
+      const groupIds = group.data.reduce(
+        (acc2, item) => Object.assign({}, acc2, { [item[this.props.idKey]]: allChecked })
+      , {});
+
+      return Object.assign({}, acc, groupIds);
+    }, {});
 
     this.setState({ allChecked, checkedIds }, this.updateStorage);
   }
@@ -182,12 +170,34 @@ export default class Ripanga extends React.Component {
   onUncheckAll = () => {
     const allChecked = false;
 
-    const checkedIds =
-      this.props.tableData[0].data
-        .reduce((acc, item) => Object.assign(acc, { [item[this.props.idKey]]: allChecked }), {});
+    const checkedIds = this.props.tableData.reduce((acc, group) => {
+      const groupIds = group.data.reduce(
+        (acc2, item) => Object.assign({}, acc2, { [item[this.props.idKey]]: allChecked })
+      , {});
+
+      return Object.assign({}, acc, groupIds);
+    }, {});
 
     this.setState({ allChecked, checkedIds }, this.updateStorage);
   }
+
+  getGroupIds = tableData => tableData.reduce((acc, { key }) => {
+    if (key !== undefined) {
+      acc.push(key.key);
+    }
+
+    return acc;
+  }, []);
+
+  getAllChecked = (props, checkedIds) => props.tableData.reduce((acc, { data }) => {
+    const groupIsAllChecked = data.reduce((acc2, item) =>
+      acc2
+        && (checkedIds[item[props.idKey]] !== undefined)
+        && (checkedIds[item[props.idKey]] === true)
+    , true);
+
+    return acc && groupIsAllChecked;
+  }, true);
 
   updateStorage = () => {
     const { checkedIds, collapsedIds } = this.state;

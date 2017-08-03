@@ -4,6 +4,11 @@ A table component with self-managed checkboxes, sticky head, sticky right panel,
 
 # Change Log
 
+##### 2.5.6
+- Fixed group collapse all bug
+- Fixed group check all bug
+- Restored star selector for box sizing
+
 ##### 2.5.5
 - The fix in v2.5.3 ended up being a hack, this fixes it for real
 

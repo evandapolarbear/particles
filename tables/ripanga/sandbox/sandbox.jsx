@@ -13,7 +13,9 @@ const def = {
   width: 100
 };
 
-const onSort = () => console.warn('Column was sorted.');
+const onSort = () => console.log('Column was sorted.');
+
+const onMounted = (state) => console.log('Table was mounted.', state);
 
 const tableDataUngrouped = [{
   data: [
@@ -65,7 +67,7 @@ render(
   <div className={sandboxStyles.sandboxContainer}>
     <button
       className={sandboxStyles.btnUncheck}
-      onClick={() => { window.dispatchEvent(new CustomEvent('table/checkAll')); }}
+      onClick={() => { window.dispatchEvent(new CustomEvent('table/uncheckAll')); }}
     >
       Uncheck All
     </button>
@@ -75,8 +77,8 @@ render(
       globalKey='ripanga-sandbox'
       idKey='key'
       scope='sandbox'
-      onMounted={state => console.log(state)}
-      tableData={tableDataUngrouped}
+      onMounted={onMounted}
+      tableData={tableDataGrouped}
       {...{
         columnDefinitions,
         onSort,
