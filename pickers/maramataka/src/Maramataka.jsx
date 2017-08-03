@@ -1,5 +1,4 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
 import cx from 'classnames';
 import moment from 'moment';
@@ -49,9 +48,9 @@ export default class Maramataka extends React.Component {
       value: { day: props.value.day * 1, month: props.value.month * 1, year: props.value.year * 1 },
       dateRangeTypeSelection: 'single',
       today: d,
-      dateRange: { 
-        from: {day: null, month: null, year: null}, 
-        to: {day: null, month: null, year: null}
+      dateRange: {
+        from: { day: null, month: null, year: null },
+        to: { day: null, month: null, year: null }
       },
       dateRangeErrors: { from: false, to: false },
       formattedDate: { full: '' },
@@ -59,8 +58,8 @@ export default class Maramataka extends React.Component {
       hoverDate: {
         day: null,
         month: null,
-        year: null,
-      },
+        year: null
+      }
     };
   }
 
@@ -118,7 +117,7 @@ export default class Maramataka extends React.Component {
     const { dateRange } = this.state;
     let step;
 
-    dateRange[type] = {day: null, month: null, year: null};
+    dateRange[type] = { day: null, month: null, year: null };
 
     if (type === 'from') {
       step = 0;
@@ -160,12 +159,10 @@ export default class Maramataka extends React.Component {
     const value = { day, month: month + 1, year };
     const selectedDate = `${month + 1} ${day} ${year}`;
     const selectedDateObj = {
-      day, 
-      month, 
+      day,
+      month,
       year
     };
-
-    // console.log('selectedDateObj', selectedDateObj);
 
     if (this.state.dateRangeTypeSelection === 'single') {
       const formattedDate = { full: moment(selectedDate, 'M D YYYY').format(fullDateFormat) };
@@ -176,68 +173,65 @@ export default class Maramataka extends React.Component {
   }
 
   formatDate(type, day, dateElement) {
-    const { active, dateRange, selected } = this.state;
+    const { active, dateRange } = this.state;
 
-    return function(dateElement) {
+    return function (dateElement) {
       if (dateElement === undefined) {
-        const dateRangeFrom = moment(`${dateRange.from.month + 1} ${dateRange.from.day} ${dateRange.from.year}`, `M D YYYY`);
-        const dateRangeTo = moment(`${dateRange.to.month + 1} ${dateRange.to.day} ${dateRange.to.year}`, `M D YYYY`);
+        const dateRangeFrom = moment(`${dateRange.from.month + 1} ${dateRange.from.day} ${dateRange.from.year}`, 'M D YYYY');
+        const dateRangeTo = moment(`${dateRange.to.month + 1} ${dateRange.to.day} ${dateRange.to.year}`, 'M D YYYY');
 
         switch (type) {
           case 'previous':
             return moment(`${active.month > 0 ? active.month : active.month + 12} ${day} ${active.year}`, 'M D YYYY').isBetween(dateRangeFrom, dateRangeTo, null, '[]');
-            break;
           case 'next':
             return moment(`${active.month >= 0 && active.month < 11 ? active.month + 2 : 1} ${day} ${active.month < 11 ? active.year : active.year + 1}`, 'M D YYYY').isBetween(dateRangeFrom, dateRangeTo, null, '[]');
           default:
             break;
         }
-      } else {
-        if (type === 'previous') {
-          if (dateElement === 'month') {
-            return active.month === 0 ? active.month + 11 : active.month - 1;
-          } else if (dateElement === 'year') {
-            return active.month === 0 ? active.year - 1 : active.year;
-          }
-        } else if (type === 'next') {
-          if (dateElement === 'month') {
-            return active.month === 11 ? active.month - 11 : active.month + 1;
-          } else if (dateElement === 'year') {
-            return active.month === 11 ? active.year + 1 : active.year;
-          }
+      } else if (type === 'previous') {
+        if (dateElement === 'month') {
+          return active.month === 0 ? active.month + 11 : active.month - 1;
+        } else if (dateElement === 'year') {
+          return active.month === 0 ? active.year - 1 : active.year;
+        }
+      } else if (type === 'next') {
+        if (dateElement === 'month') {
+          return active.month === 11 ? active.month - 11 : active.month + 1;
+        } else if (dateElement === 'year') {
+          return active.month === 11 ? active.year + 1 : active.year;
         }
       }
-    }
+    };
   }
 
   handleRangeSelection(selectedDateObj, selected, value) {
-    let expanded,
-      formattedDate;
-    const { dateRange, dateRangeStep } = this.state;
+    let expanded;
+    let formattedDate;
+    let { dateRange, dateRangeStep } = this.state;
 
     if (dateRangeStep === 0) {
       let nextStep;
-      const selectedDate = moment(`${selectedDateObj.month + 1} ${selectedDateObj.day} ${selectedDateObj.year}`, `M D YYYY`);
+      const selectedDate = this.formatDateObject(selectedDateObj);
 
       if (dateRange.to.day !== null) {
-        const rangeSwap = this.handleRangeSwap(selectedDateObj, dateRange, selectedDateObj);
+        const rangeSwap = this.handleRangeSwap(selectedDateObj, dateRange);
         nextStep = rangeSwap.nextStep;
         expanded = rangeSwap.expanded;
         formattedDate = rangeSwap.formattedDate;
+        dateRange = rangeSwap.dateRange;
       } else {
         dateRange.from = selectedDateObj;
         nextStep = dateRangeStep + 1;
         expanded = true;
         formattedDate = { full: selectedDate.format(fullDateFormat) };
       }
-
       this.dayClickSetState({ selected, value, dateRange, dateRangeStep: nextStep, formattedDate, expanded });
     } else if (dateRangeStep === 1) {
-      const selectedDate = moment(`${selectedDateObj.month + 1} ${selectedDateObj.day} ${selectedDateObj.year}`, `M D YYYY`);
+      const selectedDate = this.formatDateObject(selectedDateObj);
       const to = selectedDate.format(longDateFormat);
 
       if (dateRange.from.day !== null) {
-        const dateRangeFrom = moment(`${dateRange.from.month + 1} ${dateRange.from.day} ${dateRange.from.year}`, `M D YYYY`);
+        const dateRangeFrom = this.formatDateObject(dateRange.from);
 
         dateRange.to = dateRangeFrom.diff(moment(to, longDateFormat)) > 0 ? dateRange.from : selectedDateObj;
         dateRange.from = dateRangeFrom.diff(moment(to, longDateFormat)) < 0 ? dateRange.from : selectedDateObj;
@@ -247,42 +241,44 @@ export default class Maramataka extends React.Component {
         expanded = true;
       }
 
-      const dateRangeFrom = moment(`${dateRange.from.month + 1} ${dateRange.from.day} ${dateRange.from.year}`, `M D YYYY`);
-      const dateRangeTo = moment(`${dateRange.to.month + 1} ${dateRange.to.day} ${dateRange.to.year}`, `M D YYYY`);
-
-      formattedDate = { full: moment(dateRangeFrom, longDateFormat).format('MM/DD/YY') + ' - ' + moment(dateRangeTo, longDateFormat).format('MM/DD/YY') };
+      const dateRangeFrom = this.formatDateObject(dateRange.from).format('MM/DD/YY');
+      const dateRangeTo = this.formatDateObject(dateRange.to).format('MM/DD/YY');
+      formattedDate = { full: `${dateRangeFrom} - ${dateRangeTo}` };
       this.dayClickSetState({ selected, value, dateRange, expanded, dateRangeStep: 0, formattedDate });
     }
   }
 
-  handleRangeSwap(selectedDateObj, dateRange, from) {
-    let nextStep,
-      expanded,
-      formattedDate;
+  handleRangeSwap(selectedDateObj, dateRange) {
+    let nextStep;
+    let expanded;
+    let formattedDate;
 
-    const selectedDate = moment(`${selectedDateObj.month + 1} ${selectedDateObj.day} ${selectedDateObj.year}`, `M D YYYY`);
-    const dateRangeFrom = moment(`${dateRange.from.month + 1} ${dateRange.from.day} ${dateRange.from.year}`, `M D YYYY`);
-    const dateRangeTo = moment(`${dateRange.to.month + 1} ${dateRange.to.day} ${dateRange.to.year}`, `M D YYYY`);
-    const fromDateFormated = moment(`${selectedDateObj.month + 1} ${selectedDateObj.day} ${selectedDateObj.year}`, `M D YYYY`).format(longDateFormat);
+    const selectedDate = this.formatDateObject(selectedDateObj);
+    const dateRangeTo = this.formatDateObject(dateRange.to);
 
     if (selectedDate.diff(dateRangeTo) < 0) {
-      dateRange.to = moment(fromDateFormated, longDateFormat).diff(dateRangeTo) > 0 ? from : dateRange.to;
-      dateRange.from = moment(fromDateFormated, longDateFormat).diff(dateRangeTo) < 0 ? from : dateRange.to;
+      dateRange.to = selectedDate.diff(dateRangeTo) > 0 ? selectedDateObj : dateRange.to;
+      dateRange.from = selectedDate.diff(dateRangeTo) < 0 ? selectedDateObj : dateRange.to;
       nextStep = 0;
       expanded = true;
-      formattedDate = { full: dateRangeFrom.format('MM/DD/YY') + ' - ' + dateRangeTo.format('MM/DD/YY') };
+      formattedDate = { full: `${this.formatDateObject(dateRange.from).format('MM/DD/YY')} - ${this.formatDateObject(dateRange.to).format('MM/DD/YY')}` };
     } else {
       dateRange.to = selectedDateObj;
       nextStep = 0;
       expanded = false;
-      formattedDate = { full: dateRangeFrom.format('MM/DD/YY') + ' - ' + dateRangeTo.format('MM/DD/YY') };
+      formattedDate = { full: `${this.formatDateObject(dateRange.from).format('MM/DD/YY')} - ${this.formatDateObject(dateRange.to).format('MM/DD/YY')}` };
     }
 
     return {
       nextStep,
       expanded,
-      formattedDate
+      formattedDate,
+      dateRange
     };
+  }
+
+  formatDateObject(obj) {
+    return moment(`${obj.month + 1} ${obj.day} ${obj.year}`, 'M D YYYY');
   }
 
   dayClickSetState(newState) {
@@ -528,8 +524,6 @@ export default class Maramataka extends React.Component {
         return short;
       case 'full':
         return full;
-      // case 'long':
-      //   return long;
       default:
         return 'short';
     }
@@ -539,8 +533,8 @@ export default class Maramataka extends React.Component {
     const { showDateRange } = this.props;
     const { dateRange, dateRangeErrors, dateRangeStep } = this.state;
 
-    const dateRangeFrom = moment(`${dateRange.from.month + 1} ${dateRange.from.day} ${dateRange.from.year}`, `M D YYYY`).format(longDateFormat);
-    const dateRangeTo = moment(`${dateRange.to.month + 1} ${dateRange.to.day} ${dateRange.to.year}`, `M D YYYY`).format(longDateFormat);
+    const dateRangeFrom = dateRange.from.day && this.formatDateObject(dateRange.from).format(longDateFormat);
+    const dateRangeTo = dateRange.to.day && this.formatDateObject(dateRange.to).format(longDateFormat);
 
     const renderRangeInput = (
       <div className={this.styles.dateRangeInputsContainer}>
@@ -551,7 +545,7 @@ export default class Maramataka extends React.Component {
             onBlur={() => this.onInputDateRangeBlur('from')}
             onFocus={() => this.setState({ dateRangeStep: 0 })}
             type='text'
-            value={dateRangeFrom}
+            value={dateRangeFrom || ''}
             placeholder='Start Date'
           />
           <button className={this.styles.clearButton} onClick={e => this.onClear(e, 'from')} />
@@ -564,7 +558,7 @@ export default class Maramataka extends React.Component {
             onBlur={() => this.onInputDateRangeBlur('to')}
             onFocus={() => this.setState({ dateRangeStep: 1 })}
             type='text'
-            value={dateRangeTo}
+            value={dateRangeTo || ''}
             placeholder='End Date'
           />
           <button className={this.styles.clearButton} onClick={e => this.onClear(e, 'to')} />
@@ -599,22 +593,20 @@ export default class Maramataka extends React.Component {
       month,
       year
     };
-    this.setState({hoverDate});
+    this.setState({ hoverDate });
   }
 
   rangeHoverSet(date, dateRangeFrom, dateRangeTo) {
     const { dateRange, hoverDate } = this.state;
-    const hoveredDateFormated = moment(`${hoverDate.month + 1} ${hoverDate.day} ${hoverDate.year}`, `M D YYYY`);
+    const hoveredDateFormated = this.formatDateObject(hoverDate);
     let isHovered;
 
     if (dateRange.from.day && !dateRange.to.day) {
-      isHovered = hoverDate.day && date.isBetween(dateRangeFrom, hoveredDateFormated, null, '[]') || date.isBetween(hoveredDateFormated, dateRangeFrom, null, '[]');
-    } 
-    else if (dateRange.to.day && !dateRange.from.day) {
-      isHovered = hoverDate.day && date.isBetween(dateRangeTo, hoveredDateFormated, null, '[]') || date.isBetween(hoveredDateFormated, dateRangeTo, null, '[]');
-    } 
-    else if (dateRange.to.day && dateRange.from.day) {
-      isHovered = hoverDate.day && date.isBetween(dateRangeTo, hoveredDateFormated, null, '()') || date.isBetween(hoveredDateFormated, dateRangeFrom, null, '()');
+      isHovered = hoverDate.day && (date.isBetween(dateRangeFrom, hoveredDateFormated, null, '[]') || date.isBetween(hoveredDateFormated, dateRangeFrom, null, '[]'));
+    } else if (dateRange.to.day && !dateRange.from.day) {
+      isHovered = hoverDate.day && (date.isBetween(dateRangeTo, hoveredDateFormated, null, '[]') || date.isBetween(hoveredDateFormated, dateRangeTo, null, '[]'));
+    } else if (dateRange.to.day && dateRange.from.day) {
+      isHovered = hoverDate.day && (date.isBetween(dateRangeTo, hoveredDateFormated, null, '()') || date.isBetween(hoveredDateFormated, dateRangeFrom, null, '()'));
     }
 
     return isHovered;
@@ -622,18 +614,16 @@ export default class Maramataka extends React.Component {
 
   renderDays() {
     const { active, days, selected, dateRangeTypeSelection, dateRange, hoverDate } = this.state;
-    console.log('state', this.state);
 
     const result = [];
 
     days.previous.forEach((day) => {
-      let isSelected, 
-        isHovered;
-
-      const dateRangeFrom = moment(`${dateRange.from.month + 1} ${dateRange.from.day} ${dateRange.from.year}`, `M D YYYY`);
-      const dateRangeTo = moment(`${dateRange.to.month + 1} ${dateRange.to.day} ${dateRange.to.year}`, `M D YYYY`);
+      let isSelected;
+      let isHovered;
+      const dateRangeFrom = this.formatDateObject(dateRange.from);
+      const dateRangeTo = this.formatDateObject(dateRange.to);
       const month = this.formatDate('previous')('month');
-      const year = this.formatDate('previous')('year')
+      const year = this.formatDate('previous')('year');
 
       if (dateRangeTypeSelection === 'single') {
         isSelected = (day === selected.day &&
@@ -650,10 +640,9 @@ export default class Maramataka extends React.Component {
         );
 
         if (hoverDate.day) {
-          const date = moment(`${month + 1} ${day} ${year}`, `M D YYYY`);
+          const date = this.formatDateObject({month, day, year});
           isHovered = this.rangeHoverSet(date, dateRangeFrom, dateRangeTo);
         }
-
       }
 
       result.push(
@@ -685,15 +674,13 @@ export default class Maramataka extends React.Component {
     });
 
     days.active.forEach((day) => {
-      // const isSelected = (day === selected.day &&
-      //   active.month === selected.month &&
-      //   active.year === selected.year);
+      let isSelected;
+      let isHovered;
 
-      let isSelected,
-        isHovered;
-
-      const dateRangeFrom = moment(`${dateRange.from.month + 1} ${dateRange.from.day} ${dateRange.from.year}`, `M D YYYY`);
-      const dateRangeTo = moment(`${dateRange.to.month + 1} ${dateRange.to.day} ${dateRange.to.year}`, `M D YYYY`);
+      const dateRangeFrom = this.formatDateObject(dateRange.from);
+      const dateRangeTo = this.formatDateObject(dateRange.to);
+      const month = active.month;
+      const year = active.year;
 
       if (dateRangeTypeSelection === 'single') {
         isSelected = (day === selected.day &&
@@ -702,11 +689,11 @@ export default class Maramataka extends React.Component {
         );
       } else {
         isSelected = ((dateRange.from.day !== null && dateRange.to.day !== null) &&
-          moment(`${active.month + 1} ${day} ${active.year}`, 'M D YYYY').isBetween(dateRangeFrom, dateRangeTo, null, '[]')
+          this.formatDateObject(active).isBetween(dateRangeFrom, dateRangeTo, null, '[]')
         );
 
         if (hoverDate.day) {
-          const date = moment(`${active.month + 1} ${day} ${active.year}`, `M D YYYY`);
+          const date = this.formatDateObject({month, day, year});
           isHovered = this.rangeHoverSet(date, dateRangeFrom, dateRangeTo);
         }
 
@@ -716,8 +703,8 @@ export default class Maramataka extends React.Component {
         <div
           className={cx(this.styles.dayActive, { [this.styles.selected]: isSelected }, { [this.styles.hovered]: isHovered })}
           data-day={day}
-          data-month={active.month}
-          data-year={active.year}
+          data-month={month}
+          data-year={year}
           key={`active-${day}`}
           onClick={this.onDayClick}
           onMouseEnter={(e) => {
@@ -741,11 +728,10 @@ export default class Maramataka extends React.Component {
     });
 
     days.next.forEach((day) => {
-      let isSelected,
-        isHovered;
-
-      const dateRangeFrom = moment(`${dateRange.from.month + 1} ${dateRange.from.day} ${dateRange.from.year}`, `M D YYYY`);
-      const dateRangeTo = moment(`${dateRange.to.month + 1} ${dateRange.to.day} ${dateRange.to.year}`, `M D YYYY`);
+      let isSelected;
+      let isHovered;
+      const dateRangeFrom = this.formatDateObject(dateRange.from);
+      const dateRangeTo = this.formatDateObject(dateRange.to);
       const month = this.formatDate('next')('month');
       const year = this.formatDate('next')('year')
 
@@ -758,11 +744,11 @@ export default class Maramataka extends React.Component {
         );
       } else {
         isSelected = ((dateRange.from.day !== null && dateRange.to.day !== null) &&
-         this.formatDate('next', day)()
+          this.formatDate('next', day)()
         );
 
         if (hoverDate.day) {
-          const date = moment(`${month + 1} ${day} ${year}`, `M D YYYY`);
+          const date = this.formatDateObject({month, day, year});
           isHovered = this.rangeHoverSet(date, dateRangeFrom, dateRangeTo);
         }
 
