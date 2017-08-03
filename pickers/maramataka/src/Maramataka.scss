@@ -267,6 +267,10 @@
 
   color: #ccc;
 
+  &.hovered {
+    background: $lightGray;
+  }
+
   &.selected {
     background: $lightGray;
   } 
