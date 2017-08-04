@@ -4,6 +4,11 @@ An (optionally) dismissable notification bar.
 
 # Change Log
 
+##### 2.0.0
+- Adding required `id` prop
+- Using `prop-types` package
+- Updated type check to `oneOfType`
+
 ##### 1.2.7
 - Updating package.json to Particles URL
 

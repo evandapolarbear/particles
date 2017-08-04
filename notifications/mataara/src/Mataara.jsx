@@ -1,8 +1,8 @@
-import React, { PropTypes } from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 import cx from 'classnames';
 
 import baseStyles from './Mataara.scss';
-import defaultStyles from './MataaraDefault.scss';
 import composeStyles from '../../../shared/stylesheetComposer';
 
 let styles = {};
@@ -13,8 +13,8 @@ const TYPES = {
   SUCCESS: 'success'
 };
 
-const Mataara = ({ title, body, type, onCancel, noDismiss, stylesheets }) => {
-  styles = composeStyles(baseStyles, [defaultStyles, ...stylesheets]);
+const Mataara = ({ body, id, noDismiss, onCancel, stylesheets, title, type }) => {
+  styles = composeStyles(baseStyles, [...stylesheets]);
 
   return (
     <div
@@ -33,14 +33,15 @@ const Mataara = ({ title, body, type, onCancel, noDismiss, stylesheets }) => {
         className={
           cx(styles.btnCancel, 'fa', 'fa-times', { [styles.hidden]: noDismiss })
         }
-        onClick={onCancel}
+        onClick={() => { onCancel(id); }}
       />
     </div>
   );
 };
 
 Mataara.propTypes = {
-  body: PropTypes.oneOf([PropTypes.string, PropTypes.object]).isRequired,
+  body: PropTypes.oneOfType([PropTypes.string, PropTypes.object]).isRequired,
+  id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
   noDismiss: PropTypes.bool,
   onCancel: PropTypes.func,
   stylesheets: PropTypes.arrayOf(PropTypes.shape()),

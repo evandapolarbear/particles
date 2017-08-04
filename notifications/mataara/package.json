@@ -1,6 +1,6 @@
 {
   "name": "mataara",
-  "version": "1.2.7",
+  "version": "2.0.0",
   "description": "An (optionally) dismissable notification bar.",
   "main": "index.js",
   "scripts": {
@@ -20,6 +20,7 @@
   "homepage": "https://github.com/procore/particles/tree/master/notifications/mataara",
   "dependencies": {
     "classnames": "^2.2.5",
+    "prop-types": "^15.5.10",
     "react": "^15.5.4"
   },
   "devDependencies": {
