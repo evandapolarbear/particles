@@ -4,6 +4,9 @@ A picker with support for group or individual selections.
 
 # Change Log
 
+##### 3.11.1
+- Passing event to onFocus callback
+
 ##### 3.11.0
 - Update to React 15
 

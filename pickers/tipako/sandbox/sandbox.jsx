@@ -60,7 +60,7 @@ const searchable = true;
 const updateOnSelect = true;
 
 const onClearAll = () => { console.warn('Clear all.'); };
-const onFocus = () => { console.warn('Focus.'); };
+const onFocus = (evt) => { console.warn('Focus.', evt); };
 const onSearch = (str) => { console.warn('Searching for', str); };
 const onSelect = (item) => { console.warn('Selected', item); };
 const onSelectAll = () => { console.warn('Select all.'); };

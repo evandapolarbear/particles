@@ -180,7 +180,7 @@ export default class Tipako extends React.Component {
   onTitleClick = (evt) => {
     if (this.state.expanded === false) {
       this.setState({ currentIndex: -1, expanded: true, guid: this.guid });
-      this.props.onFocus && this.props.onFocus();
+      this.props.onFocus && this.props.onFocus(evt);
     } else if (evt.target !== this.searchInput) {
       this.onBlur();
       this.setState({ currentIndex: -1 });
@@ -202,7 +202,7 @@ export default class Tipako extends React.Component {
 
   onSearchFocus = (evt) => {
     evt.target.select();
-    this.props.onFocus && this.props.onFocus();
+    this.props.onFocus && this.props.onFocus(evt);
   }
 
   onBlur = () => {
