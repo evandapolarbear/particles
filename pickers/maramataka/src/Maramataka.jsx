@@ -686,7 +686,9 @@ export default class Maramataka extends React.Component {
             }
           }}
         >
-          {day}
+          <div className={this.styles.dayPreviousInner}>
+            {day}
+          </div>
         </div>
       );
     });
@@ -735,7 +737,9 @@ export default class Maramataka extends React.Component {
             }
           }}
         >
-          {day}
+          <div className={this.styles.dayActiveInner}>
+            {day}
+          </div>
         </div>
       );
     });
@@ -784,7 +788,9 @@ export default class Maramataka extends React.Component {
             }
           }}
         >
-          {day}
+          <div className={this.styles.dayNextInner}>
+            {day}
+          </div>
         </div>
       );
     });

@@ -202,24 +202,11 @@
 }
 
 .day {
-  border-radius: 2px;
   cursor: pointer;
   display: inline-block;
-  font-size: 14px;
-  height: 28px;
-  line-height: 28px;
-  margin: 2px 4px;
-  text-align: center;
-  width: 32px;
-
-  &:hover {
-    background: $lightGray;
-  }
-
-  &.selected {
-    background: $darkGray;
-    color: $white;
-  }
+  height: 32px;
+  padding: 2px 4px;
+  width: 40px;
 }
 
 .month {
@@ -238,24 +225,35 @@
 }
 
 .dayTitle {
-  composes: day;
-
   cursor: default;
+  display: inline-block;
+  font-size: 14px;
   font-weight: 600;
+  height: 28px;
+  line-height: 28px;
+  margin: 2px 4px;
+  text-align: center;
+  width: 32px;
+}
 
-  &:hover {
-    background: 0;
-  }
+.dayActiveInner,
+.dayPreviousInner,
+.dayNextInner {
+  border-radius: 2px;
+  font-size: 14px;
+  line-height: 28px;
+  text-align: center;
 }
 
 .dayActive {
   composes: day;
 
-  &.hovered {
+  &:hover .dayActiveInner,
+  &.hovered .dayActiveInner {
     background: $lightGray;
   }
 
-  &.selected {
+  &.selected .dayActiveInner {
     background: $darkGray;
     color: $white;
   }
@@ -264,15 +262,19 @@
 .dayPrevious,
 .dayNext {
   composes: day;
-
   color: #ccc;
 
-  &.hovered {
+  &:hover .dayPreviousInner,
+  &:hover .dayNextInner,
+  &.hovered .dayPreviousInner,
+  &.hovered .dayNextInner  {
     background: $lightGray;
   }
 
-  &.selected {
+  &.selected .dayPreviousInner,
+  &.selected .dayNextInner {
     background: $lightGray;
+    color: $white;
   } 
 }
 
