@@ -5,8 +5,8 @@ import sandboxStyles from './sandbox.scss';
 
 import Rapu from '../src';
 
-const onSubmit = () => {
-  console.warn('Submitted.'); // eslint-disable-line
+const onSubmit = (value) => {
+  console.warn('Submitted:', value); // eslint-disable-line
 };
 
 const stylesheets = [sandboxStyles];

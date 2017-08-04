@@ -46,40 +46,17 @@ export default class Rapu extends React.Component {
   handleClear = () => {
     const value = '';
     this.setState({ value });
-    this.updateUrl(value);
-
     this.props.onSubmit(value);
   }
 
   handleSubmit = () => {
-    const value = this.state.value;
-    this.updateUrl(value);
-
-    this.props.onSubmit(value);
+    this.props.onSubmit(this.state.value);
   }
 
   handleKeyUp = (e) => {
     if (e.key === 'Enter') {
       this.handleSubmit();
     }
-  }
-
-  updateUrl = (value) => {
-    const url = window.location.href.split('?');
-    const params = qs.parse(url[1]);
-    params.search = value;
-    params.page = 1;
-
-    if (!value) {
-      delete params.search;
-    }
-
-    history
-    .pushState(
-      history.state,
-      '',
-      `${url[0]}?${qs.stringify(params, { arrayFormat: 'brackets' })}`,
-    );
   }
 
   render() {
