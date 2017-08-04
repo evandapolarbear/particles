@@ -4,6 +4,10 @@ A picker with support for group or individual selections.
 
 # Change Log
 
+##### 3.11.2
+- Commenting out focus bug until future notice
+- Removing caret while disabled
+
 ##### 3.11.1
 - Passing event to onFocus callback
 

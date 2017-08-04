@@ -107,11 +107,11 @@ export default class Tipako extends React.Component {
 
     if (expanded) {
       if (this.focusedItem && currentIndex > -1) {
-        this.focusedItem.focus();
+        // this.focusedItem.focus();
       }
 
       if (this.searchInput && currentIndex === -1) {
-        this.searchInput.focus();
+        // this.searchInput.focus();
       }
     }
   }
@@ -431,7 +431,7 @@ export default class Tipako extends React.Component {
       {renderEmpty ? renderEmpty() : this.getEmptyString()}
     </div>);
 
-    const caret = loading
+    const caret = (loading || disabled)
       ? null
       : (<button onClick={this.onTitleClick} className={this.styles.caret} type='button'>
         <span className={cx('fa', 'fa-caret-down', this.styles.arrow, { [this.styles.expanded]: expanded })} />
