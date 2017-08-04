@@ -17,14 +17,8 @@ const i18n = {
   NO_RESULTS: 'No results found'
 };
 
-const checkedReducer = ids =>
-  Object.keys(ids).reduce((acc, key) => {
-    if (key !== 0 && ids[key]) {
-      acc.push(key);
-    }
-
-    return acc;
-  }, []);
+const checkedReducer = ids => Object.keys(ids).reduce((acc, id) =>
+  (ids[id] === true ? Object.assign({}, acc, { [id]: true }) : acc), {});
 
 export { SORT_DIRECTION };
 
@@ -88,7 +82,10 @@ export default class Ripanga extends React.Component {
     window.addEventListener('table/checkOne', ({ detail: id }) => this.onRowCheck(id));
     window.addEventListener('table/uncheckAll', this.onUncheckAll);
 
-    this.props.onMounted({ ...this.state });
+    const state = this.state;
+    state.checkedIds = checkedReducer(state.checkedIds);
+
+    this.props.onMounted({ ...state });
   }
 
   componentWillReceiveProps(nextProps) {
@@ -104,8 +101,6 @@ export default class Ripanga extends React.Component {
     window.removeEventListener('table/checkOne', id => this.onRowCheck(id));
     window.removeEventListener('table/uncheckAll', this.onUncheckAll);
   }
-
-  onCheck = ids => this.props.onCheck(checkedReducer(ids));
 
   onCollapse = (id) => {
     const { collapsedIds } = this.state;
@@ -131,10 +126,7 @@ export default class Ripanga extends React.Component {
 
     checkedIds[id] = !checkedIds[id];
 
-    this.onCheck(checkedIds);
-
     const allChecked = this.getAllChecked(this.props, checkedIds);
-
     this.setState({ allChecked, checkedIds }, this.updateStorage);
   }
 
@@ -147,9 +139,7 @@ export default class Ripanga extends React.Component {
     const groupIsChecked = groupIds.reduce((acc, id) => acc && checkedIds[id], true);
     groupIds.forEach((id) => { checkedIds[id] = !groupIsChecked; });
 
-    this.onCheck(checkedIds);
     const allChecked = this.getAllChecked(this.props, checkedIds);
-
     this.setState({ allChecked, checkedIds }, this.updateStorage);
   }
 
@@ -201,7 +191,8 @@ export default class Ripanga extends React.Component {
 
   updateStorage = () => {
     const { checkedIds, collapsedIds } = this.state;
-    this.onCheck(checkedIds);
+
+    this.props.onCheck(checkedReducer(checkedIds));
 
     sessionStorage.setItem(`${this.props.scope}/CHECKED`, JSON.stringify(checkedIds));
     sessionStorage.setItem(`${this.props.scope}/COLLAPSED`, JSON.stringify(collapsedIds));

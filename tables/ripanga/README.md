@@ -4,6 +4,10 @@ A table component with self-managed checkboxes, sticky head, sticky right panel,
 
 # Change Log
 
+##### 3.0.0
+- Fixing multiple calls to `onCheck` handler
+- Returning map of checked results rather than array
+
 ##### 2.5.6
 - Fixed group collapse all bug
 - Fixed group check all bug
