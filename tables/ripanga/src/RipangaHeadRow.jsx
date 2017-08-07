@@ -146,11 +146,12 @@ export default class RipangaHeadRow extends React.Component {
       const onCheckHandler = allChecked ? onUncheckAll : onCheckAll;
       const checkbox = (
         showCheckboxes
-        ? (
-          <label className={styles.controlCheckbox}>
-            <input type='checkbox' checked={allChecked} onChange={onCheckHandler} />
-          </label>
-        ) : null
+          ? (
+            <label className={styles.controlCheckbox}>
+              <input type='checkbox' checked={allChecked} onChange={onCheckHandler} />
+            </label>
+          )
+          : null
       );
 
       const caret = (showGroups

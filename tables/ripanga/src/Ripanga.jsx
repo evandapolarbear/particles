@@ -69,7 +69,7 @@ export default class Ripanga extends React.Component {
 
     this.state = {
       allChecked: this.getAllChecked(props, checkedIds),
-      allCollapsed: false,
+      allCollapsed: this.getAllCollapsed(collapsedIds),
       allGroupIds: this.getGroupIds(props.tableData),
       checkedIds,
       collapsedIds
@@ -89,10 +89,11 @@ export default class Ripanga extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    const allGroupIds = this.getGroupIds(nextProps.tableData);
     const allChecked = this.getAllChecked(nextProps, this.state.checkedIds);
+    const allCollapsed = this.getAllCollapsed(this.state.collapsedIds);
+    const allGroupIds = this.getGroupIds(nextProps.tableData);
 
-    this.setState({ allChecked, allGroupIds });
+    this.setState({ allChecked, allCollapsed, allGroupIds });
   }
 
   componentWillUnmount() {
@@ -149,7 +150,7 @@ export default class Ripanga extends React.Component {
     const checkedIds = this.props.tableData.reduce((acc, group) => {
       const groupIds = group.data.reduce(
         (acc2, item) => Object.assign({}, acc2, { [item[this.props.idKey]]: allChecked })
-      , {});
+        , {});
 
       return Object.assign({}, acc, groupIds);
     }, {});
@@ -163,7 +164,7 @@ export default class Ripanga extends React.Component {
     const checkedIds = this.props.tableData.reduce((acc, group) => {
       const groupIds = group.data.reduce(
         (acc2, item) => Object.assign({}, acc2, { [item[this.props.idKey]]: allChecked })
-      , {});
+        , {});
 
       return Object.assign({}, acc, groupIds);
     }, {});
@@ -184,10 +185,12 @@ export default class Ripanga extends React.Component {
       acc2
         && (checkedIds[item[props.idKey]] !== undefined)
         && (checkedIds[item[props.idKey]] === true)
-    , true);
+      , true);
 
     return acc && groupIsAllChecked;
   }, true);
+
+  getAllCollapsed = collapsedIds => Object.values(collapsedIds).every(id => id);
 
   updateStorage = () => {
     const { checkedIds, collapsedIds } = this.state;
@@ -244,40 +247,40 @@ export default class Ripanga extends React.Component {
     return (<div className={styles.contentContainer}>
       <RipangaSidebar
         {
-          ...{
-            collapsedIds,
-            idKey,
-            renderSidebarBodyCell,
-            renderSidebarHeadCell,
-            renderSidebarGroupCell,
-            showGroups,
-            styles,
-            tableData
-          }
+        ...{
+          collapsedIds,
+          idKey,
+          renderSidebarBodyCell,
+          renderSidebarHeadCell,
+          renderSidebarGroupCell,
+          showGroups,
+          styles,
+          tableData
+        }
         }
       />
       <div className={styles.tableContainer} ref={(el) => { this.tableContainer = el; }}>
         <div className={styles.table} ref={(el) => { this.table = el; }}>
           <RipangaHeadRow
             {
-              ...{
-                allChecked,
-                allCollapsed,
-                className: styles.tableHead,
-                columnDefinitions,
-                idKey,
-                onCheckAll: this.onCheckAll,
-                onCollapseAll: this.onCollapseAll,
-                onScroll: this.onScroll,
-                onScrollTrack: this.onScrollTrack,
-                onUncheckAll: this.onUncheckAll,
-                onSort,
-                showGroups,
-                showCheckboxes,
-                sortState,
-                styles,
-                tableData
-              }
+            ...{
+              allChecked,
+              allCollapsed,
+              className: styles.tableHead,
+              columnDefinitions,
+              idKey,
+              onCheckAll: this.onCheckAll,
+              onCollapseAll: this.onCollapseAll,
+              onScroll: this.onScroll,
+              onScrollTrack: this.onScrollTrack,
+              onUncheckAll: this.onUncheckAll,
+              onSort,
+              showGroups,
+              showCheckboxes,
+              sortState,
+              styles,
+              tableData
+            }
             }
           />
           <div className={styles.tableBody}>

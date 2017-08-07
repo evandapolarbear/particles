@@ -185,17 +185,17 @@ export default class Tiwae extends React.Component {
     } = this.state;
 
     const selectAll = this.props.isSelectAll
-    ? (<div className={styles.selectAll} onClick={this.onSelectAll}>
-      <input
-        checked={this.state.isAllChecked}
-        className={styles.itemCheckbox}
-        onChange={this.onSelectAll}
-        type='checkbox'
-      />
-      <div className={styles.itemLabel}>Select All</div>
-      <span className={styles.controlDivider}>|</span>
-    </div>)
-    : null;
+      ? (<div className={styles.selectAll} onClick={this.onSelectAll}>
+        <input
+          checked={this.state.isAllChecked}
+          className={styles.itemCheckbox}
+          onChange={this.onSelectAll}
+          type='checkbox'
+        />
+        <div className={styles.itemLabel}>Select All</div>
+        <span className={styles.controlDivider}>|</span>
+      </div>)
+      : null;
 
     const controls = (<div className={styles.controls}>
       {selectAll}

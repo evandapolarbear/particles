@@ -4,6 +4,9 @@ Manages column definition arrays to configure columns.
 
 # Change Log
 
+##### 2.4.2
+- Sandbox cleanup
+
 ##### 2.4.1
 - Updated the ellipses button to a custom `.svg`
 
