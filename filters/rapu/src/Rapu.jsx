@@ -11,12 +11,14 @@ export default class Rapu extends React.Component {
   static propTypes = {
     onSubmit: PropTypes.func.isRequired,
     stylesheets: PropTypes.arrayOf(PropTypes.shape()),
-    placeholder: PropTypes.string
+    placeholder: PropTypes.string,
+    value: PropTypes.string
   };
 
   static defaultProps = {
     stylesheets: [],
-    placeholder: 'Search'
+    placeholder: 'Search',
+    value: ''
   };
 
   constructor(props) {
@@ -24,19 +26,9 @@ export default class Rapu extends React.Component {
 
     styles = composeStyles(baseStyles, [...props.stylesheets]);
 
-    const url = window.location.href.split('?');
-    const params = qs.parse(url[1]);
-
     this.state = {
-      value: (params.search || '')
+      value: props.value
     };
-  }
-
-  componentWillReceiveProps() {
-    const url = window.location.href.split('?');
-    const params = qs.parse(url[1]);
-
-    this.setState({ value: (params.search || '') });
   }
 
   handleChange = (e) => {
@@ -78,8 +70,7 @@ export default class Rapu extends React.Component {
         />
 
         <div
-          className={cx(styles.btnClear, 'fa', 'fa-times',
-            { [styles.hidden]: this.state.value.length === 0 })}
+          className={cx(styles.btnClear, 'fa', 'fa-times', { [styles.hidden]: !this.state.value })}
           onClick={this.handleClear}
         />
       </div>

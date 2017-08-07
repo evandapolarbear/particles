@@ -4,6 +4,9 @@ A text search component that updates the address bar. Does not use auto-suggest.
 
 # Change Log
 
+##### 3.0.1
+- Further URL updating removal
+
 ##### 3.0.0
 - Removed URL updating.
 
