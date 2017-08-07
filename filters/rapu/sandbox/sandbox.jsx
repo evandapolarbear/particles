@@ -11,8 +11,9 @@ const onSubmit = (value) => {
 
 const stylesheets = [sandboxStyles];
 const placeholder = 'Search';
+const value = 'Hello world'
 
 render(
-  <Rapu {...{ onSubmit, stylesheets, placeholder }} />,
+  <Rapu {...{ onSubmit, stylesheets, placeholder, value }} />,
   window.document.getElementById('root'),
 );

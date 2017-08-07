@@ -4,8 +4,12 @@ A text search component that updates the address bar. Does not use auto-suggest.
 
 # Change Log
 
+##### 3.0.2
+- Adding `value` prop to sandbox
+
 ##### 3.0.1
 - Further URL updating removal
+- Adding `value` prop
 
 ##### 3.0.0
 - Removed URL updating.
