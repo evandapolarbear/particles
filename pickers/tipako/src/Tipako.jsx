@@ -480,7 +480,8 @@ export default class Tipako extends React.Component {
     return (
       <div
         className={cx(this.styles.container,
-          { [this.styles.active]: expanded,
+          { [this.styles.expanded]: expanded,
+            [this.styles.active]: expanded,
             [this.styles.disabled]: disabled })}
         onKeyDown={this.handleKeyDown}
         tabIndex={-1}
