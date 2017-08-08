@@ -4,6 +4,9 @@ A date picker.
 
 # Change Log
 
+##### 1.3.2
+- Adding expanded class to top level container
+
 ##### 1.3.1
 - Fixed a bug where the return of onSelect was a month off
 

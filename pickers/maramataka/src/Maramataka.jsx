@@ -382,7 +382,7 @@ export default class Maramataka extends React.Component {
       <div key={`daytitle-${name}`} className={this.styles.dayTitle}>{name.substr(0, 1)}</div>);
 
     return (
-      <div className={this.styles.container}>
+      <div className={cx(this.styles.container, { [this.styles.expanded]: expanded })}>
         {head}
 
         <div className={this.styles.dropdownContainer} onClick={evt => evt.stopPropagation()}>
