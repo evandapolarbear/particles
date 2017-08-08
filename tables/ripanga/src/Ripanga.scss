@@ -31,17 +31,11 @@ $tableZ: 0;
   z-index: $sidebarZ;
 }
 
-.tableHead {
-  position: absolute;
-  top: 0;
-  width: 100%;
-  z-index: $headerZ;
-}
-
 .tableBody {
   display: flex;
   flex-direction: column;
   font-family: inherit;
+  z-index: $tableZ;
 }
 
 .tableRow {
@@ -65,6 +59,7 @@ $tableZ: 0;
   font-weight: bold;
   height: 45px;
   position: relative;
+  z-index: $headerZ;
 }
 
 .headCell {
@@ -178,7 +173,6 @@ $tableZ: 0;
   z-index: 0;
 
   &.focused {
-    outline: 10px solid purple;
     position: fixed;
     z-index: 1;
   }

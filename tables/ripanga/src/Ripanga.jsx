@@ -6,7 +6,6 @@ import RipangaBodyRows from './RipangaBodyRows';
 import RipangaSidebar from './RipangaSidebar';
 
 import baseStyles from './Ripanga.scss';
-import defaultStyles from './RipangaDefault.scss';
 import composeStyles from '../../../shared/stylesheetComposer';
 
 const SORT_DIRECTION = { ASC: 'asc', DESC: 'desc', NONE: 'none' };
@@ -62,7 +61,7 @@ export default class Ripanga extends React.Component {
   constructor(props) {
     super(props);
 
-    styles = composeStyles(baseStyles, [defaultStyles, ...props.stylesheets]);
+    styles = composeStyles(baseStyles, [...props.stylesheets]);
 
     const checkedIds = JSON.parse(sessionStorage.getItem(`${props.scope}/CHECKED`)) || {};
     const collapsedIds = JSON.parse(sessionStorage.getItem(`${props.scope}/COLLAPSED`)) || {};

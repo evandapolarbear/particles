@@ -4,6 +4,10 @@ A table component with self-managed checkboxes, sticky head, sticky right panel,
 
 # Change Log
 
+##### 3.0.2
+- z-index updates to make header above body
+- Removing default styles
+
 ##### 3.0.1
 - Sandbox cleanup
 - Expand/collapse all (on `constructor` and `willReceiveProps`) bug fix 
