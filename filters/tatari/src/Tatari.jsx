@@ -44,7 +44,6 @@ export default class Tatari extends React.Component {
       loading: {},
       options: {},
       savedFilters: [],
-      savedSelections: [],
       totalCurrentItems: 0
     };
   }
@@ -57,27 +56,17 @@ export default class Tatari extends React.Component {
       get(this.props.urls.saved)
     ])
     .then(([{ data: filterData }, { data: stored }]) => {
-      let saved = stored;
+      const savedFilters = Object.keys(stored).reduce((acc, item) => (
+        stored[item] && stored[item].filter(Boolean).length
+        ? Object.assign(acc, { [item]: stored[item] })
+        : acc
+      ), {});
 
-      const savedFilters = Object.keys(saved);
-
-      const savedSelections = Object.keys(saved)
-        .reduce((acc, key) => acc.concat(saved[key] || []), []);
-
-      savedFilters.push(...savedSelections);
-
-      this.setState({ savedFilters, savedSelections });
-
-      // This is only needed for backwards compatibility, will remove in the near future
-      // -- May the Fourth Be With You (2017)
-      if (Array.isArray(saved)) {
-        saved =
-          stored.reduce((acc, item) => Object.assign(acc, { [item.key]: item.storedValue }), {});
-      }
+      this.setState({ savedFilters });
 
       const url = window.location.href.split('?');
       const params = qs.parse(url[1]);
-      const previousFilters = params.filters || saved;
+      const previousFilters = params.filters || savedFilters;
       const availableFilters = this.props.filterOptions(filterData);
 
       const activeFilters = availableFilters.reduce((acc, filter, index) => {
@@ -96,32 +85,10 @@ export default class Tatari extends React.Component {
         return acc;
       }, []);
 
-
-      const loading = availableFilters.reduce((acc, filter) =>
-        Object.assign(acc, { [filter.key]: previousFilters[filter.key] !== undefined }),
-        {});
-
-      this.setState({ inactiveFilters, activeFilters, loading });
-
-      Promise.all(activeFilters.map(filter => get(filter.endpoint)))
-        .then((values) => {
-          const options = activeFilters.reduce((acc, filter, index) => {
-            const { data } = values[index];
-
-            const setChecked = d => Object.assign(d, { checked: (
-              previousFilters[filter.key]
-                .filter(v => (v && v.toString()) === d.key.toString())
-                .length > 0
-            ) });
-
-            return Object.assign(acc, { [filter.key]: data.map(setChecked) });
-          }, {});
-
-          this.setState({ options, loading: {} }, () => {
-            this.updateUrl();
-            this.props.onComplete();
-          });
-        });
+      this.setState({ inactiveFilters, activeFilters, loading: {} }, () => {
+        this.updateUrl();
+        this.props.onComplete();
+      });
     })
     .catch(e => { console.error(e); }) // eslint-disable-line
   }
@@ -129,6 +96,29 @@ export default class Tatari extends React.Component {
   onExpand = (evt) => {
     evt.stopPropagation();
     const key = evt.currentTarget.dataset.key;
+
+    if (key !== 'inactive' && !(this.state.options[key] && this.state.options[key].length)) {
+      this.setState({ loading: { [key]: true } }, () => {
+        const filter = this.state.activeFilters.find(item => item.key === key);
+
+        get(filter.endpoint)
+        .then(({ data }) => {
+          const options = data.map((item) => {
+            if (this.state.savedFilters[key].includes(item.key)) {
+              return Object.assign(item, { checked: true });
+            }
+
+            return item;
+          });
+
+          this.setState({
+            loading: { [key]: false },
+            options: { [key]: options }
+          });
+        });
+      });
+    }
+
     if (this.state.loading[key]) {
       return;
     }
@@ -231,7 +221,7 @@ export default class Tatari extends React.Component {
   };
 
   createPayload = () => {
-    const { activeFilters, options } = this.state;
+    const { activeFilters, options, savedFilters } = this.state;
 
     const reduceSingle = (acc, value) => {
       if (value.key && value.checked === true) {
@@ -241,8 +231,15 @@ export default class Tatari extends React.Component {
       return acc;
     };
 
-    const reduceAll = (acc, filter) =>
-      Object.assign(acc, { [filter.key]: options[filter.key].reduce(reduceSingle, []) });
+    const reduceAll = (acc, filter) => {
+      let checked = options[filter.key] || [];
+
+      if (checked.length === 0 && savedFilters[filter.key]) {
+        checked = savedFilters[filter.key].map(item => ({ checked: true, key: item }));
+      }
+
+      return Object.assign(acc, { [filter.key]: checked.reduce(reduceSingle, []) });
+    };
 
     return activeFilters.reduce(reduceAll, {});
   }
@@ -257,23 +254,22 @@ export default class Tatari extends React.Component {
 
     const { savedFilters } = this.state;
     const newFilters = Object.keys(payload.filters);
-    const newSelections = Object.keys(payload.filters).reduce((acc, key) => {
-      acc.push(...payload.filters[key]);
-      return acc;
-    }, []);
-
-    newFilters.push(...newSelections);
-
-    const isFiltersSame = newFilters.reduce((acc, key) => acc && savedFilters.includes(key), true);
-    const isFiltersSameLength = savedFilters.length === newFilters.length;
+    const storedFilters = Object.keys(savedFilters);
+    const isFiltersSame = newFilters.reduce((acc, key) => acc && storedFilters.includes(key), true);
+    const isFiltersSameLength = storedFilters.length === newFilters.length;
 
     if (!(isFiltersSame && isFiltersSameLength)) {
-      if (Object.keys(payload.filters).length) {
-        patch(this.props.urls.patch, payload).then(this.props.onComplete);
+      const newSaved = Object.assign(payload.filters, savedFilters);
+
+      if (newFilters.length) {
+        patch(this.props.urls.patch, payload)
+        .then(this.props.onComplete)
+        .then(() => this.setState({ savedFilters: newSaved }));
       } else {
-        destroy(this.props.urls.delete).then(this.props.onComplete);
+        destroy(this.props.urls.delete)
+        .then(this.props.onComplete)
+        .then(() => this.setState({ savedFilters: newSaved }));
       }
-      this.setState({ savedFilters: newFilters, savedSelections: newSelections });
     }
   }
 
@@ -415,8 +411,15 @@ export default class Tatari extends React.Component {
     const { activeFilters, inactiveFilters } = this.state;
 
     const activeUpdated = activeFilters.reduce((activeAcc, filter) => {
-      const isPopulated = this.state.options[filter.key]
-        .reduce((acc, option) => acc || option.checked, false);
+      const isPopulated =
+        (this.state.options[filter.key]
+        && this.state.options[filter.key].reduce((acc, option) => acc || option.checked, false))
+        || (
+          this.state.options[filter.key]
+          && this.state.options[filter.key].length === 0
+          && this.state.savedFilters[filter.key]
+          && this.state.savedFilters[filter.key].length
+        );
 
       if (isPopulated === false) {
         inactiveFilters.push(filter);
@@ -436,48 +439,57 @@ export default class Tatari extends React.Component {
   }
 
   render() {
-    const inactiveFilters = this.state.inactiveFilters.length
-      ? (<TatariDropdownPlain
-        keyListeners={this.keyListeners}
-        currentIndex={this.state.currentIndex}
-        data={this.state.inactiveFilters}
-        i18n={this.props.i18n}
-        isExpanded={this.state.expanded.inactive}
-        isLoading={this.state.loading.inactive}
-        onChange={this.addActive}
-        onExpand={this.onExpand}
-        styles={styles}
-      />)
-      : null;
+    const inactiveFilters =
+      this.state.inactiveFilters.length
+      ? (
+        <TatariDropdownPlain
+          keyListeners={this.keyListeners}
+          currentIndex={this.state.currentIndex}
+          data={this.state.inactiveFilters}
+          i18n={this.props.i18n}
+          isExpanded={this.state.expanded.inactive}
+          isLoading={this.state.loading.inactive}
+          onChange={this.addActive}
+          onExpand={this.onExpand}
+          styles={styles}
+        />
+      ) : null;
 
     const activeFilters = this.state.activeFilters
-      .map(item => (<TatariDropdownCheckboxes
-        keyListeners={this.keyListeners}
-        currentIndex={this.state.currentIndex}
-        filter={item}
-        i18n={this.props.i18n}
-        isExpanded={this.state.expanded[item.key]}
-        isHiding={this.state.hiding[item.key]}
-        isLoading={this.state.loading[item.key]}
-        key={`active-${item.key}`}
-        onCheckAll={this.checkAll}
-        onCheckNone={this.checkNone}
-        onCheckOne={this.checkOne}
-        onExpand={this.onExpand}
-        onRemove={this.removeActive}
-        onSearch={this.onSearch}
-        options={this.state.options[item.key]}
-        styles={styles}
-      />));
+      .map((item) => {
+        const savedSelections = this.state.savedFilters[item.key];
 
-    const clearAll = (activeFilters.length
-      ? (<div
-        onClick={this.removeAllActive}
-        className={styles.clearAllFilters}
-      >
-        {this.props.i18n.clear_all}
-      </div>)
-      : null);
+        return (
+          <TatariDropdownCheckboxes
+            currentIndex={this.state.currentIndex}
+            filter={item}
+            i18n={this.props.i18n}
+            isExpanded={this.state.expanded[item.key]}
+            isHiding={this.state.hiding[item.key]}
+            isLoading={this.state.loading[item.key]}
+            key={`active-${item.key}`}
+            keyListeners={this.keyListeners}
+            onCheckAll={this.checkAll}
+            onCheckNone={this.checkNone}
+            onCheckOne={this.checkOne}
+            onExpand={this.onExpand}
+            onRemove={this.removeActive}
+            onSearch={this.onSearch}
+            options={this.state.options[item.key]}
+            savedSelections={savedSelections}
+            styles={styles}
+          />
+        );
+      });
+
+    const clearAll = (
+      activeFilters.length
+      ? (
+        <div onClick={this.removeAllActive} className={styles.clearAllFilters}>
+          {this.props.i18n.clear_all}
+        </div>
+      ) : null
+    );
 
     return (
       <div className={styles.filterContainer}>

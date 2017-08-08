@@ -34,52 +34,49 @@ export default class TatariDropdownCheckboxes extends React.Component {
       onRemove,
       onSearch,
       options,
+      savedSelections,
       styles
     } = this.props;
 
-    const count = options.reduce((acc, option) => (option.checked ? acc + 1 : acc), 0);
-    const adjustedCount = (count > 1 ? <div className={styles.activeCount}>({count})</div> : null);
+    let count = options.reduce((acc, option) => (option.checked ? acc + 1 : acc), 0);
+
+    if (count === 0 && options.length === 0) {
+      count = savedSelections.length;
+    }
+
+    const adjustedCount = (count > 0 ? <div className={styles.activeCount}>({count})</div> : null);
 
     function onClick(evt) {
       evt.stopPropagation();
     }
 
-    const remove = (<button
-      className={cx('fa', 'fa-times', styles.activeRemove)}
-      data-key={filter.key}
-      onClick={onRemove}
-    />);
+    const remove = (
+      <button
+        className={cx('fa', 'fa-times', styles.activeRemove)}
+        data-key={filter.key}
+        onClick={onRemove}
+      />
+    );
 
-    const loading = (isLoading
+    const loading = (
+      isLoading
       ? <span className={styles.dropdownLoading} />
-      : null);
+      : null
+    );
 
-    const caret = isLoading
+    const caret =
+      isLoading
       ? null
-      : (<div className={styles.dropdownCaret}>
-        <span
-          className={cx('fa', 'fa-caret-down', styles.arrow,
-          { [styles.expanded]: isExpanded })}
-        />
-      </div>);
+      : (
+        <div className={styles.dropdownCaret}>
+          <span
+            className={cx('fa', 'fa-caret-down', styles.arrow,
+            { [styles.expanded]: isExpanded })}
+          />
+        </div>
+      );
 
-    const singleSelection = options.reduce((acc, option) => {
-      if (count === 1 && option.checked) {
-        acc.push(<div
-          className={styles.singleSelection}
-          key={`option-${option.key}`}
-        >{option.value}</div>);
-      }
-
-      return acc;
-    }, []);
-
-    const text = (count === 1
-      ? (<div className={styles.singleSelectionDropdownTitle}>
-        {filter.value}:
-        {singleSelection}
-      </div>)
-      : <div className={styles.dropdownTitle}>{filter.value}</div>);
+    const text = <div className={styles.dropdownTitle}>{filter.value}</div>;
 
     counter = 0;
 
@@ -87,24 +84,26 @@ export default class TatariDropdownCheckboxes extends React.Component {
       const focusedItem = currentIndex === counter;
 
       if (option.hidden !== true) {
-        acc.push(<label
-          className={cx(styles.activeItem, { [styles.keyFocus]: focusedItem })}
-          key={`option-${option.key}`}
-          onClick={(evt) => { evt.stopPropagation(); }}
-          onKeyDown={onCheckOne}
-          ref={(el) => { if (focusedItem) this.focusedItem = el; }}
-          tabIndex={-1}
-        >
-          <input
-            type='checkbox'
-            checked={option.checked || false}
-            className={styles.activeCheckbox}
-            onChange={onCheckOne}
-            data-filter-key={filter.key}
-            data-key={option.key}
-          />
-          <div className={styles.activeText}>{option.value}</div>
-        </label>);
+        acc.push(
+          <label
+            className={cx(styles.activeItem, { [styles.keyFocus]: focusedItem })}
+            key={`option-${option.key}`}
+            onClick={(evt) => { evt.stopPropagation(); }}
+            onKeyDown={onCheckOne}
+            ref={(el) => { if (focusedItem) this.focusedItem = el; }}
+            tabIndex={-1}
+          >
+            <input
+              type='checkbox'
+              checked={option.checked || false}
+              className={styles.activeCheckbox}
+              onChange={onCheckOne}
+              data-filter-key={filter.key}
+              data-key={option.key}
+            />
+            <div className={styles.activeText}>{option.value}</div>
+          </label>
+        );
         counter += 1;
       }
 
@@ -142,36 +141,38 @@ export default class TatariDropdownCheckboxes extends React.Component {
       </div>)
       : null;
 
-    return (<div className={styles.dropdownContainer}>
-      <div
-        className={cx(styles.dropdownHead, { [styles.expanded]: isExpanded })}
-        data-key={filter.key}
-        onClick={onExpand}
-        onKeyDown={keyListeners}
-        tabIndex={-1}
-      >
-        {remove}
-        {text}
-        {adjustedCount}
-        {caret}
-        {loading}
-      </div>
+    return (
+      <div className={styles.dropdownContainer}>
+        <div
+          className={cx(styles.dropdownHead, { [styles.expanded]: isExpanded })}
+          data-key={filter.key}
+          onClick={onExpand}
+          onKeyDown={keyListeners}
+          tabIndex={-1}
+        >
+          {remove}
+          {text}
+          {adjustedCount}
+          {caret}
+          {loading}
+        </div>
 
-      <div
-        className={cx(styles.dropdownBody, { [styles.expanded]: isExpanded })}
-        onKeyDown={keyListeners}
-        tabIndex={-1}
-      >
-        <div>
-          {activeSearch}
-          {activeControls}
-        </div>
-        <div className={cx(styles.activeItems)}>
-          {items}
-          {emptyMessage}
+        <div
+          className={cx(styles.dropdownBody, { [styles.expanded]: isExpanded })}
+          onKeyDown={keyListeners}
+          tabIndex={-1}
+        >
+          <div>
+            {activeSearch}
+            {activeControls}
+          </div>
+          <div className={cx(styles.activeItems)}>
+            {items}
+            {emptyMessage}
+          </div>
         </div>
       </div>
-    </div>);
+    );
   }
 }
 
@@ -193,6 +194,7 @@ TatariDropdownCheckboxes.propTypes = {
   onRemove: PropTypes.func.isRequired,
   onSearch: PropTypes.func.isRequired,
   options: PropTypes.arrayOf(PropTypes.shape()),
+  savedSelections: PropTypes.arrayOf(PropTypes.number),
   styles: PropTypes.shape().isRequired
 };
 
@@ -201,5 +203,6 @@ TatariDropdownCheckboxes.defaultProps = {
   isExpanded: false,
   isLoading: false,
   options: [],
+  savedSelections: [],
   styles: {}
 };

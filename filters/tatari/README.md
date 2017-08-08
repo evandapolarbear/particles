@@ -4,6 +4,10 @@ A dynamically populated filter component.
 
 # Change Log
 
+##### 2.6.0
+- Loading of filter data deferred to clicking into them
+- UX change: single selection back to looking like <Filter> (<count>)
+
 ##### 2.5.1
 - Added esc key functionality
 - Fixed arrow/enter bugs
