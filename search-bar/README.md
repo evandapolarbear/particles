@@ -1,4 +1,4 @@
-# Rapu
+# Search Bar
 
 A text search component that updates the address bar. Does not use auto-suggest.
 

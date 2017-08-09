@@ -1,4 +1,4 @@
-# Ripanga
+# Table
 
 A table component with self-managed checkboxes, sticky head, sticky right panel, and horizontal scroll widget.
 
@@ -10,7 +10,7 @@ A table component with self-managed checkboxes, sticky head, sticky right panel,
 
 ##### 3.0.1
 - Sandbox cleanup
-- Expand/collapse all (on `constructor` and `willReceiveProps`) bug fix 
+- Expand/collapse all (on `constructor` and `willReceiveProps`) bug fix
 
 ##### 3.0.0
 - Fixing multiple calls to `onCheck` handler

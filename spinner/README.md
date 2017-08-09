@@ -1,4 +1,4 @@
-# Uta
+# Spinner
 
 A loading spinner which wraps around content.
 

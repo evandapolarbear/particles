@@ -1,4 +1,4 @@
-# Mataara
+# Notification
 
 An (optionally) dismissable notification bar.
 
