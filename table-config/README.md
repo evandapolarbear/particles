@@ -1,4 +1,4 @@
-# Column Organizer
+# Table Config
 
 Manages column definition arrays to configure columns.
 

@@ -2,7 +2,7 @@
 import { render } from 'react-dom';
 import React from 'react';
 
-import ColumnOrganizer from '../src';
+import TableConfig from '../src';
 import columns from './data';
 import sandboxStyles from './sandbox.scss';
 
@@ -14,7 +14,7 @@ const slot = (<div className={sandboxStyles.slot}>Slot</div>);
 const stylesheets = [sandboxStyles];
 
 render(
-  <ColumnOrganizer
+  <TableConfig
     {...{
       columns,
       defaultColumns,

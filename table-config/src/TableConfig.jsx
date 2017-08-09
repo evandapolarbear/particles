@@ -2,12 +2,12 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import cx from 'classnames';
 
-import baseStyles from './Tiwae.scss';
-import composeStyles from '../../../shared/stylesheetComposer';
+import baseStyles from './TableConfig.scss';
+import composeStyles from '../../shared/stylesheetComposer';
 
 let styles = {};
 
-export default class Tiwae extends React.Component {
+export default class TableConfig extends React.Component {
   static propTypes = {
     columns: PropTypes.arrayOf(PropTypes.shape()).isRequired,
     defaultColumns: PropTypes.arrayOf(PropTypes.shape()).isRequired,
