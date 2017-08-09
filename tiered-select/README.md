@@ -1,6 +1,6 @@
-# Tauwahi
+# Tiered Select
 
-A tiered picker.
+A tiered select.
 
 # Change Log
 
