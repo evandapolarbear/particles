@@ -1,9 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import Uta from 'uta';
+import Spinner from '@particles/spinner';
 import baseStyles from './ListPartial.scss';
 import defaultStyles from './ListPartialDefault.scss';
-import composeStyles from '../../../shared/stylesheetComposer';
+import composeStyles from '../../shared/stylesheetComposer';
 
 const ListPartial = ({
   bulkEditorComponent,
@@ -55,11 +55,11 @@ const ListPartial = ({
         { bulkEditorComponent && bulkEditorComponent }
       </div>
 
-      <Uta isLoading={isLoading}>
+      <Spinner isLoading={isLoading}>
         { paginationComponent && paginationComponent }
         { tableComponent && tableComponent }
         { paginationComponent && paginationComponent }
-      </Uta>
+      </Spinner>
     </div>
   </div>);
 };
