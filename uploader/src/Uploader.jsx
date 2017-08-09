@@ -1,8 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 // import cx from 'classnames';
-import baseStyles from './Tukuatu.scss';
-import composeStyles from '../../../shared/stylesheetComposer';
+import baseStyles from './Uploader.scss';
+import composeStyles from '../../shared/stylesheetComposer';
 
 let styles = {};
 
@@ -11,7 +11,7 @@ function kill(evt) {
   evt.stopPropagation();
 }
 
-export default class Tukuatu extends React.Component {
+export default class Uploader extends React.Component {
   static propTypes = {
     onComplete: PropTypes.func.isRequired,
     slotAttach: PropTypes.element,

@@ -1,23 +1,23 @@
 {
-  "name": "tukuatu",
+  "name": "@particles/uploader",
   "version": "1.0.3",
   "description": "A file uploader that supports drag and drop.",
   "main": "index.js",
   "scripts": {
     "dev": "NODE_ENV='development' webpack --progress --colors --watch",
     "prod": "NODE_ENV='production' webpack --progress --colors -p",
-    "sandbox": "NODE_ENV='development' webpack-dev-server --progress --colors --hot --inline ./sandbox/sandbox.jsx --config webpack.dev.config.js  --content-base ./../../sandbox"
+    "sandbox": "NODE_ENV='development' webpack-dev-server --progress --colors --hot --inline ./sandbox/sandbox.jsx --config webpack.dev.config.js  --content-base ./../sandbox"
   },
   "repository": {
     "type": "git",
-    "url": "git+git@github.com:procore/particles.git/"
+    "url": "https://github.com/procore/particles/"
   },
   "author": "Procore",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/procore/particles/issues"
   },
-  "homepage": "https://github.com/procore/particles/tree/master/pickers/tukuatu/",
+  "homepage": "https://github.com/procore/particles/tree/master/uploader",
   "dependencies": {
     "prop-types": "^15.5.10",
     "react": "^15.5.4"

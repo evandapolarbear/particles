@@ -3,7 +3,7 @@ import { render } from 'react-dom';
 
 import sandboxStyles from './sandbox.scss';
 
-import Tukuatu from '../src';
+import Uploader from '../src';
 
 const onComplete = (arr) => {
   console.warn('Files selected:', arr); // eslint-disable-line no-console
@@ -15,7 +15,7 @@ const slotAttach = <div>Attach File(s)</div>;
 const stylesheets = [sandboxStyles];
 
 render(
-  <Tukuatu
+  <Uploader
     {...{
       onComplete,
       slotAttach,
