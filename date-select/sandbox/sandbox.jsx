@@ -3,7 +3,7 @@ import { render } from 'react-dom'; // eslint-disable-line
 
 import sandboxStyles from './sandbox.scss';
 
-import Maramataka from '../src';
+import DateSelect from '../src';
 
 const onSelect = (value) => {
   console.info('Selected:', value); // eslint-disable-line
@@ -25,7 +25,7 @@ const rightAlign = false;
 
 render(
   <div>
-    <Maramataka
+    <DateSelect
       {...{
         closeOnSelect,
         onClear,

@@ -1,23 +1,23 @@
 {
-  "name": "maramataka",
+  "name": "@particles/date-select",
   "version": "1.3.2",
-  "description": "A date picker.",
+  "description": "A date select.",
   "main": "index.js",
   "scripts": {
     "dev": "NODE_ENV='development' webpack --progress --colors --watch",
     "prod": "NODE_ENV='production' webpack --progress --colors -p",
-    "sandbox": "NODE_ENV='development' webpack-dev-server --progress --colors --hot --inline ./sandbox/sandbox.jsx --config webpack.dev.config.js  --content-base ./../../sandbox"
+    "sandbox": "NODE_ENV='development' webpack-dev-server --progress --colors --hot --inline ./sandbox/sandbox.jsx --config webpack.dev.config.js  --content-base ./../sandbox"
   },
   "repository": {
     "type": "git",
-    "url": "git+git@github.com:procore/particles.git/"
+    "url": "https://github.com/procore/particles/"
   },
   "author": "Procore",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/procore/particles/issues"
   },
-  "homepage": "https://github.com/procore/particles/tree/master/pickers/maramataka",
+  "homepage": "https://github.com/procore/particles/tree/master/date-select",
   "dependencies": {
     "classnames": "^2.2.5",
     "prop-types": "^15.5.10",

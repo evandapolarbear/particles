@@ -1,9 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import cx from 'classnames';
-import baseStyles from './Maramataka.scss';
-import composeStyles from '../../../shared/stylesheetComposer';
-import generateId from '../../../shared/generateId';
+import baseStyles from './DateSelect.scss';
+import composeStyles from '../../shared/stylesheetComposer';
+import generateId from '../../shared/generateId';
 
 const dayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
@@ -251,8 +251,8 @@ export default class Maramataka extends React.Component {
     const { errors, expanded, value } = this.state;
 
     const button = (value.day || value.month || value.year)
-        ? <button className={this.styles.clearButton} onClick={this.onClear} />
-        : null;
+      ? <button className={this.styles.clearButton} onClick={this.onClear} />
+      : null;
 
     return (
       <div
