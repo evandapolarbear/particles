@@ -1,6 +1,6 @@
 import React from 'react';
 import { render } from 'react-dom';
-import Mataara, { TYPES } from '../src';
+import NotificationBar, { TYPES } from '../src';
 
 const onCancel = (id) => {
   console.warn(`Notification '${id}' has been cancelled.`); // eslint-disable-line
@@ -8,34 +8,34 @@ const onCancel = (id) => {
 
 render(
   <div>
-    <Mataara
+    <NotificationBar
       id={1}
       onCancel={onCancel}
       type={TYPES.SUCCESS}
       title='Success'
       body='This is a success notification.'
     />
-    <Mataara
+    <NotificationBar
       id={2}
       onCancel={onCancel}
       type={TYPES.INFO}
       title='Info'
       body='This is a error notification.'
     />
-    <Mataara
+    <NotificationBar
       id={'three'}
       onCancel={onCancel}
       type={TYPES.ERROR}
       title='Error'
       body='This is a error notification.'
     />
-    <Mataara
+    <NotificationBar
       id={'four'}
       onCancel={onCancel}
       title='Default'
       body='This is a default notification.'
     />
-    <Mataara
+    <NotificationBar
       id={'five'}
       noDismiss
       type={TYPES.ERROR}

@@ -2,8 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import cx from 'classnames';
 
-import baseStyles from './Mataara.scss';
-import composeStyles from '../../../shared/stylesheetComposer';
+import baseStyles from './NotificationBar.scss';
+import composeStyles from '../../shared/stylesheetComposer';
 
 let styles = {};
 
@@ -13,7 +13,7 @@ const TYPES = {
   SUCCESS: 'success'
 };
 
-const Mataara = ({ body, id, noDismiss, onCancel, stylesheets, title, type }) => {
+const NotificationBar = ({ body, id, noDismiss, onCancel, stylesheets, title, type }) => {
   styles = composeStyles(baseStyles, [...stylesheets]);
 
   return (
@@ -39,7 +39,7 @@ const Mataara = ({ body, id, noDismiss, onCancel, stylesheets, title, type }) =>
   );
 };
 
-Mataara.propTypes = {
+NotificationBar.propTypes = {
   body: PropTypes.oneOfType([PropTypes.string, PropTypes.object]).isRequired,
   id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
   noDismiss: PropTypes.bool,
@@ -49,7 +49,7 @@ Mataara.propTypes = {
   type: PropTypes.string
 };
 
-Mataara.defaultProps = {
+NotificationBar.defaultProps = {
   noDismiss: false,
   onCancel: null,
   stylesheets: [],
@@ -57,4 +57,4 @@ Mataara.defaultProps = {
 };
 
 export { TYPES };
-export default Mataara;
+export default NotificationBar;
