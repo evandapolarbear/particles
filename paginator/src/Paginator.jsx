@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import qs from 'qs';
 import cx from 'classnames';
 import baseStyles from './Paginator.scss';
-import composeStyles from '../../../shared/stylesheetComposer';
+import composeStyles from '../../shared/stylesheetComposer';
 
 export default class Paginator extends React.Component {
   static propTypes = {
