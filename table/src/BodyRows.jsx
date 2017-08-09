@@ -1,9 +1,9 @@
 import PropTypes from 'prop-types';
 
-import RipangaGroupRow from './RipangaGroupRow';
-import RipangaBodyRow from './RipangaBodyRow';
+import GroupRow from './GroupRow';
+import BodyRow from './BodyRow';
 
-const RipangaBodyRows = ({
+const BodyRows = ({
   checkedIds,
   collapsedIds,
   columnDefinitions,
@@ -24,7 +24,7 @@ const RipangaBodyRows = ({
       return [];
     }
 
-    return group.data.map(rowData => (RipangaBodyRow({
+    return group.data.map(rowData => (BodyRow({
       columnDefinitions,
       idKey,
       isChecked: checkedIds[rowData[idKey]],
@@ -42,7 +42,7 @@ const RipangaBodyRows = ({
     const isChecked = group.data.reduce(
       (acc, rowData) => acc && (checkedIds[rowData[idKey]] || false), true);
 
-    return (RipangaGroupRow({
+    return (GroupRow({
       groupData: group,
       isChecked,
       isCollapsed: collapsedIds[group.key.key],
@@ -70,7 +70,7 @@ const RipangaBodyRows = ({
 };
 
 /* eslint-disable react/require-default-props */
-RipangaBodyRows.propTypes = {
+BodyRows.propTypes = {
   checkedIds: PropTypes.shape(),
   columnDefinitions: PropTypes.arrayOf(PropTypes.shape()).isRequired,
   onCollapse: PropTypes.func,
@@ -86,4 +86,4 @@ RipangaBodyRows.propTypes = {
   tableData: PropTypes.arrayOf(PropTypes.shape()).isRequired
 };
 
-export default RipangaBodyRows;
+export default BodyRows;

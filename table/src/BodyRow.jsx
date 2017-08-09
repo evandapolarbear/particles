@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import cx from 'classnames';
 
-const RipangaBodyRow = ({
+const BodyRow = ({
   columnDefinitions,
   idKey,
   isChecked,
@@ -60,7 +60,7 @@ const RipangaBodyRow = ({
 };
 
 /* eslint react/require-default-props: 0 */
-RipangaBodyRow.propTypes = {
+BodyRow.propTypes = {
   columnDefinitions: PropTypes.arrayOf(PropTypes.shape()).isRequired,
   idKey: PropTypes.string,
   isChecked: PropTypes.bool,
@@ -73,4 +73,4 @@ RipangaBodyRow.propTypes = {
   styles: PropTypes.shape().isRequired
 };
 
-export default RipangaBodyRow;
+export default BodyRow;

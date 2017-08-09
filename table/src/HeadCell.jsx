@@ -1,9 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import cx from 'classnames';
-import { SORT_DIRECTION } from './Ripanga';
+import { SORT_DIRECTION } from './Table';
 
-const RipangaHeadCell = ({
+const TableHeadCell = ({
   def,
   onSort,
   sortState,
@@ -42,11 +42,11 @@ const RipangaHeadCell = ({
   );
 };
 
-RipangaHeadCell.propTypes = {
+TableHeadCell.propTypes = {
   def: PropTypes.shape().isRequired,
   onSort: PropTypes.func.isRequired,
   sortState: PropTypes.shape().isRequired,
   styles: PropTypes.shape().isRequired
 };
 
-export default RipangaHeadCell;
+export default TableHeadCell;

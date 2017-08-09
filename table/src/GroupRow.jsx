@@ -1,9 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import RipangaCaret from './RipangaCaret';
+import TableCaret from './Caret';
 
-const RipangaGroupRow = ({
+const TableGroupRow = ({
   groupData,
   isChecked,
   isCollapsed,
@@ -38,7 +38,7 @@ const RipangaGroupRow = ({
       </label>)
       : null);
 
-    const caret = RipangaCaret({
+    const caret = TableCaret({
       closed: isCollapsed,
       disabled: isDisabled,
       onClick: onCaretClick
@@ -62,7 +62,7 @@ const RipangaGroupRow = ({
 };
 
 /* eslint-disable react/require-default-props */
-RipangaGroupRow.propTypes = {
+TableGroupRow.propTypes = {
   onCollapse: PropTypes.func.isRequired,
   groupData: PropTypes.arrayOf(PropTypes.shape()).isRequired,
   isChecked: PropTypes.bool,
@@ -75,4 +75,4 @@ RipangaGroupRow.propTypes = {
   styles: PropTypes.shape().isRequired
 };
 
-export default RipangaGroupRow;
+export default TableGroupRow;

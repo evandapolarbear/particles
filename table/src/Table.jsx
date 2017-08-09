@@ -1,12 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import RipangaHeadRow from './RipangaHeadRow';
-import RipangaBodyRows from './RipangaBodyRows';
-import RipangaSidebar from './RipangaSidebar';
+import HeadRow from './HeadRow';
+import BodyRows from './BodyRows';
+import Sidebar from './Sidebar';
 
-import baseStyles from './Ripanga.scss';
-import composeStyles from '../../../shared/stylesheetComposer';
+import baseStyles from './Table.scss';
+import composeStyles from '../../shared/stylesheetComposer';
 
 const SORT_DIRECTION = { ASC: 'asc', DESC: 'desc', NONE: 'none' };
 
@@ -21,7 +21,7 @@ const checkedReducer = ids => Object.keys(ids).reduce((acc, id) =>
 
 export { SORT_DIRECTION };
 
-export default class Ripanga extends React.Component {
+export default class extends React.Component {
   static propTypes = {
     columnDefinitions: PropTypes.arrayOf(PropTypes.object).isRequired,
     idKey: PropTypes.string,
@@ -244,7 +244,7 @@ export default class Ripanga extends React.Component {
     }
 
     return (<div className={styles.contentContainer}>
-      <RipangaSidebar
+      <Sidebar
         {
         ...{
           collapsedIds,
@@ -260,7 +260,7 @@ export default class Ripanga extends React.Component {
       />
       <div className={styles.tableContainer} ref={(el) => { this.tableContainer = el; }}>
         <div className={styles.table} ref={(el) => { this.table = el; }}>
-          <RipangaHeadRow
+          <HeadRow
             {
             ...{
               allChecked,
@@ -283,7 +283,7 @@ export default class Ripanga extends React.Component {
             }
           />
           <div className={styles.tableBody}>
-            { RipangaBodyRows({
+            { BodyRows({
               checkedIds,
               collapsedIds,
               columnDefinitions,

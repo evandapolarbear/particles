@@ -23,7 +23,7 @@ const restoreHeader = (el) => {
   });
 };
 
-export default class RipangaSidebar extends React.Component {
+export default class TableSidebar extends React.Component {
   static propTypes = {
     collapsedIds: PropTypes.shape(),
     idKey: PropTypes.string.isRequired,

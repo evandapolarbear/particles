@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import RipangaCaret from './RipangaCaret';
-import RipangaHeadCell from './RipangaHeadCell';
+import Caret from './Caret';
+import HeadCell from './HeadCell';
 
 let headerInitialTop = 0;
 
@@ -25,7 +25,7 @@ const restoreHeader = (el) => {
   });
 };
 
-export default class RipangaHeadRow extends React.Component {
+export default class HeadRow extends React.Component {
   static propTypes = {
     allChecked: PropTypes.bool.isRequired,
     allCollapsed: PropTypes.bool.isRequired,
@@ -136,7 +136,7 @@ export default class RipangaHeadRow extends React.Component {
 
     const cells = columnDefinitions.reduce((acc, def) => {
       if (def.hidden !== true) {
-        acc.push(RipangaHeadCell({ def, onSort, sortState, styles }));
+        acc.push(HeadCell({ def, onSort, sortState, styles }));
       }
 
       return acc;
@@ -155,7 +155,7 @@ export default class RipangaHeadRow extends React.Component {
       );
 
       const caret = (showGroups
-        ? RipangaCaret({ closed: allCollapsed, onClick: onCollapseAll })
+        ? Caret({ closed: allCollapsed, onClick: onCollapseAll })
         : null);
 
       cells.unshift(

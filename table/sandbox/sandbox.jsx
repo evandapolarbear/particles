@@ -1,6 +1,6 @@
 import React from 'react';
 import { render } from 'react-dom'; // eslint-disable-line
-import Ripanga from '../src';
+import Table from '../src';
 import sandboxStyles from './sandbox.scss';
 
 import columnDefinitions from './data/columnDefinitions';
@@ -25,8 +25,8 @@ render(
       Uncheck All
     </button>
 
-    <Ripanga
-      globalKey='ripanga-sandbox'
+    <Table
+      globalKey='table-sandbox'
       idKey='key'
       onMounted={onMounted}
       scope='sandbox'

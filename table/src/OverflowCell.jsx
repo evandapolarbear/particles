@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import cx from 'classnames';
-import styles from './Ripanga.scss';
+import styles from './Table.scss';
 
 const scrollTop = () =>
   (document.documentElement && document.documentElement.scrollTop) ||
@@ -13,7 +13,7 @@ let table = null;
 let initialLeft = 0;
 let initialTop = 0;
 
-export default class RipangaOverflowCell extends React.Component {
+export default class OverflowCell extends React.Component {
   static propTypes = {
     children: PropTypes.shape().isRequired
   };
