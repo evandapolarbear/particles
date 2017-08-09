@@ -1,23 +1,23 @@
 {
-  "name": "crud-permissions-table",
+  "name": "@particles/crud-permissions-table",
   "version": "1.3.1",
   "description": "A table to manage CRUD permissions.",
   "main": "index.js",
   "scripts": {
     "dev": "NODE_ENV='development' webpack --progress --colors --watch",
     "prod": "NODE_ENV='production' webpack --progress --colors -p",
-    "sandbox": "NODE_ENV='development' webpack-dev-server --progress --colors --hot --inline ./sandbox/sandbox.jsx --config webpack.dev.config.js  --content-base ./../../sandbox"
+    "sandbox": "NODE_ENV='development' webpack-dev-server --progress --colors --hot --inline ./sandbox/sandbox.jsx --config webpack.dev.config.js  --content-base ./../sandbox"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/chrisarevir/component-library.git"
+    "url": "https://github.com/procore/particles/"
   },
   "author": "Procore",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/chrisarevir/component-library/issues"
+    "url": "https://github.com/procore/particles/issues"
   },
-  "homepage": "https://github.com/chrisarevir/component-library#readme",
+  "homepage": "https://github.com/procore/particles/tree/master/crud-permissions-table",
   "dependencies": {
     "classnames": "^2.2.5",
     "lodash.clonedeep": "^4.5.0",

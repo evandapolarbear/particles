@@ -4,8 +4,7 @@ import cx from 'classnames';
 import clonedeep from 'lodash.clonedeep';
 
 import baseStyles from './CrudPermissionsTable.scss';
-import defaultStyles from './CrudPermissionsTableDefault.scss';
-import composeStyles from '../../../shared/stylesheetComposer';
+import composeStyles from '../../shared/stylesheetComposer';
 
 let styles = {};
 
@@ -140,7 +139,7 @@ export default class CrudPermissionsTable extends React.Component {
   constructor(props) {
     super(props);
     this.state = {};
-    styles = composeStyles(baseStyles, [defaultStyles, ...props.stylesheets]);
+    styles = composeStyles(baseStyles, [...props.stylesheets]);
   }
 
   componentWillMount() {
