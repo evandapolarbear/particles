@@ -1,13 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import cx from 'classnames';
-import qs from 'qs';
-import baseStyles from './Rapu.scss';
-import composeStyles from '../../../shared/stylesheetComposer';
+import baseStyles from './SearchBar.scss';
+import composeStyles from '../../shared/stylesheetComposer';
 
 let styles = {};
 
-export default class Rapu extends React.Component {
+export default class SearchBar extends React.Component {
   static propTypes = {
     onSubmit: PropTypes.func.isRequired,
     stylesheets: PropTypes.arrayOf(PropTypes.shape()),

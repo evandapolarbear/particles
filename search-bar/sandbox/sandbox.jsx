@@ -3,7 +3,7 @@ import React from 'react';
 
 import sandboxStyles from './sandbox.scss';
 
-import Rapu from '../src';
+import SearchBar from '../src';
 
 const onSubmit = (value) => {
   console.warn('Submitted:', value); // eslint-disable-line
@@ -11,9 +11,9 @@ const onSubmit = (value) => {
 
 const stylesheets = [sandboxStyles];
 const placeholder = 'Search';
-const value = 'Hello world'
+const value = 'Hello world';
 
 render(
-  <Rapu {...{ onSubmit, stylesheets, placeholder, value }} />,
+  <SearchBar {...{ onSubmit, stylesheets, placeholder, value }} />,
   window.document.getElementById('root'),
 );
