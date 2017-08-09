@@ -4,6 +4,10 @@ Manages column definition arrays to configure columns.
 
 # Change Log
 
+##### 2.4.3
+- Fixing `name` in `package.json`
+- Removing HTTP PATCH call on `componentWillMount()`
+
 ##### 2.4.2
 - Sandbox cleanup
 

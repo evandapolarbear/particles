@@ -53,10 +53,6 @@ export default class TableConfig extends React.Component {
     };
   }
 
-  componentWillMount() {
-    this.props.onChange(this.props.columns);
-  }
-
   componentDidMount() {
     window.addEventListener('click', this.onBlur);
   }
