@@ -4,6 +4,9 @@ A dynamically populated filter component.
 
 # Change Log
 
+##### 2.6.1
+- Fixes a bug where it wouldn't update if updating the same filter
+
 ##### 2.6.0
 - Loading of filter data deferred to clicking into them
 - UX change: single selection back to looking like <Filter> (<count>)
