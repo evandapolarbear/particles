@@ -1,4 +1,4 @@
-# Tatari
+# Filters
 
 A dynamically populated filter component.
 

@@ -5,10 +5,10 @@ const token = window.document.querySelector('meta[name="csrf-token"]')
 const CSRFHEADER = { headers: { 'X-CSRF-TOKEN': token } };
 
 export const get = (url, params) =>
-  axios.get(url, {...CSRFHEADER, params});
+  axios.get(url, { ...CSRFHEADER, params });
 
 export const patch = (url, params, config) =>
-  axios.patch(url, params, {...CSRFHEADER, ...config });
+  axios.patch(url, params, { ...CSRFHEADER, ...config });
 
 export const destroy = (url, params, config) =>
-  axios.delete(url, params, {...CSRFHEADER, ...config });
+  axios.delete(url, params, { ...CSRFHEADER, ...config });

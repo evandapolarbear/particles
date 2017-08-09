@@ -4,7 +4,7 @@ import cx from 'classnames';
 
 let counter = 0;
 
-export default class TatariDropdownPlain extends React.Component {
+export default class DropdownPlain extends React.Component {
   componentDidUpdate() {
     const { currentIndex } = this.props;
 
@@ -88,7 +88,7 @@ export default class TatariDropdownPlain extends React.Component {
   }
 }
 
-TatariDropdownPlain.propTypes = {
+DropdownPlain.propTypes = {
   keyListeners: PropTypes.func.isRequired,
   currentIndex: PropTypes.number.isRequired,
   data: PropTypes.arrayOf(PropTypes.shape({
@@ -104,7 +104,7 @@ TatariDropdownPlain.propTypes = {
   styles: PropTypes.shape().isRequired
 };
 
-TatariDropdownPlain.defaultProps = {
+DropdownPlain.defaultProps = {
   i18n: {},
   isExpanded: false,
   isLoading: false

@@ -4,7 +4,7 @@ import cx from 'classnames';
 
 let counter = 0;
 
-export default class TatariDropdownCheckboxes extends React.Component {
+export default class DropdownCheckboxes extends React.Component {
   componentDidUpdate() {
     const { currentIndex } = this.props;
 
@@ -176,7 +176,7 @@ export default class TatariDropdownCheckboxes extends React.Component {
   }
 }
 
-TatariDropdownCheckboxes.propTypes = {
+DropdownCheckboxes.propTypes = {
   keyListeners: PropTypes.func.isRequired,
   currentIndex: PropTypes.number.isRequired,
   filter: PropTypes.shape({
@@ -198,7 +198,7 @@ TatariDropdownCheckboxes.propTypes = {
   styles: PropTypes.shape().isRequired
 };
 
-TatariDropdownCheckboxes.defaultProps = {
+DropdownCheckboxes.defaultProps = {
   i18n: {},
   isExpanded: false,
   isLoading: false,

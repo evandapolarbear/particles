@@ -2,7 +2,7 @@ import React from 'react';
 import { render } from 'react-dom'; // eslint-disable-line
 import axios from 'axios'; // eslint-disable-line
 import MockAdapter from 'axios-mock-adapter'; // eslint-disable-line
-import Tatari from '../src';
+import Filters from '../src';
 import sandboxStyles from './sandbox.scss';
 
 const mockApi = new MockAdapter(axios);
@@ -164,6 +164,6 @@ const filterOptions = options => options.filter(obj => obj.key !== 'assignee');
 const stylesheets = [sandboxStyles];
 
 render(
-  <Tatari {...{ filterOptions, i18n, onComplete, stylesheets, urls }} />,
+  <Filters {...{ filterOptions, i18n, onComplete, stylesheets, urls }} />,
   document.getElementById('root')
 );

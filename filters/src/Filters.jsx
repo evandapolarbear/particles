@@ -1,16 +1,16 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import qs from 'qs';
-import { get, patch, destroy } from './TatariApi';
-import TatariDropdownPlain from './TatariDropdownPlain';
-import TatariDropdownCheckboxes from './TatariDropdownCheckboxes';
+import { get, patch, destroy } from './FilterApi';
+import DropdownPlain from './DropdownPlain';
+import DropdownCheckboxes from './DropdownCheckboxes';
 
-import baseStyles from './Tatari.scss';
-import composeStyles from '../../../shared/stylesheetComposer';
+import baseStyles from './Filters.scss';
+import composeStyles from '../../shared/stylesheetComposer';
 
 let styles = {};
 
-export default class Tatari extends React.Component {
+export default class Filters extends React.Component {
   static propTypes = {
     filterOptions: PropTypes.func,
     i18n: PropTypes.shape(),
@@ -445,7 +445,7 @@ export default class Tatari extends React.Component {
     const inactiveFilters =
       this.state.inactiveFilters.length
       ? (
-        <TatariDropdownPlain
+        <DropdownPlain
           keyListeners={this.keyListeners}
           currentIndex={this.state.currentIndex}
           data={this.state.inactiveFilters}
@@ -463,7 +463,7 @@ export default class Tatari extends React.Component {
         const savedSelections = this.state.savedFilters[item.key];
 
         return (
-          <TatariDropdownCheckboxes
+          <DropdownCheckboxes
             currentIndex={this.state.currentIndex}
             filter={item}
             i18n={this.props.i18n}
