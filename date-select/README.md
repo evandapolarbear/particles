@@ -1,6 +1,6 @@
-# Maramataka
+# Date Select
 
-A date picker.
+A date select.
 
 # Change Log
 
