@@ -4,7 +4,7 @@
 import { render } from 'react-dom';
 import React from 'react';
 
-import Tipako from '../src';
+import Select from '../src';
 import sandboxStyles from './sandbox.scss';
 
 const data = [
@@ -83,7 +83,7 @@ const valueFunction = item => item.value;
 
 render(
   <div className={sandboxStyles.wrapper}>
-    <Tipako
+    <Select
       {...{
         closeOnSelect,
         data,
@@ -109,7 +109,7 @@ render(
         valueFunction
       }}
     />
-    <Tipako
+    <Select
       {...{
         closeOnSelect,
         data,

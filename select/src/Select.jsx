@@ -1,9 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import cx from 'classnames';
-import baseStyles from './Tipako.scss';
-import composeStyles from '../../../shared/stylesheetComposer';
-import generateId from '../../../shared/generateId';
+import baseStyles from './Select.scss';
+import composeStyles from '../../shared/stylesheetComposer';
+import generateId from '../../shared/generateId';
 
 let counter = 0;
 let groupCounter = 0;
@@ -405,13 +405,13 @@ export default class Tipako extends React.Component {
     const selectAll = (onSelectAll && items.length > 0)
       ? (<button className={this.styles.controlsButton} onClick={this.onSelectAll} type='button'>
            Select All
-        </button>)
+      </button>)
       : null;
 
     const clearAll = onClearAll
       ? (<button className={this.styles.controlsButton} onClick={this.onClearAll} type='button'>
           Clear All
-        </button>)
+      </button>)
       : null;
 
     const spacer = (clearAll && selectAll)
@@ -461,7 +461,7 @@ export default class Tipako extends React.Component {
           type='text'
           value={value || ''}
         />
-        )
+      )
       : (
         <div
           className={cx(this.styles.staticText, { [this.styles.noClear]: !updateOnSelect })}

@@ -1,6 +1,6 @@
-# Tipako
+# Select
 
-A picker with support for group or individual selections.
+A select with support for group or individual selections.
 
 # Change Log
 
