@@ -1,5 +1,5 @@
 {
-  "name": "matapihi",
+  "name": "@particles/modal",
   "version": "1.0.4",
   "description": "A modal component",
   "author": "Procore",
@@ -8,7 +8,7 @@
   "scripts": {
     "dev": "NODE_ENV='development' webpack --progress --colors --watch",
     "prod": "NODE_ENV='production' webpack --progress --colors -p",
-    "sandbox": "NODE_ENV='development' webpack-dev-server --progress --colors --hot --inline ./sandbox/sandbox.jsx --config webpack.dev.config.js  --content-base ./../../sandbox"
+    "sandbox": "NODE_ENV='development' webpack-dev-server --progress --colors --hot --inline ./sandbox/sandbox.jsx --config webpack.dev.config.js  --content-base ./../sandbox"
   },
   "dependencies": {
     "autoprefixer-loader": "^3.1.0",

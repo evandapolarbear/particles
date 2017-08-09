@@ -1,6 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import cx from 'classnames';
-import styles from './style.scss';
+import styles from './Modal.scss';
 
 const isOpening = (s1, s2) => !s1.show && s2.show;
 const isClosing = (s1, s2) => s1.show && !s2.show;

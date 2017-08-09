@@ -1,6 +1,6 @@
 import React from 'react';
 import { render } from 'react-dom';
-import Modal from '../src/Modal';
+import Modal from '../src';
 
 class Component extends React.Component {
   constructor(props) {

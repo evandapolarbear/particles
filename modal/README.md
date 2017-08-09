@@ -1,4 +1,4 @@
-# Matapihi
+# Modal
 
 A Modal Component
 
