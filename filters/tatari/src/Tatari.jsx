@@ -258,10 +258,11 @@ export default class Tatari extends React.Component {
     const isFiltersSame = newFilters.reduce((acc, key) => acc && storedFilters.includes(key), true);
     const isFiltersSameLength =
       newFilters.reduce((acc, key) =>
-        (acc && (payload.filters[key].sort() === savedFilters[key].sort()))
+        (acc && (payload.filters[key] && payload.filters[key].sort() === savedFilters[key].sort()))
       , true);
 
     if (!(isFiltersSame && isFiltersSameLength)) {
+      console.log('did I get cleared?');
       const newSaved = Object.assign(payload.filters, savedFilters);
 
       if (newFilters.length) {
