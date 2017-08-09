@@ -1,4 +1,4 @@
-# Ripa
+# Tabs
 
 A header component with a title, tabs, and extra slot.
 

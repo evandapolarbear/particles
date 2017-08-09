@@ -2,7 +2,7 @@ import React from 'react';
 import { render } from 'react-dom';
 import sandboxStyles from './sandbox.scss';
 
-import Ripa from '../src';
+import Tabs from '../src';
 
 const onChange = () => {
   console.warn('Tab changed; external callback triggered.');
@@ -22,7 +22,7 @@ const selectedKey = labels[0].k;
 const stylesheets = [sandboxStyles];
 
 render(
-  <Ripa
+  <Tabs
     {...{ onChange, labels, slotL, slotR, selectedKey, stylesheets }}
   />,
   window.document.getElementById('root')

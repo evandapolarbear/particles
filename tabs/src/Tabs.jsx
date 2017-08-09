@@ -1,11 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import baseStyles from './Ripa.scss';
-import composeStyles from '../../../shared/stylesheetComposer';
+import baseStyles from './Tabs.scss';
+import composeStyles from '../../shared/stylesheetComposer';
 
 let styles = {};
 
-class Ripa extends React.Component {
+class Tabs extends React.Component {
   static propTypes = {
     labels: PropTypes.arrayOf(
       PropTypes.shape({
@@ -87,4 +87,4 @@ class Ripa extends React.Component {
   }
 }
 
-export default Ripa;
+export default Tabs;
