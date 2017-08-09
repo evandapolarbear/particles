@@ -2,8 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import cx from 'classnames';
 
-import baseStyles from './Tauwahi.scss';
-import composeStyles from '../../../shared/stylesheetComposer';
+import baseStyles from './TieredSelect.scss';
+import composeStyles from '../../shared/stylesheetComposer';
 
 export default class Tauwahi extends React.Component {
   static propTypes = {

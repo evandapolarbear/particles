@@ -3,7 +3,7 @@ import React from 'react';
 import { render } from 'react-dom';
 
 import sandboxStyles from './sandbox.scss';
-import Tauwahi from '../src';
+import TieredSelect from '../src';
 import data from './data';
 
 const canAdd = true;
@@ -14,7 +14,7 @@ const onSelect = (item) => { console.log('Selected:', item); }; // eslint-disabl
 const stylesheets = [sandboxStyles];
 
 render(
-  <Tauwahi
+  <TieredSelect
     {...{
       canAdd,
       currentSelection,
