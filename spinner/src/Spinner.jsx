@@ -1,12 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import cx from 'classnames';
-import baseStyles from './Uta.scss';
-import composeStyles from '../../../shared/stylesheetComposer';
+import baseStyles from './Spinner.scss';
+import composeStyles from '../../shared/stylesheetComposer';
 
 let styles = {};
 
-const Uta = (props) => {
+const Spinner = (props) => {
   const {
     children,
     className,
@@ -33,7 +33,7 @@ const Uta = (props) => {
   );
 };
 
-Uta.propTypes = {
+Spinner.propTypes = {
   children: PropTypes.node,
   className: PropTypes.string,
   Component: PropTypes.oneOfType([PropTypes.node, PropTypes.string]),
@@ -42,7 +42,7 @@ Uta.propTypes = {
   titleText: PropTypes.string
 };
 
-Uta.defaultProps = {
+Spinner.defaultProps = {
   children: null,
   className: null,
   Component: 'div',
@@ -51,4 +51,4 @@ Uta.defaultProps = {
   titleText: 'Loading'
 };
 
-export default Uta;
+export default Spinner;

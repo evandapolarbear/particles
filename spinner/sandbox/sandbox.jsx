@@ -1,15 +1,15 @@
 import { render } from 'react-dom';
 import React from 'react';
 
-import Uta from '../src';
+import Spinner from '../src';
 
 const isLoading = true;
 
 render(
-  <Uta isLoading={isLoading}>
+  <Spinner isLoading={isLoading}>
     <div style={{ height: '300px', background: 'bisque' }}>
       I am content that is still loading.
     </div>
-  </Uta>,
+  </Spinner>,
   window.document.getElementById('root')
 );
