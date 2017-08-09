@@ -258,10 +258,10 @@ export default class Filters extends React.Component {
     const isFiltersSame = newFilters.reduce((acc, key) => acc && storedFilters.includes(key), true);
     const isFiltersSameLength =
       newFilters.reduce((acc, key) =>
-        (acc && (payload.filters[key].sort() === savedFilters[key].sort()))
+        (acc && (payload.filters[key].sort() === savedFilters[key] && savedFilters[key].sort()))
       , true);
 
-    if (!(isFiltersSame && isFiltersSameLength)) {
+    if (!(newFilters.length === storedFilters.length) || !(isFiltersSame && isFiltersSameLength)) {
       const newSaved = Object.assign(payload.filters, savedFilters);
 
       if (newFilters.length) {
